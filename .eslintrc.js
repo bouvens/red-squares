@@ -29,6 +29,7 @@ module.exports = {
         'object-curly-spacing': [1, 'always'],
         'consistent-this': [1, 'that'],
         'no-mixed-spaces-and-tabs': 1,
+        'no-mixed-operators': 0,
         'indent': [1, 4, { SwitchCase: 1 }],
         'no-shadow': 1,
         'semi': [1, 'never'],
