@@ -1,52 +1,7 @@
 import React, { Component, PropTypes } from 'react'
-import _ from 'lodash' // TODO is it needed?
 import style from './RedSquares.less'
-
-const Square = (props) => (
-    <div
-        ref={props.refHandler}
-        className={props.style}
-        style={{
-            width: `${props.size}px`,
-            height: `${props.size}px`,
-            top: `${props.top}px`,
-            left: `${props.left}px`,
-        }}
-    />
-)
-
-Square.propTypes = {
-    top: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
-    refHandler: PropTypes.func,
-    size: PropTypes.number.isRequired,
-}
-
-Square.defaultProps = {
-    refHandler: _.noop,
-}
-
-const Field = (props) => (
-    <div
-        ref={props.refHandler}
-        className={style.field}
-    >
-        {props.children}
-    </div>
-)
-
-Field.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.object,
-        PropTypes.array,
-    ]),
-    refHandler: PropTypes.func,
-}
-
-Field.defaultProps = {
-    children: null,
-    refHandler: _.noop,
-}
+import Field from './Field'
+import Square from './Square'
 
 const heroStates = {
     normal: {
@@ -60,8 +15,12 @@ const heroStates = {
 }
 
 export default class RedSquares extends Component {
+    /* global performance */
     static propTypes = {
-        settings: PropTypes.object.isRequired,
+        heroSize: PropTypes.number.isRequired,
+        threatSize: PropTypes.number.isRequired,
+        threatLimit: PropTypes.number.isRequired,
+        threatAddTimeout: PropTypes.number.isRequired,
     }
 
     state = {
@@ -70,20 +29,16 @@ export default class RedSquares extends Component {
             y: 0,
             status: heroStates.normal,
         },
-        threats: [
-            {
-                x: 200,
-                y: 0,
-                speed: {
-                    x: 0,
-                    y: 2,
-                }
-            },
-        ],
+        threats: [],
+        lastTreatTime: performance.now() - this.props.threatAddTimeout,
     }
 
     componentDidMount () {
         document.onmousemove = this.saveMousePos
+
+        this.saveFieldSize()
+        window.onresize = this.saveFieldSize
+
         setInterval(this.updateFrame, 20)
     }
 
@@ -100,7 +55,7 @@ export default class RedSquares extends Component {
     }
 
     getHeroStatus = () => {
-        const { heroSize, threatSize } = this.props.settings
+        const { heroSize, threatSize } = this.props
         const safeLength = (heroSize + threatSize) / 2
         const sizeFix = (threatSize - heroSize) / 2
         const hero = this.state.hero
@@ -113,27 +68,30 @@ export default class RedSquares extends Component {
     updateFrame = () => {
         this.moveHero()
         this.moveThreats()
+        this.controlThreats()
     }
 
-    getFieldPos = () => {
+    saveFieldSize = () => {
         const fieldRect = this.field
         // TODO check and browsers and rewrite like https://learn.javascript.ru/coordinates-document
-        return {
-            left: fieldRect.offsetLeft,
-            top: fieldRect.offsetTop,
-            right: fieldRect.offsetLeft + fieldRect.clientWidth,
-            bottom: fieldRect.offsetTop + fieldRect.clientHeight,
-            width: fieldRect.clientWidth,
-            height: fieldRect.clientHeight,
-        }
+        this.setState({
+            field: {
+                left: fieldRect.offsetLeft,
+                top: fieldRect.offsetTop,
+                right: fieldRect.offsetLeft + fieldRect.clientWidth,
+                bottom: fieldRect.offsetTop + fieldRect.clientHeight,
+                width: fieldRect.clientWidth,
+                height: fieldRect.clientHeight,
+            }
+        })
     }
 
     moveHero = () => {
-        const fieldPos = this.getFieldPos()
-        let x = Math.max(RedSquares.mousePos.x - this.props.settings.heroSize / 2, fieldPos.left)
-        x = Math.min(x, fieldPos.right - this.props.settings.heroSize)
-        let y = Math.max(RedSquares.mousePos.y - this.props.settings.heroSize / 2, fieldPos.top)
-        y = Math.min(y, fieldPos.bottom - this.props.settings.heroSize)
+        const fieldPos = this.state.field
+        let x = Math.max(RedSquares.mousePos.x - this.props.heroSize / 2, fieldPos.left)
+        x = Math.min(x, fieldPos.right - this.props.heroSize)
+        let y = Math.max(RedSquares.mousePos.y - this.props.heroSize / 2, fieldPos.top)
+        y = Math.min(y, fieldPos.bottom - this.props.heroSize)
 
         this.setState({
             hero: {
@@ -145,38 +103,90 @@ export default class RedSquares extends Component {
     }
 
     moveThreats = () => {
-        const fieldPos = this.getFieldPos()
-
         this.setState({
-            threats: this.state.threats.map((threat) => {
-                const y = threat.y + threat.speed.y
-
-                return {
+            threats: this.state.threats.map((threat) => (
+                {
                     ...threat,
-                    x: threat.x,
-                    y: y <= fieldPos.height ? y : -this.props.settings.threatSize,
+                    x: threat.x + threat.speed.x,
+                    y: threat.y + threat.speed.y,
                 }
-            })
+            ))
         })
+    }
+
+    beat = (field) => (threat) => {
+        let { x, y, speed } = threat
+
+        const rightBorder = field.width - this.props.threatSize
+        if (x <= 0) {
+            speed.x = Math.abs(speed.x)
+        }
+        if (x >= rightBorder) {
+            speed.x = -Math.abs(speed.x)
+        }
+
+        const bottomBorder = field.height - this.props.threatSize
+        if (y <= 0) {
+            speed.y = Math.abs(speed.y)
+        }
+        if (y >= bottomBorder) {
+            speed.y = -Math.abs(speed.y)
+        }
+
+        return {
+            ...threat,
+            x,
+            y,
+            speed,
+        }
+    }
+
+    controlThreats = () => {
+        const field = this.state.field
+        let threats = this.state.threats.map(this.beat(field))
+
+        if (threats.length < this.props.threatLimit
+            && performance.now() >= this.state.lastTreatTime + this.props.threatAddTimeout * 1000) {
+            let y = 0 - this.props.threatSize
+            let speed = {
+                x: Math.floor(Math.random() * 4),
+                y: Math.floor(Math.random() * 4 + 1),
+            }
+
+            if (Math.random() < 0.5) {
+                y = field.height + this.props.threatSize
+                speed.y = -speed.y
+            }
+            threats.push({
+                x: Math.floor(Math.random() * (field.width - this.props.threatSize + 1)),
+                y,
+                speed,
+            })
+            this.setState({
+                threats,
+                lastTreatTime: performance.now(),
+            })
+        }
     }
 
     render () {
         return (
             <div className={style.wrapper}>
                 <Field
+                    style={style.field}
                     refHandler={(elem) => { this.field = elem }}
                 >
                     <Square
                         style={this.state.hero.status.style}
                         refHandler={(elem) => { this.hero = elem }}
-                        size={this.props.settings.heroSize}
+                        size={this.props.heroSize}
                         left={this.state.hero.x}
                         top={this.state.hero.y}
                     />
                     {this.state.threats.map((threat, index) => (
                         <Square
                             style={style.threat}
-                            size={this.props.settings.threatSize}
+                            size={this.props.threatSize}
                             left={threat.x}
                             top={threat.y}
                         />
@@ -184,8 +194,8 @@ export default class RedSquares extends Component {
                 </Field>
                 <p>hero.x = {this.state.hero.x}</p>
                 <p>hero.y = {this.state.hero.y}</p>
-                <p>threat.x = {this.state.threats[0].x}</p>
-                <p>threat.y = {this.state.threats[0].y}</p>
+                <p>threat.x = {this.state.threats[0] && this.state.threats[0].x}</p>
+                <p>threat.y = {this.state.threats[0] && this.state.threats[0].y}</p>
             </div>
         )
     }
