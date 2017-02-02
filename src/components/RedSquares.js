@@ -55,8 +55,6 @@ export default class RedSquares extends Component {
         }
     }
 
-    lastTreatTime = performance.now() - this.props.threatAddTimeout
-
     componentDidMount () {
         document.onmousemove = this.saveMousePos
 
@@ -146,98 +144,62 @@ export default class RedSquares extends Component {
         })
     }
 
-    processSpeed = (options) => {
-        const { size, lean, canFlyAway } = options
-        let { speed, isOut } = options
-        const isGoingOut = Math.sign(lean) === Math.sign(speed)
+    processSpeed = (oldThreat, size, canFlyAway, options) => {
+        const { axis, lean } = options
+        const threat = { ...oldThreat }
+        const isGoingOut = Math.sign(lean) === Math.sign(threat.speed[axis])
 
-        if (!isOut) {
+        if (!threat.isOut) {
             if (canFlyAway && isGoingOut) {
-                isOut = true
+                threat.isOut = true
             } else {
-                speed = (isGoingOut ? -1 : 1) * (speed || 1)
+                threat.speed[axis] = (isGoingOut ? -1 : 1) * (threat.speed[axis] || 1)
             }
         }
+        threat.isAroundField = Math.abs(lean) <= size * 3
 
-        return {
-            speed,
-            isOut,
-            isAroundField: Math.abs(lean) <= size * 3,
-        }
+        return threat
     }
 
     beat = (field) => (threat) => {
-        const { x, y, speed } = threat
-        let { isOut, isAroundField } = threat
+        let newThreat = { ...threat }
         const canFlyAway = Math.random() < 1 / this.props.threatRemoveProbability
+        const processThreat = this.processSpeed.bind(null, newThreat, this.props.threatSize, canFlyAway)
 
-        if (x < 0) {
-            const lean = x
-            const processed = this.processSpeed({
-                size: this.props.threatSize,
-                speed: speed.x,
-                lean,
-                isOut,
-                canFlyAway
+        if (newThreat.x < 0) {
+            newThreat = processThreat({
+                axis: 'x',
+                lean: newThreat.x,
             })
-            speed.x = processed.speed
-            isOut = processed.isOut
-            isAroundField = processed.isAroundField
         }
         const rightBorder = field.width - this.props.threatSize
-        if (x > rightBorder) {
-            const lean = x - rightBorder
-            const processed = this.processSpeed({
-                size: this.props.threatSize,
-                speed: speed.x,
-                lean,
-                isOut,
-                canFlyAway,
+        if (newThreat.x > rightBorder) {
+            newThreat = processThreat({
+                axis: 'x',
+                lean: newThreat.x - rightBorder,
             })
-            speed.x = processed.speed
-            isOut = processed.isOut
-            isAroundField = processed.isAroundField
         }
 
-        if (y < 0) {
-            const lean = y
-            const processed = this.processSpeed({
-                size: this.props.threatSize,
-                speed: speed.y,
-                lean,
-                isOut,
-                canFlyAway,
+        if (newThreat.y < 0) {
+            newThreat = processThreat({
+                axis: 'y',
+                lean: newThreat.y,
             })
-            speed.y = processed.speed
-            isOut = processed.isOut
-            isAroundField = processed.isAroundField
         }
         const bottomBorder = field.height - this.props.threatSize
-        if (y >= bottomBorder) {
-            const lean = y - bottomBorder
-            const processed = this.processSpeed({
-                size: this.props.threatSize,
-                speed: speed.y,
-                lean,
-                isOut,
-                canFlyAway,
+        if (newThreat.y > bottomBorder) {
+            newThreat = processThreat({
+                axis: 'y',
+                lean: newThreat.y - bottomBorder,
             })
-            speed.y = processed.speed
-            isOut = processed.isOut
-            isAroundField = processed.isAroundField
         }
 
-        return {
-            ...threat,
-            x,
-            y,
-            speed,
-            isOut,
-            isAroundField,
-        }
+        return newThreat
     }
 
-    addThreat = (threats, field) => {
+    lastTreatTime = performance.now() - this.props.threatAddTimeout
+
+    addThreat = (field, threats) => {
         const size = this.props.threatSize
         let x = Math.round(Math.random() * (field.width - size))
         let y = 0 - size
@@ -285,7 +247,7 @@ export default class RedSquares extends Component {
 
         if (threats.length < this.props.threatLimit
             && performance.now() >= this.lastTreatTime + this.props.threatAddTimeout) {
-            this.addThreat(threats, field)
+            this.addThreat(field, threats)
         }
 
         this.setState({
