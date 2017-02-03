@@ -3,6 +3,7 @@ import './App.css'
 import RedSquares from './components/RedSquares'
 
 const SETTINGS = {
+    frameLength: 20,
     heroSize: 50,
     threatSize: 30,
     threatLimit: 10,

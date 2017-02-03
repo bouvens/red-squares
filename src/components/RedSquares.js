@@ -15,8 +15,8 @@ const heroStates = {
 }
 
 export default class RedSquares extends Component {
-    /* global performance */
     static propTypes = {
+        frameLength: PropTypes.number.isRequired,
         heroSize: PropTypes.number.isRequired,
         threatSize: PropTypes.number.isRequired,
         threatLimit: PropTypes.number.isRequired,
@@ -34,27 +34,6 @@ export default class RedSquares extends Component {
         threatsIndex: 0,
     }
 
-    static mousePos = {
-        x: 0,
-        y: 0,
-    }
-
-    saveMousePos = (e) => {
-        RedSquares.mousePos = {
-            x: e.pageX,
-            y: e.pageY,
-        }
-    }
-
-    static keyPressed = {}
-
-    saveKeyPressed = ({ key }) => {
-        RedSquares.keyPressed = {
-            ...RedSquares.keyPressed,
-            [key]: true,
-        }
-    }
-
     componentDidMount () {
         document.onmousemove = this.saveMousePos
 
@@ -65,9 +44,33 @@ export default class RedSquares extends Component {
         this.startInterval()
     }
 
+    static mousePos = {
+        x: 0,
+        y: 0,
+    }
+
+    static keyPressed = {}
+
+    frame = 0
+    lastTreatTime = 0
+
+    saveMousePos = (e) => {
+        RedSquares.mousePos = {
+            x: e.pageX,
+            y: e.pageY,
+        }
+    }
+
+    saveKeyPressed = ({ key }) => {
+        RedSquares.keyPressed = {
+            ...RedSquares.keyPressed,
+            [key]: true,
+        }
+    }
+
     startInterval = () => {
         this.setState({
-            interval: setInterval(this.updateFrame, 20)
+            interval: setInterval(this.updateFrame, this.props.frameLength)
         })
     }
 
@@ -75,11 +78,14 @@ export default class RedSquares extends Component {
         if (RedSquares.keyPressed.Escape) {
             RedSquares.keyPressed.Escape = false
             this.reset()
+
             return
         }
         this.moveHero()
         this.moveThreats()
         this.controlThreats()
+
+        this.frame += 1
     }
 
     reset = () => {
@@ -197,8 +203,6 @@ export default class RedSquares extends Component {
         return newThreat
     }
 
-    lastTreatTime = performance.now() - this.props.threatAddTimeout
-
     addThreat = (field, threats) => {
         const size = this.props.threatSize
         let x = Math.round(Math.random() * (field.width - size))
@@ -233,7 +237,7 @@ export default class RedSquares extends Component {
             isAroundField: true,
         })
 
-        this.lastTreatTime = performance.now()
+        this.lastTreatTime = this.frame
         this.setState({
             threats,
             threatsIndex: this.state.threatsIndex + 1,
@@ -246,7 +250,7 @@ export default class RedSquares extends Component {
         threats = threats.filter((threat) => threat.isAroundField)
 
         if (threats.length < this.props.threatLimit
-            && performance.now() >= this.lastTreatTime + this.props.threatAddTimeout) {
+            && this.frame >= this.lastTreatTime + (this.props.threatAddTimeout / this.props.frameLength)) {
             this.addThreat(field, threats)
         }
 
