@@ -14,6 +14,12 @@ const heroStates = {
     },
 }
 
+const STATUS = {
+    play: 'play',
+    pause: 'pause',
+    stop: 'stop',
+}
+
 export default class RedSquares extends Component {
     static propTypes = {
         frameLength: PropTypes.number.isRequired,
@@ -25,13 +31,13 @@ export default class RedSquares extends Component {
     }
 
     state = {
+        status: STATUS.stop,
         hero: {
             x: 0,
             y: 0,
             status: heroStates.normal,
         },
         threats: [],
-        threatsIndex: 0,
     }
 
     componentDidMount () {
@@ -39,6 +45,13 @@ export default class RedSquares extends Component {
 
         this.saveFieldSize()
         window.onresize = this.saveFieldSize
+        setTimeout(() => this.setState({
+            hero: {
+                ...this.state.hero,
+                x: (this.field.clientWidth - this.props.heroSize) / 2,
+                y: (this.field.clientHeight - this.props.heroSize) / 2,
+            }
+        }), 0)
         window.document.onkeyup = this.saveKeyPressed
 
         this.startInterval()
@@ -49,10 +62,7 @@ export default class RedSquares extends Component {
         y: 0,
     }
 
-    static keyPressed = {}
-
-    frame = 0
-    lastTreatTime = 0
+    keyPressed = []
 
     saveMousePos = (e) => {
         RedSquares.mousePos = {
@@ -61,50 +71,72 @@ export default class RedSquares extends Component {
         }
     }
 
-    saveKeyPressed = ({ key }) => {
-        RedSquares.keyPressed = {
-            ...RedSquares.keyPressed,
-            [key]: true,
+    saveKeyPressed = ({ key }) => this.keyPressed.push(key)
+
+    buttonPressProceed = () => {
+        switch (this.state.status) {
+            case STATUS.play:
+                this.setState({
+                    status: STATUS.pause,
+                })
+                break
+            case STATUS.pause:
+                this.setState({
+                    status: STATUS.play,
+                })
+                break
+            case STATUS.stop:
+            default:
+                this.setState({
+                    status: STATUS.play,
+                })
+                this.frame = 0
+                this.lastTreatTime = 0 - (this.props.threatAddTimeout / this.props.frameLength)
+                clearInterval(this.interval)
+                this.startInterval()
+                this.setState({
+                    threats: [],
+                })
         }
     }
 
+    getButtonName = () => {
+        switch (this.state.status) {
+            case STATUS.play:
+                return 'Pause'
+            case STATUS.pause:
+                return 'Resume'
+            case STATUS.stop:
+                return 'Start'
+            default:
+                return 'WAT'
+        }
+    }
+
+    keymap = {
+        ' ': this.buttonPressProceed,
+    }
+
+    reactToKeys = () => {
+        this.keyPressed.forEach((key) => this.keymap[key] && this.keymap[key]())
+        this.keyPressed = []
+    }
+
+    threatsIndex = 0
+
     startInterval = () => {
-        this.setState({
-            interval: setInterval(this.updateFrame, this.props.frameLength)
-        })
+        this.interval = setInterval(this.updateFrame, this.props.frameLength)
     }
 
     updateFrame = () => {
-        if (RedSquares.keyPressed.Escape) {
-            RedSquares.keyPressed.Escape = false
-            this.reset()
+        this.reactToKeys()
 
-            return
+        if (this.state.status === STATUS.play) {
+            this.moveThreats()
+            this.controlThreats()
+            this.moveHero()
+            this.frame += 1
         }
-        this.moveHero()
-        this.moveThreats()
-        this.controlThreats()
-
-        this.frame += 1
-    }
-
-    reset = () => {
-        clearInterval(this.state.interval)
-        this.startInterval()
-        this.setState({
-            threats: [],
-        })
-    }
-
-    getHeroStatus = () => {
-        const { heroSize, threatSize } = this.props
-        const safeLength = (heroSize + threatSize) / 2
-        const sizeFix = (threatSize - heroSize) / 2
-        const hero = this.state.hero
-
-        return this.state.threats.some((threat) =>
-            Math.abs(threat.x - hero.x + sizeFix) < safeLength && Math.abs(threat.y - hero.y + sizeFix) < safeLength
-        ) ? heroStates.trouble : heroStates.normal
     }
 
     saveFieldSize = () => {
@@ -118,22 +150,6 @@ export default class RedSquares extends Component {
                 bottom: fieldRect.offsetTop + fieldRect.clientHeight,
                 width: fieldRect.clientWidth,
                 height: fieldRect.clientHeight,
-            }
-        })
-    }
-
-    moveHero = () => {
-        const fieldPos = this.state.field
-        let x = Math.max(RedSquares.mousePos.x - this.props.heroSize / 2, fieldPos.left)
-        x = Math.min(x, fieldPos.right - this.props.heroSize)
-        let y = Math.max(RedSquares.mousePos.y - this.props.heroSize / 2, fieldPos.top)
-        y = Math.min(y, fieldPos.bottom - this.props.heroSize)
-
-        this.setState({
-            hero: {
-                x: x - fieldPos.left,
-                y: y - fieldPos.top,
-                status: this.getHeroStatus(),
             }
         })
     }
@@ -229,7 +245,7 @@ export default class RedSquares extends Component {
             speed.y = -speed.y
         }
         threats.push({
-            id: this.state.threatsIndex,
+            id: this.threatsIndex += 1,
             x,
             y,
             speed,
@@ -240,7 +256,6 @@ export default class RedSquares extends Component {
         this.lastTreatTime = this.frame
         this.setState({
             threats,
-            threatsIndex: this.state.threatsIndex + 1,
         })
     }
 
@@ -256,6 +271,41 @@ export default class RedSquares extends Component {
 
         this.setState({
             threats
+        })
+    }
+
+    getHeroStatus = () => {
+        const { heroSize, threatSize } = this.props
+        const safeLength = (heroSize + threatSize) / 2
+        const sizeFix = (threatSize - heroSize) / 2
+        const hero = this.state.hero
+
+        if (this.state.threats.some((threat) =>
+                Math.abs(threat.x - hero.x + sizeFix) < safeLength && Math.abs(threat.y - hero.y + sizeFix) < safeLength
+            )) {
+            this.setState({
+                status: STATUS.stop,
+            })
+
+            return heroStates.trouble
+        }
+
+        return heroStates.normal
+    }
+
+    moveHero = () => {
+        const fieldPos = this.state.field
+        let x = Math.max(RedSquares.mousePos.x - this.props.heroSize / 2, fieldPos.left)
+        x = Math.min(x, fieldPos.right - this.props.heroSize)
+        let y = Math.max(RedSquares.mousePos.y - this.props.heroSize / 2, fieldPos.top)
+        y = Math.min(y, fieldPos.bottom - this.props.heroSize)
+
+        this.setState({
+            hero: {
+                x: x - fieldPos.left,
+                y: y - fieldPos.top,
+                status: this.getHeroStatus(),
+            }
         })
     }
 
@@ -284,15 +334,9 @@ export default class RedSquares extends Component {
                     ))}
                 </Field>
                 <div className={style.side}>
-                    <button onClick={this.reset}>Reset</button>
-                    <p>hero.x = {this.state.hero.x}</p>
-                    <p>hero.y = {this.state.hero.y}</p>
-                    <p>threat.id = {this.state.threats[0] && this.state.threats[0].id}</p>
-                    <p>threat.x = {this.state.threats[0] && this.state.threats[0].x}</p>
-                    <p>threat.y = {this.state.threats[0] && this.state.threats[0].y}</p>
-                    <p>threat.speed.x = {this.state.threats[0] && this.state.threats[0].speed.x}</p>
-                    <p>threat.speed.y = {this.state.threats[0] && this.state.threats[0].speed.y}</p>
-                    <p>threat.out = {this.state.threats[0] && this.state.threats[0].out ? 'true' : 'false'}</p>
+                    <button onClick={this.buttonPressProceed}>{this.getButtonName()}</button>
+                    {' (Press Space)'}
+                    <p>status = {this.state.status}</p>
                     <p>threats.length = {this.state.threats.length}</p>
                 </div>
             </div>
