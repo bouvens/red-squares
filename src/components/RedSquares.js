@@ -38,6 +38,7 @@ export default class RedSquares extends Component {
             status: heroStates.normal,
         },
         threats: [],
+        beats: 0,
     }
 
     componentDidMount () {
@@ -96,6 +97,7 @@ export default class RedSquares extends Component {
                 this.startInterval()
                 this.setState({
                     threats: [],
+                    beats: 0,
                 })
         }
     }
@@ -175,6 +177,12 @@ export default class RedSquares extends Component {
             if (canFlyAway && isGoingOut) {
                 threat.isOut = true
             } else {
+                if (isGoingOut) {
+                    this.setState({
+                        beats: this.state.beats + 1,
+                    })
+                }
+
                 threat.speed[axis] = (isGoingOut ? -1 : 1) * (threat.speed[axis] || 1)
             }
         }
@@ -274,14 +282,13 @@ export default class RedSquares extends Component {
         })
     }
 
-    getHeroStatus = () => {
+    getHeroStatus = (x, y) => {
         const { heroSize, threatSize } = this.props
         const safeLength = (heroSize + threatSize) / 2
         const sizeFix = (threatSize - heroSize) / 2
-        const hero = this.state.hero
 
         if (this.state.threats.some((threat) =>
-                Math.abs(threat.x - hero.x + sizeFix) < safeLength && Math.abs(threat.y - hero.y + sizeFix) < safeLength
+                Math.abs(threat.x - x + sizeFix) < safeLength && Math.abs(threat.y - y + sizeFix) < safeLength
             )) {
             this.setState({
                 status: STATUS.stop,
@@ -297,17 +304,21 @@ export default class RedSquares extends Component {
         const fieldPos = this.state.field
         let x = Math.max(RedSquares.mousePos.x - this.props.heroSize / 2, fieldPos.left)
         x = Math.min(x, fieldPos.right - this.props.heroSize)
+        x -= fieldPos.left
         let y = Math.max(RedSquares.mousePos.y - this.props.heroSize / 2, fieldPos.top)
         y = Math.min(y, fieldPos.bottom - this.props.heroSize)
+        y -= fieldPos.top
 
         this.setState({
             hero: {
-                x: x - fieldPos.left,
-                y: y - fieldPos.top,
-                status: this.getHeroStatus(),
+                x,
+                y,
+                status: this.getHeroStatus(x, y),
             }
         })
     }
+
+    getS = (num) => num !== 1 ? 's' : ''
 
     render () {
         return (
@@ -336,8 +347,8 @@ export default class RedSquares extends Component {
                 <div className={style.side}>
                     <button onClick={this.buttonPressProceed}>{this.getButtonName()}</button>
                     {' (Press Space)'}
-                    <p>status = {this.state.status}</p>
-                    <p>threats.length = {this.state.threats.length}</p>
+                    <h2>{this.state.beats || 'No'} beat{this.getS(this.state.beats)}</h2>
+                    <p>{this.state.threats.length || 'No'} threat{this.getS(this.state.threats.length)} on field</p>
                 </div>
             </div>
         )
