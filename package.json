@@ -6,6 +6,7 @@
   "scripts": {
     "build": "nwb build-react-app",
     "clean": "nwb clean-app",
+    "deploy": "gh-pages -d dist",
     "start": "nwb serve-react-app",
     "test": "nwb test-react",
     "test:coverage": "nwb test-react --coverage",
@@ -24,6 +25,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.9.0",
+    "gh-pages": "^0.12.0",
     "nwb": "0.13.x",
     "nwb-less": "^0.5.0"
   },
