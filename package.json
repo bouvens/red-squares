@@ -6,7 +6,7 @@
   "scripts": {
     "build": "nwb build-react-app",
     "clean": "nwb clean-app",
-    "deploy": "gh-pages -d dist",
+    "deploy": "nwb build-react-app && gh-pages -d dist",
     "start": "nwb serve-react-app",
     "test": "nwb test-react",
     "test:coverage": "nwb test-react --coverage",
