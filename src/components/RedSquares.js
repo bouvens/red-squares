@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import style from './RedSquares.less'
 import Field from './Field'
 import Square from './Square'
+import StateControl from './StateControl'
 
 const heroStates = {
     normal: {
@@ -22,12 +23,7 @@ const STATUS = {
 
 export default class RedSquares extends Component {
     static propTypes = {
-        frameLength: PropTypes.number.isRequired,
-        heroSize: PropTypes.number.isRequired,
-        threatSize: PropTypes.number.isRequired,
-        threatLimit: PropTypes.number.isRequired,
-        threatAddTimeout: PropTypes.number.isRequired,
-        threatRemoveProbability: PropTypes.number.isRequired,
+        defaults: PropTypes.objectOf(PropTypes.number).isRequired,
     }
 
     state = {
@@ -39,6 +35,15 @@ export default class RedSquares extends Component {
         },
         threats: [],
         beats: 0,
+        outs: 0,
+        frameLength: this.props.defaults.frameLength,
+        heroSize: this.props.defaults.heroSize,
+        threatSize: this.props.defaults.threatSize,
+        threatLimit: this.props.defaults.threatLimit,
+        threatAddTimeout: this.props.defaults.threatAddTimeout,
+        threatRemoveProbability: this.props.defaults.threatRemoveProbability,
+        fieldWidth: 640,
+        fieldHeight: 480,
     }
 
     componentDidMount () {
@@ -49,8 +54,8 @@ export default class RedSquares extends Component {
         setTimeout(() => this.setState({
             hero: {
                 ...this.state.hero,
-                x: (this.field.clientWidth - this.props.heroSize) / 2,
-                y: (this.field.clientHeight - this.props.heroSize) / 2,
+                x: (this.field.clientWidth - this.state.heroSize) / 2,
+                y: (this.field.clientHeight - this.state.heroSize) / 2,
             }
         }), 0)
         window.document.onkeyup = this.saveKeyPressed
@@ -92,7 +97,7 @@ export default class RedSquares extends Component {
                     status: STATUS.play,
                 })
                 this.frame = 0
-                this.lastTreatTime = 0 - (this.props.threatAddTimeout / this.props.frameLength)
+                this.lastTreatTime = 0 - (this.state.threatAddTimeout / this.state.frameLength)
                 clearInterval(this.interval)
                 this.startInterval()
                 this.setState({
@@ -127,7 +132,7 @@ export default class RedSquares extends Component {
     threatsIndex = 0
 
     startInterval = () => {
-        this.interval = setInterval(this.updateFrame, this.props.frameLength)
+        this.interval = setInterval(this.updateFrame, this.state.frameLength)
     }
 
     updateFrame = () => {
@@ -186,15 +191,20 @@ export default class RedSquares extends Component {
                 threat.speed[axis] = (isGoingOut ? -1 : 1) * (threat.speed[axis] || 1)
             }
         }
-        threat.isAroundField = Math.abs(lean) <= size * 3
+        if (Math.abs(lean) > size * 3) {
+            threat.isAroundField = false
+            this.setState({
+                outs: this.state.outs + 1
+            })
+        }
 
         return threat
     }
 
     beat = (field) => (threat) => {
         let newThreat = { ...threat }
-        const canFlyAway = Math.random() < 1 / this.props.threatRemoveProbability
-        const processThreat = this.processSpeed.bind(null, newThreat, this.props.threatSize, canFlyAway)
+        const canFlyAway = Math.random() < 1 / this.state.threatRemoveProbability
+        const processThreat = this.processSpeed.bind(null, newThreat, this.state.threatSize, canFlyAway)
 
         if (newThreat.x < 0) {
             newThreat = processThreat({
@@ -202,7 +212,7 @@ export default class RedSquares extends Component {
                 lean: newThreat.x,
             })
         }
-        const rightBorder = field.width - this.props.threatSize
+        const rightBorder = field.width - this.state.threatSize
         if (newThreat.x > rightBorder) {
             newThreat = processThreat({
                 axis: 'x',
@@ -216,7 +226,7 @@ export default class RedSquares extends Component {
                 lean: newThreat.y,
             })
         }
-        const bottomBorder = field.height - this.props.threatSize
+        const bottomBorder = field.height - this.state.threatSize
         if (newThreat.y > bottomBorder) {
             newThreat = processThreat({
                 axis: 'y',
@@ -228,7 +238,7 @@ export default class RedSquares extends Component {
     }
 
     addThreat = (field, threats) => {
-        const size = this.props.threatSize
+        const size = this.state.threatSize
         let x = Math.round(Math.random() * (field.width - size))
         let y = 0 - size
         let speed = {
@@ -272,8 +282,8 @@ export default class RedSquares extends Component {
         let threats = this.state.threats.map(this.beat(field))
         threats = threats.filter((threat) => threat.isAroundField)
 
-        if (threats.length < this.props.threatLimit
-            && this.frame >= this.lastTreatTime + (this.props.threatAddTimeout / this.props.frameLength)) {
+        if (threats.length < this.state.threatLimit
+            && this.frame >= this.lastTreatTime + (this.state.threatAddTimeout / this.state.frameLength)) {
             this.addThreat(field, threats)
         }
 
@@ -283,7 +293,7 @@ export default class RedSquares extends Component {
     }
 
     getHeroStatus = (x, y) => {
-        const { heroSize, threatSize } = this.props
+        const { heroSize, threatSize } = this.state
         const safeLength = (heroSize + threatSize) / 2
         const sizeFix = (threatSize - heroSize) / 2
 
@@ -302,11 +312,11 @@ export default class RedSquares extends Component {
 
     moveHero = () => {
         const fieldPos = this.state.field
-        let x = Math.max(RedSquares.mousePos.x - this.props.heroSize / 2, fieldPos.left)
-        x = Math.min(x, fieldPos.right - this.props.heroSize)
+        let x = Math.max(RedSquares.mousePos.x - this.state.heroSize / 2, fieldPos.left)
+        x = Math.min(x, fieldPos.right - this.state.heroSize)
         x -= fieldPos.left
-        let y = Math.max(RedSquares.mousePos.y - this.props.heroSize / 2, fieldPos.top)
-        y = Math.min(y, fieldPos.bottom - this.props.heroSize)
+        let y = Math.max(RedSquares.mousePos.y - this.state.heroSize / 2, fieldPos.top)
+        y = Math.min(y, fieldPos.bottom - this.state.heroSize)
         y -= fieldPos.top
 
         this.setState({
@@ -318,7 +328,33 @@ export default class RedSquares extends Component {
         })
     }
 
-    getS = (num) => num !== 1 ? 's' : ''
+    getS = (num) => (num !== 1 ? 's' : '')
+
+    IDS = {
+        frameLength: 'frameLength',
+        heroSize: 'heroSize',
+        threatSize: 'threatSize',
+        threatLimit: 'threatLimit',
+        threatAddTimeout: 'threatAddTimeout',
+        threatRemoveProbability: 'threatRemoveProbability',
+        fieldWidth: 'fieldWidth',
+        fieldHeight: 'fieldHeight',
+    }
+
+    changeHandler = (state) => (event) => {
+        const initialValue = event.target.value
+        let value
+
+        switch (state) {
+            case this.IDS.heroSize:
+            case this.IDS.threatSize:
+                value = parseInt(initialValue, 10) || 1
+                break
+            default:
+                value = initialValue
+        }
+        this.setState({ [state]: value })
+    }
 
     render () {
         return (
@@ -326,11 +362,13 @@ export default class RedSquares extends Component {
                 <Field
                     style={style.field}
                     refHandler={(elem) => { this.field = elem }}
+                    width={this.state.fieldWidth}
+                    height={this.state.fieldHeight}
                 >
                     <Square
                         style={this.state.hero.status.style}
                         refHandler={(elem) => { this.hero = elem }}
-                        size={this.props.heroSize}
+                        size={this.state.heroSize}
                         left={this.state.hero.x}
                         top={this.state.hero.y}
                     />
@@ -338,7 +376,7 @@ export default class RedSquares extends Component {
                         <Square
                             key={threat.id}
                             style={style.threat}
-                            size={this.props.threatSize}
+                            size={this.state.threatSize}
                             left={threat.x}
                             top={threat.y}
                         />
@@ -348,7 +386,55 @@ export default class RedSquares extends Component {
                     <button onClick={this.buttonPressProceed}>{this.getButtonName()}</button>
                     {' (Press Space)'}
                     <h2>{this.state.beats || 'No'} beat{this.getS(this.state.beats)}</h2>
+                    <h2>{this.state.outs || 'No'} out{this.getS(this.state.outs)}</h2>
                     <p>{this.state.threats.length || 'No'} threat{this.getS(this.state.threats.length)} on field</p>
+
+                    <StateControl.Connector
+                        state={this.state}
+                        onChange={this.changeHandler}
+                        onFocus={this.selectAll}
+                    >
+                        <StateControl.Input
+                            id={this.IDS.frameLength}
+                            label="Frame length (ms)"
+                            onChange={this.changeHandler}
+                        />
+                        <StateControl.Input
+                            id={this.IDS.heroSize}
+                            label="Hero size (px)"
+                            onChange={this.changeHandler}
+                        />
+                        <StateControl.Input
+                            id={this.IDS.threatSize}
+                            label="Threat size (px)"
+                            onChange={this.changeHandler}
+                        />
+                        <StateControl.Input
+                            id={this.IDS.threatLimit}
+                            label="Threat limit"
+                            onChange={this.changeHandler}
+                        />
+                        <StateControl.Input
+                            id={this.IDS.threatAddTimeout}
+                            label="Threat add timeout (ms)"
+                            onChange={this.changeHandler}
+                        />
+                        <StateControl.Input
+                            id={this.IDS.threatRemoveProbability}
+                            label="Threat remove probability (1/x)"
+                            onChange={this.changeHandler}
+                        />
+                        <StateControl.Input
+                            id={this.IDS.fieldWidth}
+                            label="Field width (px)"
+                            onChange={this.changeHandler}
+                        />
+                        <StateControl.Input
+                            id={this.IDS.fieldHeight}
+                            label="Field height (px)"
+                            onChange={this.changeHandler}
+                        />
+                    </StateControl.Connector>
                 </div>
             </div>
         )

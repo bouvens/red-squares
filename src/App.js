@@ -12,7 +12,7 @@ const SETTINGS = {
 }
 
 const App = () => (
-    <RedSquares {...SETTINGS} />
+    <RedSquares defaults={SETTINGS} />
 )
 
 export default App
