@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
-import { STATUS } from '../constants/game'
-import { heroStates } from '../constants/hero'
+import { gameStatus, heroStates } from '../constants'
 import style from './RedSquares.less'
+import InputCatcher from '../inputCatcher'
 import Field from './Field'
 import Square from './Square'
 import StateControl from './StateControl'
@@ -11,8 +11,25 @@ export default class RedSquares extends Component {
         defaults: PropTypes.objectOf(PropTypes.number).isRequired,
     }
 
+    constructor (props) {
+        super(props)
+        this.inputCatcher = new InputCatcher({
+            ' ': this.spacePressProceed,
+        })
+
+        setTimeout(() => this.setState({
+            hero: {
+                ...this.state.hero,
+                x: (this.field.clientWidth - this.state.heroSize) / 2,
+                y: (this.field.clientHeight - this.state.heroSize) / 2,
+            }
+        }), 0)
+
+        this.startInterval()
+    }
+
     state = {
-        status: STATUS.stop,
+        status: gameStatus.stop,
         hero: {
             x: 0,
             y: 0,
@@ -32,50 +49,22 @@ export default class RedSquares extends Component {
         sideWidth: this.props.defaults.sideWidth,
     }
 
-    componentDidMount () {
-        document.onmousemove = this.saveMousePos
-
-        setTimeout(() => this.setState({
-            hero: {
-                ...this.state.hero,
-                x: (this.field.clientWidth - this.state.heroSize) / 2,
-                y: (this.field.clientHeight - this.state.heroSize) / 2,
-            }
-        }), 0)
-        window.document.onkeyup = this.saveKeyPressed
-
-        this.startInterval()
-    }
-
-    static mousePos = {}
-
-    saveMousePos = (e) => {
-        RedSquares.mousePos = {
-            x: e.pageX,
-            y: e.pageY,
-        }
-    }
-
-    static keyPressed = []
-
-    saveKeyPressed = ({ key }) => RedSquares.keyPressed.push(key)
-
     spacePressProceed = () => {
         switch (this.state.status) {
-            case STATUS.play:
+            case gameStatus.play:
                 this.setState({
-                    status: STATUS.pause,
+                    status: gameStatus.pause,
                 })
                 break
-            case STATUS.pause:
+            case gameStatus.pause:
                 this.setState({
-                    status: STATUS.play,
+                    status: gameStatus.play,
                 })
                 break
-            case STATUS.stop:
+            case gameStatus.stop:
             default:
                 this.setState({
-                    status: STATUS.play,
+                    status: gameStatus.play,
                 })
                 this.frame = 0
                 this.lastTreatTime = 0 - (this.state.threatAddTimeout / this.state.frameLength)
@@ -90,36 +79,25 @@ export default class RedSquares extends Component {
 
     getButtonName = () => {
         switch (this.state.status) {
-            case STATUS.play:
+            case gameStatus.play:
                 return 'Pause'
-            case STATUS.pause:
+            case gameStatus.pause:
                 return 'Resume'
-            case STATUS.stop:
+            case gameStatus.stop:
                 return 'Start'
             default:
                 return 'WAT'
         }
     }
 
-    keymap = {
-        ' ': this.spacePressProceed,
-    }
-
-    reactToKeys = () => {
-        RedSquares.keyPressed.forEach((key) => this.keymap[key] && this.keymap[key]())
-        RedSquares.keyPressed = []
-    }
-
-    threatsIndex = 0
-
     startInterval = () => {
         this.interval = setInterval(this.updateFrame, this.state.frameLength)
     }
 
     updateFrame = () => {
-        this.reactToKeys()
+        this.inputCatcher.reactToKeys()
 
-        if (this.state.status === STATUS.play) {
+        if (this.state.status === gameStatus.play) {
             this.moveThreats()
             this.controlThreats()
             this.moveHero()
@@ -214,6 +192,7 @@ export default class RedSquares extends Component {
         return newThreat
     }
 
+    threatsIndex = 0
     addThreat = (threats) => {
         const size = this.state.threatSize
         let x = Math.round(Math.random() * (this.state.fieldWidth - size))
@@ -277,7 +256,7 @@ export default class RedSquares extends Component {
                 Math.abs(threat.x - x + sizeFix) < safeLength && Math.abs(threat.y - y + sizeFix) < safeLength
             )) {
             this.setState({
-                status: STATUS.stop,
+                status: gameStatus.stop,
             })
 
             return heroStates.trouble
@@ -289,10 +268,10 @@ export default class RedSquares extends Component {
     moveHero = () => {
         const fieldPos = this.getFieldSize()
 
-        let x = Math.max(RedSquares.mousePos.x - this.state.heroSize / 2, fieldPos.left)
+        let x = Math.max(InputCatcher.mousePos.x - this.state.heroSize / 2, fieldPos.left)
         x = Math.min(x, fieldPos.right - this.state.heroSize)
         x -= fieldPos.left
-        let y = Math.max(RedSquares.mousePos.y - this.state.heroSize / 2, fieldPos.top)
+        let y = Math.max(InputCatcher.mousePos.y - this.state.heroSize / 2, fieldPos.top)
         y = Math.min(y, fieldPos.bottom - this.state.heroSize)
         y -= fieldPos.top
 

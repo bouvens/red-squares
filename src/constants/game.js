@@ -5,12 +5,12 @@ export const DEFAULTS = {
     threatLimit: 10,
     threatAddTimeout: 1500,
     threatRemoveProbability: 20,
-    fieldWidth: 640,
-    fieldHeight: 480,
+    fieldWidth: 800,
+    fieldHeight: 600,
     sideWidth: 200,
 }
 
-export const STATUS = {
+export const gameStatus = {
     play: 'play',
     pause: 'pause',
     stop: 'stop',
