@@ -1,25 +1,10 @@
 import React, { Component, PropTypes } from 'react'
+import { STATUS } from '../constants/game'
+import { heroStates } from '../constants/hero'
 import style from './RedSquares.less'
 import Field from './Field'
 import Square from './Square'
 import StateControl from './StateControl'
-
-const heroStates = {
-    normal: {
-        id: 'normal',
-        style: style.hero,
-    },
-    trouble: {
-        id: 'trouble',
-        style: style.heroInTrouble,
-    },
-}
-
-const STATUS = {
-    play: 'play',
-    pause: 'pause',
-    stop: 'stop',
-}
 
 export default class RedSquares extends Component {
     static propTypes = {
@@ -42,15 +27,14 @@ export default class RedSquares extends Component {
         threatLimit: this.props.defaults.threatLimit,
         threatAddTimeout: this.props.defaults.threatAddTimeout,
         threatRemoveProbability: this.props.defaults.threatRemoveProbability,
-        fieldWidth: 640,
-        fieldHeight: 480,
+        fieldWidth: this.props.defaults.fieldWidth,
+        fieldHeight: this.props.defaults.fieldHeight,
+        sideWidth: this.props.defaults.sideWidth,
     }
 
     componentDidMount () {
         document.onmousemove = this.saveMousePos
 
-        this.saveFieldSize()
-        window.onresize = this.saveFieldSize
         setTimeout(() => this.setState({
             hero: {
                 ...this.state.hero,
@@ -63,12 +47,7 @@ export default class RedSquares extends Component {
         this.startInterval()
     }
 
-    static mousePos = {
-        x: 0,
-        y: 0,
-    }
-
-    keyPressed = []
+    static mousePos = {}
 
     saveMousePos = (e) => {
         RedSquares.mousePos = {
@@ -77,9 +56,11 @@ export default class RedSquares extends Component {
         }
     }
 
-    saveKeyPressed = ({ key }) => this.keyPressed.push(key)
+    static keyPressed = []
 
-    buttonPressProceed = () => {
+    saveKeyPressed = ({ key }) => RedSquares.keyPressed.push(key)
+
+    spacePressProceed = () => {
         switch (this.state.status) {
             case STATUS.play:
                 this.setState({
@@ -121,12 +102,12 @@ export default class RedSquares extends Component {
     }
 
     keymap = {
-        ' ': this.buttonPressProceed,
+        ' ': this.spacePressProceed,
     }
 
     reactToKeys = () => {
-        this.keyPressed.forEach((key) => this.keymap[key] && this.keymap[key]())
-        this.keyPressed = []
+        RedSquares.keyPressed.forEach((key) => this.keymap[key] && this.keymap[key]())
+        RedSquares.keyPressed = []
     }
 
     threatsIndex = 0
@@ -146,19 +127,15 @@ export default class RedSquares extends Component {
         }
     }
 
-    saveFieldSize = () => {
+    getFieldSize = () => {
         const fieldRect = this.field
         // TODO check and browsers and rewrite like https://learn.javascript.ru/coordinates-document
-        this.setState({
-            field: {
-                left: fieldRect.offsetLeft,
-                top: fieldRect.offsetTop,
-                right: fieldRect.offsetLeft + fieldRect.clientWidth,
-                bottom: fieldRect.offsetTop + fieldRect.clientHeight,
-                width: fieldRect.clientWidth,
-                height: fieldRect.clientHeight,
-            }
-        })
+        return {
+            left: fieldRect.offsetLeft,
+            top: fieldRect.offsetTop,
+            right: fieldRect.offsetLeft + this.state.fieldWidth,
+            bottom: fieldRect.offsetTop + this.state.fieldHeight,
+        }
     }
 
     moveThreats = () => {
@@ -201,7 +178,7 @@ export default class RedSquares extends Component {
         return threat
     }
 
-    beat = (field) => (threat) => {
+    beat = (threat) => {
         let newThreat = { ...threat }
         const canFlyAway = Math.random() < 1 / this.state.threatRemoveProbability
         const processThreat = this.processSpeed.bind(null, newThreat, this.state.threatSize, canFlyAway)
@@ -212,7 +189,7 @@ export default class RedSquares extends Component {
                 lean: newThreat.x,
             })
         }
-        const rightBorder = field.width - this.state.threatSize
+        const rightBorder = this.state.fieldWidth - this.state.threatSize
         if (newThreat.x > rightBorder) {
             newThreat = processThreat({
                 axis: 'x',
@@ -226,7 +203,7 @@ export default class RedSquares extends Component {
                 lean: newThreat.y,
             })
         }
-        const bottomBorder = field.height - this.state.threatSize
+        const bottomBorder = this.state.fieldHeight - this.state.threatSize
         if (newThreat.y > bottomBorder) {
             newThreat = processThreat({
                 axis: 'y',
@@ -237,9 +214,9 @@ export default class RedSquares extends Component {
         return newThreat
     }
 
-    addThreat = (field, threats) => {
+    addThreat = (threats) => {
         const size = this.state.threatSize
-        let x = Math.round(Math.random() * (field.width - size))
+        let x = Math.round(Math.random() * (this.state.fieldWidth - size))
         let y = 0 - size
         let speed = {
             x: Math.round(Math.random() * 8 - 4),
@@ -248,18 +225,18 @@ export default class RedSquares extends Component {
 
         if (Math.random() < 0.5) {
             x = 0 - size
-            y = Math.round(Math.random() * (field.height - size))
+            y = Math.round(Math.random() * (this.state.fieldHeight - size))
             speed = {
                 x: Math.ceil(Math.random() * 4),
                 y: Math.round(Math.random() * 8 - 4),
             }
 
             if (Math.random() < 0.5) {
-                x = field.width
+                x = this.state.fieldWidth
                 speed.x = -speed.x
             }
         } else if (Math.random() < 0.5) {
-            y = field.height
+            y = this.state.fieldHeight
             speed.y = -speed.y
         }
         threats.push({
@@ -278,13 +255,12 @@ export default class RedSquares extends Component {
     }
 
     controlThreats = () => {
-        const field = this.state.field
-        let threats = this.state.threats.map(this.beat(field))
+        let threats = this.state.threats.map(this.beat)
         threats = threats.filter((threat) => threat.isAroundField)
 
         if (threats.length < this.state.threatLimit
             && this.frame >= this.lastTreatTime + (this.state.threatAddTimeout / this.state.frameLength)) {
-            this.addThreat(field, threats)
+            this.addThreat(threats)
         }
 
         this.setState({
@@ -311,7 +287,8 @@ export default class RedSquares extends Component {
     }
 
     moveHero = () => {
-        const fieldPos = this.state.field
+        const fieldPos = this.getFieldSize()
+
         let x = Math.max(RedSquares.mousePos.x - this.state.heroSize / 2, fieldPos.left)
         x = Math.min(x, fieldPos.right - this.state.heroSize)
         x -= fieldPos.left
@@ -328,7 +305,7 @@ export default class RedSquares extends Component {
         })
     }
 
-    getS = (num) => (num !== 1 ? 's' : '')
+    getS = (name, num) => name + (num !== 1 ? 's' : '')
 
     IDS = {
         frameLength: 'frameLength',
@@ -348,6 +325,8 @@ export default class RedSquares extends Component {
         switch (state) {
             case this.IDS.heroSize:
             case this.IDS.threatSize:
+            case this.IDS.fieldWidth:
+            case this.IDS.fieldHeight:
                 value = parseInt(initialValue, 10) || 1
                 break
             default:
@@ -358,7 +337,7 @@ export default class RedSquares extends Component {
 
     render () {
         return (
-            <div className={style.wrapper}>
+            <div className={style.wrapper} style={{ width: `${this.state.fieldWidth + this.state.sideWidth}px` }}>
                 <Field
                     style={style.field}
                     refHandler={(elem) => { this.field = elem }}
@@ -382,12 +361,12 @@ export default class RedSquares extends Component {
                         />
                     ))}
                 </Field>
-                <div className={style.side}>
-                    <button onClick={this.buttonPressProceed}>{this.getButtonName()}</button>
+                <div className={style.side} style={{ width: `${this.state.sideWidth}px` }}>
+                    <button onClick={this.spacePressProceed}>{this.getButtonName()}</button>
                     {' (Press Space)'}
-                    <h2>{this.state.beats || 'No'} beat{this.getS(this.state.beats)}</h2>
-                    <h2>{this.state.outs || 'No'} out{this.getS(this.state.outs)}</h2>
-                    <p>{this.state.threats.length || 'No'} threat{this.getS(this.state.threats.length)} on field</p>
+                    <h2>{this.state.beats || 'No'} {this.getS('beat', this.state.beats)}</h2>
+                    <h2>{this.state.outs || 'No'} {this.getS('out', this.state.outs)}</h2>
+                    <p>{this.state.threats.length || 'No'} {this.getS('threat', this.state.threats.length)} on field</p>
 
                     <StateControl.Connector
                         state={this.state}

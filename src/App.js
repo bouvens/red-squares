@@ -1,18 +1,10 @@
 import React from 'react'
 import './App.css'
+import { DEFAULTS } from './constants/game'
 import RedSquares from './components/RedSquares'
 
-const SETTINGS = {
-    frameLength: 20,
-    heroSize: 50,
-    threatSize: 30,
-    threatLimit: 10,
-    threatAddTimeout: 1500,
-    threatRemoveProbability: 20,
-}
-
 const App = () => (
-    <RedSquares defaults={SETTINGS} />
+    <RedSquares defaults={DEFAULTS} />
 )
 
 export default App
