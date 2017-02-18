@@ -1,4 +1,4 @@
-import style from '../components/RedSquares.less'
+import style from '../components/Hero.less'
 
 export const heroStates = {
     normal: {

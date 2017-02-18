@@ -77,18 +77,13 @@ export default class RedSquares extends Component {
         }
     }
 
-    getButtonName = () => {
-        switch (this.state.status) {
-            case gameStatus.play:
-                return 'Pause'
-            case gameStatus.pause:
-                return 'Resume'
-            case gameStatus.stop:
-                return 'Start'
-            default:
-                return 'WAT'
-        }
+    buttonName = {
+        [gameStatus.play]: 'Pause',
+        [gameStatus.pause]: 'Resume',
+        [gameStatus.stop]: 'Start',
     }
+
+    getButtonName = () => this.buttonName[this.state.status]
 
     startInterval = () => {
         this.interval = setInterval(this.updateFrame, this.state.frameLength)
@@ -98,34 +93,10 @@ export default class RedSquares extends Component {
         this.inputCatcher.reactToKeys()
 
         if (this.state.status === gameStatus.play) {
-            this.moveThreats()
             this.controlThreats()
             this.moveHero()
             this.frame += 1
         }
-    }
-
-    getFieldSize = () => {
-        const fieldRect = this.field
-        // TODO check and browsers and rewrite like https://learn.javascript.ru/coordinates-document
-        return {
-            left: fieldRect.offsetLeft,
-            top: fieldRect.offsetTop,
-            right: fieldRect.offsetLeft + this.state.fieldWidth,
-            bottom: fieldRect.offsetTop + this.state.fieldHeight,
-        }
-    }
-
-    moveThreats = () => {
-        this.setState({
-            threats: this.state.threats.map((threat) => (
-                {
-                    ...threat,
-                    x: threat.x + threat.speed.x,
-                    y: threat.y + threat.speed.y,
-                }
-            ))
-        })
     }
 
     processSpeed = (oldThreat, size, canFlyAway, options) => {
@@ -234,7 +205,15 @@ export default class RedSquares extends Component {
     }
 
     controlThreats = () => {
-        let threats = this.state.threats.map(this.beat)
+        let threats = this.state.threats
+            .map((threat) => (
+                {
+                    ...threat,
+                    x: threat.x + threat.speed.x,
+                    y: threat.y + threat.speed.y,
+                }
+            ))
+            .map(this.beat)
         threats = threats.filter((threat) => threat.isAroundField)
 
         if (threats.length < this.state.threatLimit
@@ -263,6 +242,17 @@ export default class RedSquares extends Component {
         }
 
         return heroStates.normal
+    }
+
+    getFieldSize = () => {
+        const fieldRect = this.field
+        // TODO check and browsers and rewrite like https://learn.javascript.ru/coordinates-document
+        return {
+            left: fieldRect.offsetLeft,
+            top: fieldRect.offsetTop,
+            right: fieldRect.offsetLeft + this.state.fieldWidth,
+            bottom: fieldRect.offsetTop + this.state.fieldHeight,
+        }
     }
 
     moveHero = () => {

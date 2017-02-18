@@ -1,3 +1,5 @@
+@sidePadding: 20px;
+
 * {
   box-sizing: border-box;
 }
@@ -10,23 +12,13 @@
 
 .side {
   float: left;
-  padding-left: 20px;
+  padding-left: @sidePadding;
 }
 
 .field {
   background-color: blanchedalmond;
   position: relative;
   float: left;
-}
-
-.hero {
-  background-color: crimson;
-  position: absolute;
-}
-
-.heroInTrouble {
-  &:extend(.hero);
-  opacity: 0.3;
 }
 
 .threat {
