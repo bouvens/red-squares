@@ -9,7 +9,7 @@ import heroStyle from '../components/Hero.less'
 import style from './RedSquares.less'
 import Field from './Field'
 import Square from './Square'
-import StateControl from './StateControl'
+import { Connector, Input } from './StateControl'
 
 const heroStyleMap = {
     [heroStates.normal]: heroStyle.hero,
@@ -108,12 +108,14 @@ export default class RedSquares extends React.Component {
         this.props.setState(state, value)
     }
 
+    refHandler = (elem) => { this.field = elem }
+
     render () {
         return (
             <div className={style.wrapper} style={{ width: `${this.props.fieldWidth + this.props.sideWidth}px` }}>
                 <Field
                     style={style.field}
-                    refHandler={(elem) => { this.field = elem }}
+                    refHandler={this.refHandler}
                     width={this.props.fieldWidth}
                     height={this.props.fieldHeight}
                 >
@@ -141,43 +143,43 @@ export default class RedSquares extends React.Component {
                     <p>{this.getS('threat', this.props.threats.length)} on field</p>
                     <p>{this.getS('frame', this.props.frame)}</p>
 
-                    <StateControl.Connector
+                    <Connector
                         state={this.props}
                         onChange={this.changeHandler}
                     >
-                        <StateControl.Input
+                        <Input
                             id={IDS.frameLength}
                             label="Frame length (ms)"
                         />
-                        <StateControl.Input
+                        <Input
                             id={IDS.heroSize}
                             label="Hero size (px)"
                         />
-                        <StateControl.Input
+                        <Input
                             id={IDS.threatSize}
                             label="Threat size (px)"
                         />
-                        <StateControl.Input
+                        <Input
                             id={IDS.threatLimit}
                             label="Threat limit"
                         />
-                        <StateControl.Input
+                        <Input
                             id={IDS.threatAddTimeout}
                             label="Threat add timeout (ms)"
                         />
-                        <StateControl.Input
+                        <Input
                             id={IDS.threatRemoveProbability}
                             label="Threat remove probability (1/x)"
                         />
-                        <StateControl.Input
+                        <Input
                             id={IDS.fieldWidth}
                             label="Field width (px)"
                         />
-                        <StateControl.Input
+                        <Input
                             id={IDS.fieldHeight}
                             label="Field height (px)"
                         />
-                    </StateControl.Connector>
+                    </Connector>
                 </div>
             </div>
         )
