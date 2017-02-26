@@ -36,6 +36,7 @@ const heroStyleMap = {
         threatLimit: state.threats.limit,
         threatAddTimeout: state.threats.addTimeout,
         threatRemoveProbability: state.threats.removeProbability,
+        frame: state.game.frame,
     }),
     (dispatch) => bindActionCreators({
         processSpacePress: actions.game.processSpacePress,
@@ -66,6 +67,7 @@ export default class RedSquares extends React.Component {
         threatLimit: PropTypes.number,
         threatAddTimeout: PropTypes.number,
         threatRemoveProbability: PropTypes.number,
+        frame: PropTypes.number,
     }
 
     constructor (props) {
@@ -137,6 +139,7 @@ export default class RedSquares extends React.Component {
                     <h2>{this.getS('beat', this.props.beats)}</h2>
                     <h2>{this.getS('out', this.props.outs)}</h2>
                     <p>{this.getS('threat', this.props.threats.length)} on field</p>
+                    <p>{this.getS('frame', this.props.frame)}</p>
 
                     <StateControl.Connector
                         state={this.props}

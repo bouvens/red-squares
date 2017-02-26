@@ -27,10 +27,10 @@ export default function (state = initialState, action) {
                 index: state.index + action.added,
                 lastTime: action.lastTime,
             }
-        case types.SET_THREATS_STATE:
+        case types.SET_STATE:
             return {
                 ...state,
-                ...action.data,
+                ...action.data.threats,
             }
         default:
             return state

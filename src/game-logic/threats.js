@@ -1,4 +1,4 @@
-const processSpeed = ({ newThreat, size, canFlyAway }) => ({ axis, lean }) => {
+const processSpeed = (newThreat, size, canFlyAway) => (axis, lean) => {
     newThreat.isGoingOut = Math.sign(lean) === Math.sign(newThreat.speed[axis])
 
     if (!newThreat.isOut) {
@@ -8,55 +8,41 @@ const processSpeed = ({ newThreat, size, canFlyAway }) => ({ axis, lean }) => {
             newThreat.speed[axis] = (newThreat.isGoingOut ? -1 : 1) * (newThreat.speed[axis] || 1)
         }
     }
-    if (Math.abs(lean) > size * 2) {
+    if (Math.abs(lean) > size * 3) {
         newThreat.isAroundField = false
     }
 
     return newThreat
 }
 
-const beat = ({
-    removeProbability,
-    size,
-    fieldWidth,
-    fieldHeight,
-}) => (threat) => {
+const beat = (removeProbability,
+              size,
+              fieldWidth,
+              fieldHeight,) => (threat) => {
     let newThreat = { ...threat }
     const canFlyAway = Math.random() < 1 / removeProbability
-    const processThreat = processSpeed({ newThreat, size, canFlyAway })
+    const processThreat = processSpeed(newThreat, size, canFlyAway)
 
     if (newThreat.x < 0) {
-        newThreat = processThreat({
-            axis: 'x',
-            lean: newThreat.x,
-        })
+        newThreat = processThreat('x', newThreat.x)
     }
     const rightBorder = fieldWidth - size
     if (newThreat.x > rightBorder) {
-        newThreat = processThreat({
-            axis: 'x',
-            lean: newThreat.x - rightBorder,
-        })
+        newThreat = processThreat('x', newThreat.x - rightBorder)
     }
 
     if (newThreat.y < 0) {
-        newThreat = processThreat({
-            axis: 'y',
-            lean: newThreat.y,
-        })
+        newThreat = processThreat('y', newThreat.y)
     }
     const bottomBorder = fieldHeight - size
     if (newThreat.y > bottomBorder) {
-        newThreat = processThreat({
-            axis: 'y',
-            lean: newThreat.y - bottomBorder,
-        })
+        newThreat = processThreat('y', newThreat.y - bottomBorder)
     }
 
     return newThreat
 }
 
-const newThreat = ({ size, index, fieldWidth, fieldHeight, maxSpeed }) => {
+const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
     let x = Math.round(Math.random() * (fieldWidth - size))
     let y = 0 - size
     let speed = {
@@ -90,21 +76,11 @@ const newThreat = ({ size, index, fieldWidth, fieldHeight, maxSpeed }) => {
     }
 }
 
-export function controlThreats (
-    threats,
-    removeProbability,
-    limit,
-    frame,
-    lastTime,
-    addTimeout,
-    frameLength,
-    size,
-    index,
-    fieldWidth,
-    fieldHeight,
-    maxSpeed,
-) {
-    threats = threats
+export function controlThreats (state) {
+    const { threats } = state
+    const { frame, frameLength, fieldWidth, fieldHeight } = state.game
+
+    let newThreats = threats.threats
         .map((threat) => (
             {
                 ...threat,
@@ -112,39 +88,50 @@ export function controlThreats (
                 y: threat.y + threat.speed.y,
             }
         ))
-        .map(beat({
-            removeProbability,
-            size,
+        .map(beat(
+            threats.removeProbability,
+            threats.size,
             fieldWidth,
             fieldHeight,
-        }))
-    const oldThreatsNum = threats.length
-    threats = threats.filter((threat) => threat.isAroundField)
-    const outs = oldThreatsNum - threats.length
+        ))
+    const oldThreatsNum = newThreats.length
+    newThreats = newThreats.filter((threat) => threat.isAroundField)
+    const outs = oldThreatsNum - newThreats.length
 
     let beats = 0
 
-    threats = threats.map((threat) => {
+    newThreats = newThreats.map((threat) => {
         if (threat.isGoingOut && !threat.isOut) {
             beats += 1
             delete threat.isGoingOut
         }
-
         return threat
-    })
+    }, 0)
 
     let added = 0
-    if (threats.length < limit && frame >= lastTime + (addTimeout / frameLength)) {
-        threats.push(newThreat({ size, index, fieldWidth, fieldHeight, maxSpeed }))
+    if (newThreats.length < threats.limit && frame >= threats.lastTime + (threats.addTimeout / frameLength)) {
+        newThreats.push(newThreat(
+            threats.size,
+            threats.index,
+            fieldWidth,
+            fieldHeight,
+            threats.maxSpeed,
+        ))
         added = 1
-        lastTime = frame
     }
 
     return {
-        threats,
-        beats,
-        outs,
-        added,
-        lastTime,
+        ...state,
+        game: {
+            ...state.game,
+            beats: state.game.beats + beats,
+            outs: state.game.outs + outs,
+        },
+        threats: {
+            ...threats,
+            threats: newThreats,
+            lastTime: added ? frame : threats.lastTime,
+            index: threats.index + added,
+        },
     }
 }

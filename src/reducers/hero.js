@@ -16,10 +16,10 @@ export default function (state = initialState, action) {
                 ...state,
                 ...action.hero,
             }
-        case types.SET_HERO_STATE:
+        case types.SET_STATE:
             return {
                 ...state,
-                ...action.data,
+                ...action.data.hero,
             }
         default:
             return state

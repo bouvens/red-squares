@@ -36,10 +36,10 @@ export default function (state = initialState, action) {
                 outs: state.outs + action.outs,
                 frame: state.frame + 1,
             }
-        case types.SET_GAME_STATE:
+        case types.SET_STATE:
             return {
                 ...state,
-                ...action.data,
+                ...action.data.game,
             }
         default:
             return state

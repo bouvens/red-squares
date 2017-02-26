@@ -2,6 +2,7 @@ import * as types from '../constants/actionTypes'
 import { gameStatus, IDS } from '../constants/game'
 import { controlThreats } from '../game-logic/threats'
 import { moveHero } from '../game-logic/hero'
+import { combineProcessors } from '../utils/funcs'
 
 export function processSpacePress () {
     return (dispatch, getState) => {
@@ -28,35 +29,20 @@ export function processSpacePress () {
     }
 }
 
+const nextFrame = combineProcessors(controlThreats, moveHero)
+
 export function updateFrame (mousePos, field) {
     return (dispatch, getState) => {
         const state = getState()
 
         if (state.game.status === gameStatus.play) {
-            const controlled = controlThreats(
-                state.threats.threats,
-                state.threats.removeProbability,
-                state.threats.limit,
-                state.game.frame,
-                state.threats.lastTime,
-                state.threats.addTimeout,
-                state.game.frameLength,
-                state.threats.size,
-                state.threats.index,
-                state.game.fieldWidth,
-                state.game.fieldHeight,
-                state.threats.maxSpeed,
-            )
             dispatch({
-                type: types.UPDATE_FRAME,
-                ...controlled,
-                ...moveHero(
+                type: types.SET_STATE,
+                data: nextFrame({
+                    ...state,
                     mousePos,
                     field,
-                    state.hero.size,
-                    state.threats.size,
-                    controlled.threats,
-                ),
+                }),
             })
         }
     }
@@ -69,49 +55,61 @@ export function setState (name, value) {
             case IDS.fieldWidth:
             case IDS.fieldHeight:
                 dispatch({
-                    type: types.SET_GAME_STATE,
+                    type: types.SET_STATE,
                     data: {
-                        [name]: value,
+                        game: {
+                            [name]: value
+                        },
                     },
                 })
                 break
             case IDS.heroSize:
                 dispatch({
-                    type: types.SET_HERO_STATE,
+                    type: types.SET_STATE,
                     data: {
-                        size: value,
+                        hero: {
+                            size: value
+                        },
                     },
                 })
                 break
             case IDS.threatSize:
                 dispatch({
-                    type: types.SET_THREATS_STATE,
+                    type: types.SET_STATE,
                     data: {
-                        size: value,
+                        threats: {
+                            size: value
+                        },
                     },
                 })
                 break
             case IDS.threatLimit:
                 dispatch({
-                    type: types.SET_THREATS_STATE,
+                    type: types.SET_STATE,
                     data: {
-                        limit: value,
+                        threats: {
+                            limit: value
+                        },
                     },
                 })
                 break
             case IDS.threatAddTimeout:
                 dispatch({
-                    type: types.SET_THREATS_STATE,
+                    type: types.SET_STATE,
                     data: {
-                        addTimeout: value,
+                        threats: {
+                            addTimeout: value
+                        },
                     },
                 })
                 break
             case IDS.threatRemoveProbability:
                 dispatch({
-                    type: types.SET_THREATS_STATE,
+                    type: types.SET_STATE,
                     data: {
-                        removeProbability: value,
+                        threats: {
+                            removeProbability: value
+                        },
                     },
                 })
                 break
