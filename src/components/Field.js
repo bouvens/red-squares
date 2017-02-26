@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { noOp } from '../utils'
+import { noOp } from '../utils/funcs'
 
 const Field = (props) => (
     <div

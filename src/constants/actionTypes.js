@@ -1,0 +1,6 @@
+export const SET_STATUS = 'SET_STATUS'
+export const START_NEW = 'START_NEW'
+export const UPDATE_FRAME = 'UPDATE_FRAME'
+export const SET_GAME_STATE = 'SET_GAME_STATE'
+export const SET_HERO_STATE = 'SET_HERO_STATE'
+export const SET_THREATS_STATE = 'SET_THREATS_STATE'
