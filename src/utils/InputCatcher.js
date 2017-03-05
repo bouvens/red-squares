@@ -13,6 +13,7 @@ export default class InputCatcher {
         InputCatcher.instance = this
 
         document.onmousemove = this.saveMousePos
+        window.document.onkeydown = this.preventing
         window.document.onkeyup = this.saveKeyPressed
     }
 
@@ -20,6 +21,12 @@ export default class InputCatcher {
         InputCatcher.mousePos = {
             x: e.pageX,
             y: e.pageY,
+        }
+    }
+
+    preventing = (e) => {
+        if (e.key === ' ') {
+            e.preventDefault()
         }
     }
 
