@@ -2,14 +2,14 @@ export default class InputCatcher {
     static instance
     static mousePos = {}
     static keyPressed = []
-    keymap = []
+    initialKeymap = {}
 
     constructor (keymap) {
+        this.initialKeymap = keymap
+
         if (InputCatcher.instance) {
             return InputCatcher.instance
         }
-
-        this.keymap = keymap
         InputCatcher.instance = this
 
         document.onmousemove = this.saveMousePos
@@ -32,8 +32,8 @@ export default class InputCatcher {
 
     saveKeyPressed = ({ key }) => InputCatcher.keyPressed.push(key)
 
-    reactToKeys = () => {
-        InputCatcher.keyPressed.forEach((key) => this.keymap[key] && this.keymap[key]())
+    reactToKeys = (keymap = this.initialKeymap) => {
+        InputCatcher.keyPressed.forEach((key) => keymap[key] && keymap[key]())
         InputCatcher.keyPressed = []
     }
 }

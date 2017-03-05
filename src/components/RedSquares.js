@@ -3,7 +3,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 import { heroStates } from '../constants/hero'
-import InputCatcher from '../utils/InputCatcher'
 import heroStyle from '../components/Hero.less'
 import style from './RedSquares.less'
 import Field from './Field'
@@ -32,6 +31,7 @@ const heroStyleMap = {
     }),
     (dispatch) => bindActionCreators({
         processSpacePress: actions.game.processSpacePress,
+        init: actions.game.init,
         updateFrame: actions.game.updateFrame,
     }, dispatch)
 )
@@ -50,20 +50,16 @@ export default class RedSquares extends React.Component {
         threatSize: PropTypes.number,
         threats: PropTypes.array,
         processSpacePress: PropTypes.func,
+        init: PropTypes.func,
         updateFrame: PropTypes.func,
     }
 
     componentWillMount () {
-        this.inputCatcher = new InputCatcher({
-            ' ': this.props.processSpacePress,
-        })
+        this.props.init()
 
-        setInterval(this.tick, this.props.frameLength)
-    }
-
-    tick = () => {
-        this.inputCatcher.reactToKeys()
-        this.props.updateFrame(InputCatcher.mousePos, this.getFieldSize())
+        setInterval(() => {
+            this.props.updateFrame(this.getFieldSize())
+        }, this.props.frameLength)
     }
 
     getFieldSize = () => {

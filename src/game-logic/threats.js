@@ -18,29 +18,30 @@ const processSpeed = (newThreat, size, canFlyAway) => (axis, lean) => {
 const beat = (removeProbability,
               size,
               fieldWidth,
-              fieldHeight,) => (threat) => {
-    let newThreat = { ...threat }
-    const canFlyAway = Math.random() < 1 / removeProbability
-    const processThreat = processSpeed(newThreat, size, canFlyAway)
+              fieldHeight) =>
+    (threat) => {
+        let newThreat = { ...threat }
+        const canFlyAway = Math.random() < 1 / removeProbability
+        const processThreat = processSpeed(newThreat, size, canFlyAway)
 
-    if (newThreat.x < 0) {
-        newThreat = processThreat('x', newThreat.x)
-    }
-    const rightBorder = fieldWidth - size
-    if (newThreat.x > rightBorder) {
-        newThreat = processThreat('x', newThreat.x - rightBorder)
-    }
+        if (newThreat.x < 0) {
+            newThreat = processThreat('x', newThreat.x)
+        }
+        const rightBorder = fieldWidth - size
+        if (newThreat.x > rightBorder) {
+            newThreat = processThreat('x', newThreat.x - rightBorder)
+        }
 
-    if (newThreat.y < 0) {
-        newThreat = processThreat('y', newThreat.y)
-    }
-    const bottomBorder = fieldHeight - size
-    if (newThreat.y > bottomBorder) {
-        newThreat = processThreat('y', newThreat.y - bottomBorder)
-    }
+        if (newThreat.y < 0) {
+            newThreat = processThreat('y', newThreat.y)
+        }
+        const bottomBorder = fieldHeight - size
+        if (newThreat.y > bottomBorder) {
+            newThreat = processThreat('y', newThreat.y - bottomBorder)
+        }
 
-    return newThreat
-}
+        return newThreat
+    }
 
 const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
     let x = Math.round(Math.random() * (fieldWidth - size))

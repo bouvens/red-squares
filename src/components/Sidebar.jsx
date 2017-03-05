@@ -11,6 +11,7 @@ import style from './RedSquares.less'
         sideWidth: state.game.sideWidth,
         status: state.game.status,
         beats: state.game.beats,
+        highestBeats: state.game.highestBeats,
         outs: state.game.outs,
         threatsLength: state.threats.threats.length,
         frame: state.game.frame,
@@ -33,6 +34,7 @@ export default class Sidebar extends React.Component {
         sideWidth: PropTypes.number,
         status: PropTypes.oneOf(Object.values(gameStatus)),
         beats: PropTypes.number,
+        highestBeats: PropTypes.number,
         outs: PropTypes.number,
         threatsLength: PropTypes.number,
         frame: PropTypes.number,
@@ -67,6 +69,7 @@ export default class Sidebar extends React.Component {
                 <button onClick={this.props.processSpacePress}>{buttonName[this.props.status]}</button>
                 {' (Press Space)'}
                 <h2>{this.getS('beat', this.props.beats)}</h2>
+                <p>Highest beats: {this.props.highestBeats}</p>
                 <h2>{this.getS('out', this.props.outs)}</h2>
                 <p>{this.getS('threat', this.props.threatsLength)} on field</p>
                 <p>{this.getS('frame', this.props.frame)}</p>

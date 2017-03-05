@@ -1,48 +1,62 @@
 import * as types from '../constants/actionTypes'
-import { gameStatus, IDS } from '../constants/game'
-import { controlThreats } from '../game-logic/threats'
-import { moveHero } from '../game-logic/hero'
+import { gameStatus, IDS, HIGHEST_BEATS } from '../constants/game'
+import InputCatcher from '../utils/InputCatcher'
 import { combineProcessors } from '../utils/funcs'
+import { spacePress, moveHero, controlThreats } from '../game-logic'
 
 export function processSpacePress () {
     return (dispatch, getState) => {
-        switch (getState().game.status) {
-            case gameStatus.play:
-                dispatch({
-                    type: types.SET_STATUS,
-                    status: gameStatus.pause,
-                })
-                break
-            case gameStatus.pause:
-                dispatch({
-                    type: types.SET_STATUS,
-                    status: gameStatus.play,
-                })
-                break
-            case gameStatus.stop:
-            default:
-                dispatch({
-                    type: types.START_NEW,
-                    lastTime: 0 - getState().threats.addTimeout / getState().game.frameLength,
-                })
-        }
+        dispatch({
+            type: types.SET_STATE,
+            data: spacePress(getState()),
+        })
+    }
+}
+
+export function init () {
+    return (dispatch) => {
+        dispatch({
+            type: types.INIT,
+            inputController: new InputCatcher(),
+            highestBeats: localStorage[HIGHEST_BEATS] ? parseInt(localStorage[HIGHEST_BEATS], 10) : 0,
+        })
     }
 }
 
 const nextFrame = combineProcessors(controlThreats, moveHero)
 
-export function updateFrame (mousePos, field) {
+export function updateFrame (field) {
     return (dispatch, getState) => {
-        const state = getState()
+        let data = getState()
 
-        if (state.game.status === gameStatus.play) {
+        data.game.inputController.reactToKeys({
+            ' ': () => {
+                data = spacePress(data)
+            }
+        })
+
+        if (data.game.status === gameStatus.play) {
+            data = nextFrame({
+                ...data,
+                mousePos: InputCatcher.mousePos,
+                field,
+            })
+
+            if (data.game.status === gameStatus.stop) {
+                localStorage.setItem(
+                    HIGHEST_BEATS,
+                    data.game.highestBeats = Math.max(data.game.beats, data.game.highestBeats)
+                )
+            }
+
             dispatch({
                 type: types.SET_STATE,
-                data: nextFrame({
-                    ...state,
-                    mousePos,
-                    field,
-                }),
+                data,
+            })
+        } else {
+            dispatch({
+                type: types.SET_STATE,
+                data,
             })
         }
     }

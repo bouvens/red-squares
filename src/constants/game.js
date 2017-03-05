@@ -1,3 +1,5 @@
+export const HIGHEST_BEATS = 'highestBeats'
+
 export const defaults = {
     frameLength: 20,
     heroSize: 50,
