@@ -1,64 +1,65 @@
 import * as types from '../constants/actionTypes'
-import { gameStatus, IDS, HIGHEST_BEATS } from '../constants/game'
+import { IDS, HIGHEST_BEATS } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
-import { combineProcessors } from '../utils/funcs'
-import { spacePress, moveHero, controlThreats } from '../game-logic'
+import { spacePress, gameDataUpdater } from '../game-logic'
+
+const spacePressAtStart = (state) => spacePress(state, performance.now())
 
 export function processSpacePress () {
     return (dispatch, getState) => {
         dispatch({
             type: types.SET_STATE,
-            data: spacePress(getState()),
+            data: spacePressAtStart(getState()),
         })
     }
 }
 
-export function init () {
-    return (dispatch) => {
-        dispatch({
-            type: types.INIT,
-            inputController: new InputCatcher(),
-            highestBeats: localStorage[HIGHEST_BEATS] ? parseInt(localStorage[HIGHEST_BEATS], 10) : 0,
-        })
-    }
-}
-
-const nextFrame = combineProcessors(controlThreats, moveHero)
-
-export function updateFrame (field) {
-    return (dispatch, getState) => {
+function updateFrame (dispatch, getState) {
+    return () => {
         let data = getState()
 
         data.game.inputController.reactToKeys({
             ' ': () => {
-                data = spacePress(data)
+                data = spacePressAtStart(data)
             }
         })
 
-        if (data.game.status === gameStatus.play) {
-            data = nextFrame({
-                ...data,
-                mousePos: InputCatcher.mousePos,
-                field,
-            })
-
-            if (data.game.status === gameStatus.stop) {
-                localStorage.setItem(
-                    HIGHEST_BEATS,
-                    data.game.highestBeats = Math.max(data.game.beats, data.game.highestBeats)
-                )
-            }
-
-            dispatch({
-                type: types.SET_STATE,
-                data,
-            })
-        } else {
-            dispatch({
-                type: types.SET_STATE,
-                data,
-            })
+        data = {
+            ...data,
+            mousePos: InputCatcher.mousePos,
+            field: data.game.redSquares.getFieldSize(),
         }
+
+        data.game.frame += 1
+        data = gameDataUpdater(data)
+
+        dispatch({
+            type: types.SET_STATE,
+            data,
+        })
+
+        const waitTime = data.game.startTime + data.game.frameLength * data.game.frame - performance.now()
+        if (waitTime < -1000) {
+            data.game.frame = Math.floor((performance.now() - data.game.startTime) / data.game.frameLength)
+        }
+
+        setTimeout(
+            updateFrame(dispatch, getState),
+            Math.max(waitTime, 0)
+        )
+    }
+}
+
+export function init (redSquares) {
+    return (dispatch, getState) => {
+        dispatch({
+            type: types.INIT,
+            redSquares,
+            inputController: new InputCatcher(),
+            highestBeats: localStorage[HIGHEST_BEATS] ? parseInt(localStorage[HIGHEST_BEATS], 10) : 0,
+        })
+
+        updateFrame(dispatch, getState)()
     }
 }
 

@@ -3,12 +3,14 @@ import { defaults, gameStatus } from '../constants/game'
 import { heroStates } from '../constants/hero'
 
 const initialState = {
+    redSquares: null,
     inputController: null,
     status: gameStatus.stop,
     beats: 0,
     highestBeats: 0,
     outs: 0,
     frame: 0,
+    startTime: 0,
     frameLength: defaults.frameLength, // TODO move to constants when it will defined
     fieldWidth: defaults.fieldWidth,
     fieldHeight: defaults.fieldHeight,
@@ -20,6 +22,7 @@ export default function (state = initialState, action) {
         case types.INIT:
             return {
                 ...state,
+                redSquares: action.redSquares,
                 inputController: action.inputController,
                 highestBeats: action.highestBeats,
             }

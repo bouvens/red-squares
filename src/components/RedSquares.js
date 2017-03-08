@@ -16,7 +16,6 @@ const heroStyleMap = {
 
 @connect(
     (state) => ({
-        frameLength: state.game.frameLength,
         fieldWidth: state.game.fieldWidth,
         fieldHeight: state.game.fieldHeight,
         sideWidth: state.game.sideWidth,
@@ -30,14 +29,11 @@ const heroStyleMap = {
         threats: state.threats.threats,
     }),
     (dispatch) => bindActionCreators({
-        processSpacePress: actions.game.processSpacePress,
         init: actions.game.init,
-        updateFrame: actions.game.updateFrame,
     }, dispatch)
 )
 export default class RedSquares extends React.Component {
     static propTypes = {
-        frameLength: PropTypes.number,
         fieldWidth: PropTypes.number,
         fieldHeight: PropTypes.number,
         sideWidth: PropTypes.number,
@@ -49,17 +45,11 @@ export default class RedSquares extends React.Component {
         }),
         threatSize: PropTypes.number,
         threats: PropTypes.array,
-        processSpacePress: PropTypes.func,
         init: PropTypes.func,
-        updateFrame: PropTypes.func,
     }
 
-    componentWillMount () {
-        this.props.init()
-
-        setInterval(() => {
-            this.props.updateFrame(this.getFieldSize())
-        }, this.props.frameLength)
+    componentDidMount () {
+        this.props.init(this)
     }
 
     getFieldSize = () => {

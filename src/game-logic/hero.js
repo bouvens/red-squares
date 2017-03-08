@@ -34,7 +34,6 @@ export function moveHero (state) {
         game: {
             ...state.game,
             status: status === heroStates.normal ? gameStatus.play : gameStatus.stop,
-            frame: state.game.frame + 1,
         },
         hero: {
             ...hero,
