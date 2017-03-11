@@ -1,5 +1,5 @@
 import * as types from '../constants/actionTypes'
-import { IDS, HIGHEST_BEATS } from '../constants/game'
+import { IDS, HIGHEST_BEATS, GAME_STATUS } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
 import { spacePress, gameDataUpdater } from '../game-logic'
 
@@ -38,10 +38,12 @@ function updateFrame (dispatch, getState) {
             data.game.frame = Math.floor((performance.now() - data.game.startTime) / data.game.frameLength)
         }
 
-        dispatch({
-            type: types.SET_STATE,
-            data,
-        })
+        if (data.game.status === GAME_STATUS.play || getState().game.status === GAME_STATUS.play) {
+            dispatch({
+                type: types.SET_STATE,
+                data,
+            })
+        }
 
         setTimeout(
             updateFrame(dispatch, getState),
