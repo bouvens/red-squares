@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { sign } from '../utils/funcs'
 
 const processSpeed = (newThreat, size, canFlyAway) => (axis, lean) => {
@@ -123,18 +124,18 @@ export function controlThreats (state) {
         added = 1
     }
 
-    return {
-        ...state,
+    const newState = _.merge({}, state, {
         game: {
-            ...state.game,
             beats: state.game.beats + beats,
             outs: state.game.outs + outs,
         },
         threats: {
-            ...threats,
-            threats: newThreats,
             lastTime: added ? frame : threats.lastTime,
             index: threats.index + added,
         },
-    }
+    })
+
+    newState.threats.threats = newThreats
+
+    return newState
 }

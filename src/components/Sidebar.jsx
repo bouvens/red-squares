@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import * as actions from '../actions'
-import { GAME_STATUS, BUTTON_NAMES, IDS } from '../constants/game'
+import { GAME_STATUS, BUTTON_NAMES, IDS, HIGHEST_BEATS } from '../constants/game'
 import { Connector, Input } from './StateControl'
 import style from './RedSquares.less'
 
@@ -26,6 +26,7 @@ import style from './RedSquares.less'
     (dispatch) => bindActionCreators({
         processSpacePress: actions.game.processSpacePress,
         setState: actions.game.setState,
+        clearHighest: actions.game.clearHighest,
     }, dispatch)
 )
 export default class Sidebar extends React.Component {
@@ -45,6 +46,7 @@ export default class Sidebar extends React.Component {
         fieldHeight: PropTypes.number,
         processSpacePress: PropTypes.func,
         setState: PropTypes.func,
+        clearHighest: PropTypes.func,
     }
 
     getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
@@ -103,6 +105,7 @@ export default class Sidebar extends React.Component {
                         label="Field height (px)"
                     />
                 </Connector>
+                <button onClick={this.props.clearHighest}>Clear highest</button>
             </div>
         )
     }

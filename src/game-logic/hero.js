@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { GAME_STATUS } from '../constants/game'
 import { HERO_STATUSES } from '../constants/hero'
 
@@ -29,17 +30,14 @@ export function moveHero (state) {
 
     const status = getHeroStatus(x, y, hero.size, threatSize, threats)
 
-    return {
-        ...state,
+    return _.merge({}, state, {
         game: {
-            ...state.game,
             status: status === HERO_STATUSES.normal ? GAME_STATUS.play : GAME_STATUS.stop,
         },
         hero: {
-            ...hero,
             x,
             y,
             status,
         }
-    }
+    })
 }

@@ -14,18 +14,8 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case types.UPDATE_FRAME:
-            return {
-                ...state,
-                threats: action.threats,
-                index: state.index + action.added,
-                lastTime: action.lastTime,
-            }
         case types.SET_STATE:
-            return {
-                ...state,
-                ...action.data.threats,
-            }
+            return _.extend({}, state, action.data.threats)
         default:
             return state
     }

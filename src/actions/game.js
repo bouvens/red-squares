@@ -38,6 +38,13 @@ function updateFrame (dispatch, getState) {
             data.game.frame = Math.floor((performance.now() - data.game.startTime) / data.game.frameLength)
         }
 
+        if (data.game.status === GAME_STATUS.stop && getState().game.status === GAME_STATUS.play) {
+            localStorage.setItem(
+                HIGHEST_BEATS,
+                data.game.highestBeats = Math.max(data.game.beats, data.game.highestBeats)
+            )
+        }
+
         if (data.game.status === GAME_STATUS.play || getState().game.status === GAME_STATUS.play) {
             dispatch({
                 type: types.SET_STATE,
@@ -52,13 +59,28 @@ function updateFrame (dispatch, getState) {
     }
 }
 
+export function clearHighest () {
+    return (dispatch) => {
+        localStorage.removeItem(HIGHEST_BEATS)
+
+        dispatch({
+            type: types.INIT,
+            data: {
+                highestBeats: 0,
+            },
+        })
+    }
+}
+
 export function init (redSquares) {
     return (dispatch, getState) => {
         dispatch({
             type: types.INIT,
-            redSquares,
-            inputController: new InputCatcher(),
-            highestBeats: localStorage[HIGHEST_BEATS] ? parseInt(localStorage[HIGHEST_BEATS], 10) : 0,
+            data: {
+                redSquares,
+                inputController: new InputCatcher(),
+                highestBeats: localStorage[HIGHEST_BEATS] ? parseInt(localStorage[HIGHEST_BEATS], 10) : 0,
+            },
         })
 
         updateFrame(dispatch, getState)()
