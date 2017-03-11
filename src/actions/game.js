@@ -33,15 +33,15 @@ function updateFrame (dispatch, getState) {
         data.game.frame += 1
         data = gameDataUpdater(data)
 
-        dispatch({
-            type: types.SET_STATE,
-            data,
-        })
-
         const waitTime = data.game.startTime + data.game.frameLength * data.game.frame - performance.now()
         if (waitTime < -1000) {
             data.game.frame = Math.floor((performance.now() - data.game.startTime) / data.game.frameLength)
         }
+
+        dispatch({
+            type: types.SET_STATE,
+            data,
+        })
 
         setTimeout(
             updateFrame(dispatch, getState),
