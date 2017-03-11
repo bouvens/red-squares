@@ -1,8 +1,5 @@
 module.exports = {
     type: 'react-app',
-    babel: {
-        plugins: ['jsx-control-statements']
-    },
     webpack: {
         loaders: {
             babel: {

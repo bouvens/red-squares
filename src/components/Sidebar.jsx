@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import _ from 'lodash'
 import * as actions from '../actions'
 import { GAME_STATUS, BUTTON_NAMES, IDS } from '../constants/game'
 import { Connector, Input } from './StateControl'
@@ -30,7 +31,7 @@ import style from './RedSquares.less'
 export default class Sidebar extends React.Component {
     static propTypes = {
         sideWidth: PropTypes.number,
-        status: PropTypes.oneOf(Object.values(GAME_STATUS)),
+        status: PropTypes.oneOf(_.values(GAME_STATUS)),
         beats: PropTypes.number,
         highestBeats: PropTypes.number,
         outs: PropTypes.number,

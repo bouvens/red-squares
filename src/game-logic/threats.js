@@ -1,5 +1,7 @@
+import { sign } from '../utils/funcs'
+
 const processSpeed = (newThreat, size, canFlyAway) => (axis, lean) => {
-    newThreat.isGoingOut = Math.sign(lean) === Math.sign(newThreat.speed[axis])
+    newThreat.isGoingOut = sign(lean) === sign(newThreat.speed[axis])
 
     if (!newThreat.isOut) {
         if (canFlyAway && newThreat.isGoingOut) {

@@ -13,8 +13,7 @@ export default class InputCatcher {
         InputCatcher.instance = this
 
         document.onmousemove = this.saveMousePos
-        window.document.onkeydown = this.preventing
-        window.document.onkeyup = this.saveKeyPressed
+        window.document.onkeydown = this.process
     }
 
     saveMousePos = (e) => {
@@ -24,13 +23,14 @@ export default class InputCatcher {
         }
     }
 
-    preventing = (e) => {
-        if (e.key === ' ') {
+    process = (e) => {
+        if (e.keyCode === 32) {
             e.preventDefault()
         }
+        this.saveKeyPressed(e)
     }
 
-    saveKeyPressed = ({ key }) => InputCatcher.keyPressed.push(key)
+    saveKeyPressed = ({ keyCode }) => InputCatcher.keyPressed.push(keyCode)
 
     reactToKeys = (keymap = this.initialKeymap) => {
         InputCatcher.keyPressed.forEach((key) => keymap[key] && keymap[key]())

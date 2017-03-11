@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import * as actions from '../actions'
 import { HERO_STATUSES } from '../constants/hero'
 import heroStyle from '../components/Hero.less'
@@ -37,7 +38,7 @@ export default class RedSquares extends React.Component {
         fieldWidth: PropTypes.number,
         fieldHeight: PropTypes.number,
         sideWidth: PropTypes.number,
-        heroStatus: PropTypes.oneOf(Object.values(HERO_STATUSES)),
+        heroStatus: PropTypes.oneOf(_.values(HERO_STATUSES)),
         heroSize: PropTypes.number,
         heroPos: PropTypes.shape({
             x: PropTypes.number,

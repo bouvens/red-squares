@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { noOp } from '../utils/funcs'
+import _ from 'lodash'
 
 const Square = ({ top, left, size, style, refHandler }) => (
     <div
@@ -23,7 +23,7 @@ Square.propTypes = {
 }
 
 Square.defaultProps = {
-    refHandler: noOp,
+    refHandler: _.noop,
 }
 
 export default Square

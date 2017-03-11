@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { noOp } from '../utils/funcs'
+import _ from 'lodash'
 
 const Field = ({ style, children, refHandler, width, height }) => (
     <div
@@ -27,7 +27,7 @@ Field.propTypes = {
 
 Field.defaultProps = {
     children: null,
-    refHandler: noOp,
+    refHandler: _.noop,
     width: 640,
     height: 480,
 }

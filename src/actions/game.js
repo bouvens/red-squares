@@ -19,9 +19,9 @@ function updateFrame (dispatch, getState) {
         let data = getState()
 
         data.game.inputController.reactToKeys({
-            ' ': () => {
+            32: () => {
                 data = spacePressAtStart(data)
-            }
+            },
         })
 
         data = {
