@@ -1,7 +1,7 @@
 module.exports = {
     type: 'react-app',
     webpack: {
-        loaders: {
+        rules: {
             babel: {
                 test: /\.jsx?/
             },
@@ -12,7 +12,7 @@ module.exports = {
         },
         extra: {
             resolve: {
-                extensions: ['', '.js', '.jsx', '.json']
+                extensions: ['.js', '.jsx', '.json']
             },
             node: {
                 process: false
