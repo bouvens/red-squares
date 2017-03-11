@@ -25,7 +25,6 @@ export const BUTTON_NAMES = {
 }
 
 export const IDS = {
-    frameLength: 'frameLength',
     heroSize: 'heroSize',
     threatSize: 'threatSize',
     threatLimit: 'threatLimit',

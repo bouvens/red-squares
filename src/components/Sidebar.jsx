@@ -14,8 +14,6 @@ import style from './RedSquares.less'
         highestBeats: state.game.highestBeats,
         outs: state.game.outs,
         threatsLength: state.threats.threats.length,
-        frame: state.game.frame,
-        frameLength: state.game.frameLength,
         heroSize: state.hero.size,
         threatSize: state.threats.size,
         threatLimit: state.threats.limit,
@@ -37,8 +35,6 @@ export default class Sidebar extends React.Component {
         highestBeats: PropTypes.number,
         outs: PropTypes.number,
         threatsLength: PropTypes.number,
-        frame: PropTypes.number,
-        frameLength: PropTypes.number,
         heroSize: PropTypes.number,
         threatSize: PropTypes.number,
         threatLimit: PropTypes.number,
@@ -70,18 +66,13 @@ export default class Sidebar extends React.Component {
                 {' (Press Space)'}
                 <h2>{this.getS('beat', this.props.beats)}</h2>
                 <p>Highest beats: {this.props.highestBeats}</p>
-                <h2>{this.getS('out', this.props.outs)}</h2>
+                <p>{this.getS('out', this.props.outs)}</p>
                 <p>{this.getS('threat', this.props.threatsLength)} on field</p>
-                <p>{this.getS('frame', this.props.frame)}</p>
 
                 <Connector
                     state={this.props}
                     onChange={this.changeHandler}
                 >
-                    <Input
-                        id={IDS.frameLength}
-                        label="Frame length (ms)"
-                    />
                     <Input
                         id={IDS.heroSize}
                         label="Hero size (px)"
