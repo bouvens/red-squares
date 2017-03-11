@@ -1,6 +1,6 @@
 export const HIGHEST_BEATS = 'highestBeats'
 
-export const defaults = {
+export const DEFAULTS = {
     frameLength: 20,
     heroSize: 50,
     threatSize: 30,
@@ -12,16 +12,16 @@ export const defaults = {
     sideWidth: 200,
 }
 
-export const gameStatus = {
+export const GAME_STATUS = {
     play: 'play',
     pause: 'pause',
     stop: 'stop',
 }
 
-export const buttonName = {
-    [gameStatus.play]: 'Pause',
-    [gameStatus.pause]: 'Resume',
-    [gameStatus.stop]: 'Start',
+export const BUTTON_NAMES = {
+    [GAME_STATUS.play]: 'Pause',
+    [GAME_STATUS.pause]: 'Resume',
+    [GAME_STATUS.stop]: 'Start',
 }
 
 export const IDS = {

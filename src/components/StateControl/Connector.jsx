@@ -1,17 +1,17 @@
 import React, { PropTypes } from 'react'
 import { noOperation } from './utils'
 
-export const Connector = (props) => (
+export const Connector = ({ children, state, onChange, onClick, onFocus }) => (
     <div>
         {React.Children.map(
-            props.children,
+            children,
             (child) => (
-                typeof child.type === 'function'
+                React.isValidElement(child)
                     ? React.cloneElement(child, {
-                        state: props.state,
-                        onChange: props.onChange,
-                        onClick: props.onClick,
-                        onFocus: props.onFocus,
+                        state,
+                        onChange,
+                        onClick,
+                        onFocus,
                     })
                     : child
             )

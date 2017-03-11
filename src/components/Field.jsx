@@ -1,16 +1,16 @@
 import React, { PropTypes } from 'react'
 import { noOp } from '../utils/funcs'
 
-const Field = (props) => (
+const Field = ({ style, children, refHandler, width, height }) => (
     <div
-        ref={props.refHandler}
-        className={props.style}
+        ref={refHandler}
+        className={style}
         style={{
-            width: `${props.width}px`,
-            height: `${props.height}px`,
+            width: `${width}px`,
+            height: `${height}px`,
         }}
     >
-        {props.children}
+        {children}
     </div>
 )
 

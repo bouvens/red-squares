@@ -1,14 +1,14 @@
 import * as types from '../constants/actionTypes'
-import { defaults } from '../constants/game'
+import { DEFAULTS } from '../constants/game'
 
 const initialState = {
     threats: [],
-    size: defaults.threatSize,
+    size: DEFAULTS.threatSize,
     lastTime: 0,
-    addTimeout: defaults.threatAddTimeout,
+    addTimeout: DEFAULTS.threatAddTimeout,
     index: 0,
-    limit: defaults.threatLimit,
-    removeProbability: defaults.threatRemoveProbability,
+    limit: DEFAULTS.threatLimit,
+    removeProbability: DEFAULTS.threatRemoveProbability,
     maxSpeed: 4,
 }
 

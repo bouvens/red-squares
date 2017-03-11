@@ -1,5 +1,5 @@
-import { gameStatus } from '../constants/game'
-import { heroStates } from '../constants/hero'
+import { GAME_STATUS } from '../constants/game'
+import { HERO_STATUSES } from '../constants/hero'
 
 const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
     const safeLength = (heroSize + threatSize) / 2
@@ -9,10 +9,10 @@ const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
             Math.abs(threat.x - x + sizeFix) < safeLength && Math.abs(threat.y - y + sizeFix) < safeLength
         )) {
 
-        return heroStates.trouble
+        return HERO_STATUSES.trouble
     }
 
-    return heroStates.normal
+    return HERO_STATUSES.normal
 }
 
 export function moveHero (state) {
@@ -33,7 +33,7 @@ export function moveHero (state) {
         ...state,
         game: {
             ...state.game,
-            status: status === heroStates.normal ? gameStatus.play : gameStatus.stop,
+            status: status === HERO_STATUSES.normal ? GAME_STATUS.play : GAME_STATUS.stop,
         },
         hero: {
             ...hero,

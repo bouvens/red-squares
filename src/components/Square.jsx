@@ -1,15 +1,15 @@
 import React, { PropTypes } from 'react'
 import { noOp } from '../utils/funcs'
 
-const Square = (props) => (
+const Square = ({ top, left, size, style, refHandler }) => (
     <div
-        ref={props.refHandler}
-        className={props.style}
+        ref={refHandler}
+        className={style}
         style={{
-            width: `${props.size}px`,
-            height: `${props.size}px`,
-            top: `${props.top}px`,
-            left: `${props.left}px`,
+            width: `${size}px`,
+            height: `${size}px`,
+            top: `${top}px`,
+            left: `${left}px`,
         }}
     />
 )

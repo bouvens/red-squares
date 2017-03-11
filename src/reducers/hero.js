@@ -1,12 +1,12 @@
 import * as types from '../constants/actionTypes'
-import { defaults } from '../constants/game'
-import { heroStates } from '../constants/hero'
+import { DEFAULTS } from '../constants/game'
+import { HERO_STATUSES } from '../constants/hero'
 
 const initialState = {
-    x: (defaults.fieldWidth - defaults.heroSize) / 2,
-    y: (defaults.fieldHeight - defaults.heroSize) / 2,
-    status: heroStates.normal,
-    size: defaults.heroSize,
+    x: (DEFAULTS.fieldWidth - DEFAULTS.heroSize) / 2,
+    y: (DEFAULTS.fieldHeight - DEFAULTS.heroSize) / 2,
+    status: HERO_STATUSES.normal,
+    size: DEFAULTS.heroSize,
 }
 
 export default function (state = initialState, action) {

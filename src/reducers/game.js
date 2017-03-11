@@ -1,20 +1,20 @@
 import * as types from '../constants/actionTypes'
-import { defaults, gameStatus } from '../constants/game'
-import { heroStates } from '../constants/hero'
+import { DEFAULTS, GAME_STATUS } from '../constants/game'
+import { HERO_STATUSES } from '../constants/hero'
 
 const initialState = {
     redSquares: null,
     inputController: null,
-    status: gameStatus.stop,
+    status: GAME_STATUS.stop,
     beats: 0,
     highestBeats: 0,
     outs: 0,
     frame: 0,
     startTime: 0,
-    frameLength: defaults.frameLength, // TODO move to constants when it will defined
-    fieldWidth: defaults.fieldWidth,
-    fieldHeight: defaults.fieldHeight,
-    sideWidth: defaults.sideWidth,
+    frameLength: DEFAULTS.frameLength, // TODO move to constants when it will defined
+    fieldWidth: DEFAULTS.fieldWidth,
+    fieldHeight: DEFAULTS.fieldHeight,
+    sideWidth: DEFAULTS.sideWidth,
 }
 
 export default function (state = initialState, action) {
@@ -29,7 +29,7 @@ export default function (state = initialState, action) {
         case types.UPDATE_FRAME:
             return {
                 ...state,
-                status: action.hero.status === heroStates.normal ? gameStatus.play : gameStatus.stop,
+                status: action.hero.status === HERO_STATUSES.normal ? GAME_STATUS.play : GAME_STATUS.stop,
                 beats: state.beats + action.beats,
                 outs: state.outs + action.outs,
                 frame: state.frame + 1,

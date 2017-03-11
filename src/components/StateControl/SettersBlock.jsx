@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react'
 
-const Setter = (props) => (
+const Setter = ({ text, tabIndex, onClick }) => (
     <div className="setter">
-        <a onClick={props.onClick} tabIndex={props.tabIndex}>{props.text}</a>
+        <a onClick={onClick} tabIndex={tabIndex}>{text}</a>
     </div>
 )
 
@@ -12,13 +12,13 @@ Setter.propTypes = {
     onClick: PropTypes.func,
 }
 
-export const SettersBlock = (props) => (
+export const SettersBlock = ({ setters, setState, tabIndexOffset }) => (
     <div>
-        {props.setters.map((setter, index) => (
+        {setters.map((setter, index) => (
             <Setter
-                onClick={() => props.setState(setter.params)}
+                onClick={() => setState(setter.params)}
                 key={index}
-                tabIndex={index + props.tabIndexOffset}
+                tabIndex={index + tabIndexOffset}
                 text={setter.text}
             />
         ))}

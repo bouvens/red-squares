@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
-import { heroStates } from '../constants/hero'
+import { HERO_STATUSES } from '../constants/hero'
 import heroStyle from '../components/Hero.less'
 import style from './RedSquares.less'
 import Field from './Field'
@@ -10,8 +10,8 @@ import Square from './Square'
 import Sidebar from './Sidebar'
 
 const heroStyleMap = {
-    [heroStates.normal]: heroStyle.hero,
-    [heroStates.trouble]: heroStyle.heroInTrouble,
+    [HERO_STATUSES.normal]: heroStyle.hero,
+    [HERO_STATUSES.trouble]: heroStyle.heroInTrouble,
 }
 
 @connect(
@@ -37,7 +37,7 @@ export default class RedSquares extends React.Component {
         fieldWidth: PropTypes.number,
         fieldHeight: PropTypes.number,
         sideWidth: PropTypes.number,
-        heroStatus: PropTypes.oneOf(Object.values(heroStates)),
+        heroStatus: PropTypes.oneOf(Object.values(HERO_STATUSES)),
         heroSize: PropTypes.number,
         heroPos: PropTypes.shape({
             x: PropTypes.number,

@@ -28,7 +28,9 @@ export class Input extends React.Component {
     id = `labeled-control-${this.props.id}`
     stateName = this.props.stateName || this.props.id
 
-    refHandler = (control) => { this.control = control }
+    refHandler = (control) => {
+        this.control = control
+    }
 
     render () {
         return (
