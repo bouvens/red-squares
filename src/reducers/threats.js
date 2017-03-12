@@ -5,12 +5,12 @@ import { DEFAULTS } from '../constants/game'
 const initialState = {
     threats: [],
     size: DEFAULTS.threatSize,
+    maxSpeed: DEFAULTS.threatSpeed,
     lastTime: 0,
     addTimeout: DEFAULTS.threatAddTimeout,
     index: 0,
     limit: DEFAULTS.threatLimit,
     removeProbability: DEFAULTS.threatRemoveProbability,
-    maxSpeed: 4,
 }
 
 export default function (state = initialState, action) {

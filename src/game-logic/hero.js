@@ -1,13 +1,13 @@
 import _ from 'lodash'
 import { GAME_STATUS } from '../constants/game'
 import { HERO_STATUSES } from '../constants/hero'
+import { sign } from '../utils/funcs'
 
 const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
-    const safeLength = (heroSize + threatSize) / 2
-    const sizeFix = (threatSize - heroSize) / 2
+    const safeLength = heroSize + threatSize
 
     if (threats.some((threat) =>
-            Math.abs(threat.x - x + sizeFix) < safeLength && Math.abs(threat.y - y + sizeFix) < safeLength
+            Math.abs(threat.x - x) < safeLength && Math.abs(threat.y - y) < safeLength
         )) {
 
         return HERO_STATUSES.trouble
@@ -16,17 +16,42 @@ const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
     return HERO_STATUSES.normal
 }
 
+function getMove (hero, target) {
+    const xDelta = target.x - hero.x
+    const yDelta = target.y - hero.y
+
+    if (Math.sqrt(xDelta ** 2 + yDelta ** 2) <= hero.maxSpeed) {
+        return {
+            xMove: xDelta,
+            yMove: yDelta,
+        }
+    }
+
+    const xMove = hero.maxSpeed / Math.sqrt(1 + (yDelta ** 2 / xDelta ** 2)) * sign(xDelta)
+    const yMove = xDelta ?
+        Math.abs(xMove * yDelta / xDelta) * sign(yDelta) :
+        hero.maxSpeed
+
+    return {
+        xMove,
+        yMove,
+    }
+}
+
 export function moveHero (state) {
-    const { mousePos, field, hero } = state
+    const { game, hero, target } = state
     const { threats } = state.threats
     const threatSize = state.threats.size
 
-    let x = Math.max(mousePos.x - hero.size / 2, field.left)
-    x = Math.min(x, field.right - hero.size)
-    x -= field.left
-    let y = Math.max(mousePos.y - hero.size / 2, field.top)
-    y = Math.min(y, field.bottom - hero.size)
-    y -= field.top
+    const { xMove, yMove } = getMove(hero, target)
+
+    let x = hero.x + xMove
+    x = Math.max(x, hero.size)
+    x = Math.min(x, game.fieldWidth - hero.size)
+
+    let y = hero.y + yMove
+    y = Math.max(y, hero.size)
+    y = Math.min(y, game.fieldHeight - hero.size)
 
     const status = getHeroStatus(x, y, hero.size, threatSize, threats)
 

@@ -27,16 +27,18 @@ const beat = (removeProbability,
         const canFlyAway = Math.random() < 1 / removeProbability
         const processThreat = processSpeed(newThreat, size, canFlyAway)
 
-        if (newThreat.x < 0) {
-            newThreat = processThreat('x', newThreat.x)
+        const leftBorder = size
+        if (newThreat.x < leftBorder) {
+            newThreat = processThreat('x', newThreat.x - leftBorder)
         }
         const rightBorder = fieldWidth - size
         if (newThreat.x > rightBorder) {
             newThreat = processThreat('x', newThreat.x - rightBorder)
         }
 
-        if (newThreat.y < 0) {
-            newThreat = processThreat('y', newThreat.y)
+        const topBorder = size
+        if (newThreat.y < topBorder) {
+            newThreat = processThreat('y', newThreat.y - topBorder)
         }
         const bottomBorder = fieldHeight - size
         if (newThreat.y > bottomBorder) {
@@ -47,16 +49,17 @@ const beat = (removeProbability,
     }
 
 const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
-    let x = Math.round(Math.random() * (fieldWidth - size))
-    let y = 0 - size
+    const lean = size * 2
+    let x = Math.round(Math.random() * (fieldWidth - lean))
+    let y = 0 - lean
     let speed = {
         x: Math.round((Math.random() * 2 - 1) * maxSpeed),
         y: Math.ceil(Math.random() * maxSpeed),
     }
 
     if (Math.random() < 0.5) {
-        x = 0 - size
-        y = Math.round(Math.random() * (fieldHeight - size))
+        x = 0 - lean
+        y = Math.round(Math.random() * (fieldHeight - lean))
         speed = {
             x: Math.ceil(Math.random() * maxSpeed),
             y: Math.round((Math.random() * 2 - 1) * maxSpeed),

@@ -72,8 +72,16 @@ export default class Sidebar extends React.Component {
                         label="Hero size (px)"
                     />
                     <Input
+                        id={IDS.heroSpeed}
+                        label="Hero max speed (px/s)"
+                    />
+                    <Input
                         id={IDS.threatSize}
                         label="Threat size (px)"
+                    />
+                    <Input
+                        id={IDS.threatSpeed}
+                        label="Threat max speed (px/s)"
                     />
                     <Input
                         id={IDS.threatLimit}
@@ -86,14 +94,6 @@ export default class Sidebar extends React.Component {
                     <Input
                         id={IDS.threatRemoveProbability}
                         label="Threat remove probability (1/x)"
-                    />
-                    <Input
-                        id={IDS.fieldWidth}
-                        label="Field width (px)"
-                    />
-                    <Input
-                        id={IDS.fieldHeight}
-                        label="Field height (px)"
                     />
                 </Connector>
                 <button onClick={this.props.clearHighest}>Clear highest</button>

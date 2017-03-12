@@ -77,17 +77,17 @@ export default class RedSquares extends React.Component {
                 >
                     <Square
                         style={heroStyleMap[this.props.heroStatus]}
-                        size={this.props.heroSize}
-                        left={this.props.heroPos.x}
-                        top={this.props.heroPos.y}
+                        size={this.props.heroSize * 2}
+                        left={this.props.heroPos.x - this.props.heroSize}
+                        top={this.props.heroPos.y - this.props.heroSize}
                     />
                     {this.props.threats.map((threat) => (
                         <Square
                             key={threat.id}
                             style={style.threat}
-                            size={this.props.threatSize}
-                            left={threat.x}
-                            top={threat.y}
+                            size={this.props.threatSize * 2}
+                            left={threat.x - this.props.threatSize}
+                            top={threat.y - this.props.threatSize}
                         />
                     ))}
                 </Field>

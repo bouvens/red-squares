@@ -24,10 +24,13 @@ function updateFrame (dispatch, getState) {
             },
         })
 
+        const fieldSize = data.game.redSquares.getFieldSize()
         data = {
             ...data,
-            mousePos: InputCatcher.mousePos,
-            field: data.game.redSquares.getFieldSize(),
+            target: {
+                x: InputCatcher.mousePos.x - fieldSize.left,
+                y: InputCatcher.mousePos.y - fieldSize.top,
+            },
         }
 
         data.game.frame += 1
