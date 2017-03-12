@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import * as types from '../constants/actionTypes'
 import { DEFAULTS } from '../constants/game'
 import { HERO_STATUSES } from '../constants/hero'

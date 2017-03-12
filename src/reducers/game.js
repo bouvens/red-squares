@@ -1,6 +1,6 @@
+import _ from 'lodash'
 import * as types from '../constants/actionTypes'
 import { DEFAULTS, GAME_STATUS } from '../constants/game'
-import { HERO_STATUSES } from '../constants/hero'
 
 const initialState = {
     redSquares: null,

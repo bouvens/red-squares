@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import * as actions from '../actions'
-import { GAME_STATUS, BUTTON_NAMES, IDS, HIGHEST_BEATS } from '../constants/game'
+import { GAME_STATUS, BUTTON_NAMES, IDS } from '../constants/game'
 import { Connector, Input } from './StateControl'
 import style from './RedSquares.less'
 
@@ -25,7 +25,7 @@ import style from './RedSquares.less'
     }),
     (dispatch) => bindActionCreators({
         processSpacePress: actions.game.processSpacePress,
-        setState: actions.game.setState,
+        setState: actions.params.setState,
         clearHighest: actions.game.clearHighest,
     }, dispatch)
 )
@@ -73,7 +73,15 @@ export default class Sidebar extends React.Component {
                 <p>{this.getS('threat', this.props.threatsLength)} on field</p>
 
                 <Connector
-                    state={this.props}
+                    state={{
+                        heroSize: this.props.heroSize,
+                        threatSize: this.props.threatSize,
+                        threatLimit: this.props.threatLimit,
+                        threatAddTimeout: this.props.threatAddTimeout,
+                        threatRemoveProbability: this.props.threatRemoveProbability,
+                        fieldWidth: this.props.fieldWidth,
+                        fieldHeight: this.props.fieldHeight,
+                    }}
                     onChange={this.changeHandler}
                 >
                     <Input
