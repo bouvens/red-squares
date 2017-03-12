@@ -8,21 +8,17 @@ import { Connector, Input } from './StateControl'
 import style from './RedSquares.less'
 
 @connect(
-    (state) => ({
-        sideWidth: state.game.sideWidth,
-        status: state.game.status,
-        beats: state.game.beats,
-        highestBeats: state.game.highestBeats,
-        outs: state.game.outs,
-        threatsLength: state.threats.threats.length,
-        heroSize: state.hero.size,
-        threatSize: state.threats.size,
-        threatLimit: state.threats.limit,
-        threatAddTimeout: state.threats.addTimeout,
-        threatRemoveProbability: state.threats.removeProbability,
-        fieldWidth: state.game.fieldWidth,
-        fieldHeight: state.game.fieldHeight,
-    }),
+    (state) => _.extend(
+        {
+            sideWidth: state.game.sideWidth,
+            status: state.game.status,
+            beats: state.game.beats,
+            highestBeats: state.game.highestBeats,
+            outs: state.game.outs,
+            threatsLength: state.threats.threats.length,
+        },
+        _.mapValues(IDS, (id) => _.get(state, id))
+    ),
     (dispatch) => bindActionCreators({
         processSpacePress: actions.game.processSpacePress,
         setState: actions.params.setState,
@@ -52,14 +48,9 @@ export default class Sidebar extends React.Component {
     getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
 
     changeHandler = (state) => (event) => {
-        const initialValue = event.target.value
-        let value
+        const { value } = event.target
 
-        switch (state) {
-            default:
-                value = parseInt(initialValue, 10) || 1
-        }
-        this.props.setState(state, value)
+        this.props.setState(state, parseInt(value, 10) || 1)
     }
 
     render () {
@@ -73,15 +64,7 @@ export default class Sidebar extends React.Component {
                 <p>{this.getS('threat', this.props.threatsLength)} on field</p>
 
                 <Connector
-                    state={{
-                        heroSize: this.props.heroSize,
-                        threatSize: this.props.threatSize,
-                        threatLimit: this.props.threatLimit,
-                        threatAddTimeout: this.props.threatAddTimeout,
-                        threatRemoveProbability: this.props.threatRemoveProbability,
-                        fieldWidth: this.props.fieldWidth,
-                        fieldHeight: this.props.fieldHeight,
-                    }}
+                    state={_.mapValues(_.invert(IDS), (id) => this.props[id])}
                     onChange={this.changeHandler}
                 >
                     <Input

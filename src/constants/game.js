@@ -25,11 +25,11 @@ export const BUTTON_NAMES = {
 }
 
 export const IDS = {
-    heroSize: 'heroSize',
-    threatSize: 'threatSize',
-    threatLimit: 'threatLimit',
-    threatAddTimeout: 'threatAddTimeout',
-    threatRemoveProbability: 'threatRemoveProbability',
-    fieldWidth: 'fieldWidth',
-    fieldHeight: 'fieldHeight',
+    heroSize: 'hero.size',
+    threatSize: 'threats.size',
+    threatLimit: 'threats.limit',
+    threatAddTimeout: 'threats.addTimeout',
+    threatRemoveProbability: 'threats.removeProbability',
+    fieldWidth: 'game.fieldWidth',
+    fieldHeight: 'game.fieldHeight',
 }
