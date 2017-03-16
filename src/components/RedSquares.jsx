@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as actions from '../actions'
+import { DEFAULTS } from '../constants/game'
 import { HERO_STATUSES } from '../constants/hero'
 import heroStyle from '../components/Hero.less'
 import style from './RedSquares.less'
@@ -19,7 +20,6 @@ const heroStyleMap = {
     (state) => ({
         fieldWidth: state.game.fieldWidth,
         fieldHeight: state.game.fieldHeight,
-        sideWidth: state.game.sideWidth,
         heroStatus: state.hero.status,
         heroSize: state.hero.size,
         heroPos: {
@@ -37,7 +37,6 @@ export default class RedSquares extends React.Component {
     static propTypes = {
         fieldWidth: PropTypes.number,
         fieldHeight: PropTypes.number,
-        sideWidth: PropTypes.number,
         heroStatus: PropTypes.oneOf(_.values(HERO_STATUSES)),
         heroSize: PropTypes.number,
         heroPos: PropTypes.shape({
@@ -55,7 +54,7 @@ export default class RedSquares extends React.Component {
 
     getFieldSize = () => {
         const fieldRect = this.field
-        // TODO check in browsers and rewrite like https://learn.javascript.ru/coordinates-document
+
         return {
             left: fieldRect.offsetLeft,
             top: fieldRect.offsetTop,
@@ -68,7 +67,7 @@ export default class RedSquares extends React.Component {
 
     render () {
         return (
-            <div className={style.wrapper} style={{ width: `${this.props.fieldWidth + this.props.sideWidth}px` }}>
+            <div className={style.wrapper} style={{ width: `${this.props.fieldWidth + DEFAULTS.sideWidth}px` }}>
                 <Field
                     style={style.field}
                     refHandler={this.refHandler}

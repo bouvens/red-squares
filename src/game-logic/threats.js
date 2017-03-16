@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { sign } from '../utils/funcs'
+import { DEFAULTS } from '../constants/game'
 
 const processSpeed = (newThreat, size, canFlyAway) => (axis, lean) => {
     newThreat.isGoingOut = sign(lean) === sign(newThreat.speed[axis])
@@ -85,7 +86,8 @@ const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
 
 export function controlThreats (state) {
     const { threats } = state
-    const { frame, frameLength, fieldWidth, fieldHeight } = state.game
+    const { frame, fieldWidth, fieldHeight } = state.game
+    const { frameLength } = DEFAULTS
 
     let newThreats = threats.threats
         .map((threat) => (

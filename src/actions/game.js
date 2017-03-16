@@ -1,5 +1,5 @@
 import * as types from '../constants/actionTypes'
-import { HIGHEST_BEATS, GAME_STATUS } from '../constants/game'
+import { HIGHEST_BEATS, GAME_STATUS, DEFAULTS, KEY_CODES } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
 import { spacePress, gameDataUpdater } from '../game-logic'
 
@@ -19,7 +19,7 @@ function updateFrame (dispatch, getState) {
         let data = getState()
 
         data.game.inputController.reactToKeys({
-            32: () => {
+            [KEY_CODES.space]: () => {
                 data = spacePressAtStart(data)
             },
         })
@@ -36,9 +36,9 @@ function updateFrame (dispatch, getState) {
         data.game.frame += 1
         data = gameDataUpdater(data)
 
-        const waitTime = data.game.startTime + data.game.frameLength * data.game.frame - performance.now()
+        const waitTime = data.game.startTime + DEFAULTS.frameLength * data.game.frame - performance.now()
         if (waitTime < -1000) {
-            data.game.frame = Math.floor((performance.now() - data.game.startTime) / data.game.frameLength)
+            data.game.frame = Math.floor((performance.now() - data.game.startTime) / DEFAULTS.frameLength)
         }
 
         if (data.game.status === GAME_STATUS.stop && getState().game.status === GAME_STATUS.play) {

@@ -11,10 +11,8 @@ const initialState = {
     outs: 0,
     frame: 0,
     startTime: 0,
-    frameLength: DEFAULTS.frameLength, // TODO move to constants when it will defined
     fieldWidth: DEFAULTS.fieldWidth,
     fieldHeight: DEFAULTS.fieldHeight,
-    sideWidth: DEFAULTS.sideWidth,
 }
 
 export default function (state = initialState, action) {

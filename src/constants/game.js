@@ -35,3 +35,7 @@ export const IDS = {
     threatAddTimeout: 'threats.addTimeout',
     threatRemoveProbability: 'threats.removeProbability',
 }
+
+export const KEY_CODES = {
+    space: 32,
+}

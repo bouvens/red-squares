@@ -3,14 +3,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import * as actions from '../actions'
-import { GAME_STATUS, BUTTON_NAMES, IDS } from '../constants/game'
+import { GAME_STATUS, BUTTON_NAMES, IDS, DEFAULTS } from '../constants/game'
 import { Connector, Input } from './StateControl'
 import style from './RedSquares.less'
 
 @connect(
     (state) => _.extend(
         {
-            sideWidth: state.game.sideWidth,
             status: state.game.status,
             beats: state.game.beats,
             highestBeats: state.game.highestBeats,
@@ -27,7 +26,6 @@ import style from './RedSquares.less'
 )
 export default class Sidebar extends React.Component {
     static propTypes = {
-        sideWidth: PropTypes.number,
         status: PropTypes.oneOf(_.values(GAME_STATUS)),
         beats: PropTypes.number,
         highestBeats: PropTypes.number,
@@ -55,7 +53,7 @@ export default class Sidebar extends React.Component {
 
     render () {
         return (
-            <div className={style.side} style={{ width: `${this.props.sideWidth}px` }}>
+            <div className={style.side} style={{ width: `${DEFAULTS.sideWidth}px` }}>
                 <button onClick={this.props.processSpacePress}>{BUTTON_NAMES[this.props.status]}</button>
                 {' (Press Space)'}
                 <h2>{this.getS('beat', this.props.beats)}</h2>

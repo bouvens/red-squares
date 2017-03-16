@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { GAME_STATUS } from '../constants/game'
+import { GAME_STATUS, DEFAULTS } from '../constants/game'
 import { combineProcessors } from '../utils/funcs'
 import { moveHero } from './hero'
 import { controlThreats } from './threats'
@@ -31,7 +31,7 @@ export function spacePress (state, startTime) {
                 threats: {
                     ...state.threats,
                     threats: [],
-                    lastTime: 0 - state.threats.addTimeout / state.game.frameLength,
+                    lastTime: 0 - state.threats.addTimeout / DEFAULTS.frameLength,
                 },
             }
     }
