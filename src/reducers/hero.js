@@ -9,6 +9,9 @@ const initialState = {
     maxSpeed: DEFAULTS.heroSpeed,
     status: HERO_STATUSES.normal,
     size: DEFAULTS.heroSize,
+    shadowPeriod: DEFAULTS.shadowPeriod,
+    shadowQuantity: DEFAULTS.shadowQuantity,
+    shadows: [],
 }
 
 export default function (state = initialState, action) {

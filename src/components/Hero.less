@@ -1,9 +1,15 @@
+@troubleColor: crimson;
+
 .hero {
-  background-color: crimson;
+  background-color: mediumseagreen;
   position: absolute;
 }
 
 .heroInTrouble {
   &:extend(.hero);
-  opacity: 0.3;
+  background-color: @troubleColor;
+}
+
+.shadow {
+  &:extend(.heroInTrouble);
 }
