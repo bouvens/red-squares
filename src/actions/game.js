@@ -15,8 +15,6 @@ export function processSpacePress () {
     }
 }
 
-let minWaitTime = Infinity
-
 function updateFrame (dispatch, getState) {
     return () => {
         let data = getState()
@@ -52,11 +50,6 @@ function updateFrame (dispatch, getState) {
                 type: types.SET_STATE,
                 data,
             })
-        }
-
-        if (waitTime > 0 && waitTime < minWaitTime) {
-            minWaitTime = waitTime
-            console.log(waitTime)
         }
 
         setTimeout(

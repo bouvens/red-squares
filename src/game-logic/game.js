@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { GAME_STATUS, DEFAULTS } from '../constants/game'
-import { combineProcessors } from '../utils/funcs'
+import { combineProcessors, defaultHeroPosition } from '../utils/funcs'
 import { moveHero } from './hero'
 import { controlThreats } from './threats'
 
@@ -18,7 +18,7 @@ export function spacePress (state, startTime) {
             return statusUpdate(state, GAME_STATUS.play)
         case GAME_STATUS.stop:
         default:
-            return { // we use spread because of need of rewrite (not merge) threats
+            return { // we use spread because of need to rewrite (not merge) threats
                 ...state,
                 game: {
                     ...state.game,
@@ -27,6 +27,10 @@ export function spacePress (state, startTime) {
                     outs: 0,
                     frame: 0,
                     startTime,
+                },
+                hero: {
+                    ...state.hero,
+                    ...defaultHeroPosition,
                 },
                 threats: {
                     ...state.threats,

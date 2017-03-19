@@ -6,7 +6,7 @@ import { DEFAULTS, GAME_STATUS } from '../constants/game'
 const initialState = {
     redSquares: null,
     inputController: null,
-    manager: _.findKey(managers, (f) => f === managers.Mouse),
+    manager: _.findKey(managers, (f) => f === managers.Scared),
     status: GAME_STATUS.stop,
     beats: 0,
     highestBeats: 0,
