@@ -8,8 +8,8 @@ const Square = ({ top, left, size, className, style, refHandler }) => (
         style={{
             width: `${size}px`,
             height: `${size}px`,
-            top: `${top}px`,
-            left: `${left}px`,
+            top: `${Math.round(top)}px`,
+            left: `${Math.round(left)}px`,
             ...style,
         }}
     />
