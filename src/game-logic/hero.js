@@ -54,6 +54,21 @@ export function moveHero (state) {
     y = Math.min(y, game.fieldHeight - hero.size)
 
     const status = getHeroStatus(x, y, hero.size, threatSize, threats)
+    const { shadows } = hero
+    let id = 0
+    if (!(game.frame % hero.shadowPeriod)) {
+        if (shadows.length === hero.shadowQuantity) {
+            shadows.pop()
+        }
+        if (shadows.length) {
+            id = shadows[0].id + 1
+        }
+        shadows.unshift({
+            x: hero.x,
+            y: hero.y,
+            id,
+        })
+    }
 
     return _.merge({}, state, {
         game: {
@@ -63,6 +78,7 @@ export function moveHero (state) {
             x,
             y,
             status,
+            shadows,
         }
     })
 }

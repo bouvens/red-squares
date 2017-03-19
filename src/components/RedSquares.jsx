@@ -28,6 +28,7 @@ const heroStyleMap = {
         },
         threatSize: state.threats.size,
         threats: state.threats.threats,
+        shadows: state.hero.shadows,
     }),
     (dispatch) => bindActionCreators({
         init: actions.game.init,
@@ -45,6 +46,7 @@ export default class RedSquares extends React.Component {
         }),
         threatSize: PropTypes.number,
         threats: PropTypes.array,
+        shadows: PropTypes.array,
         init: PropTypes.func,
     }
 
@@ -74,21 +76,33 @@ export default class RedSquares extends React.Component {
                     width={this.props.fieldWidth}
                     height={this.props.fieldHeight}
                 >
-                    <Square
-                        style={heroStyleMap[this.props.heroStatus]}
-                        size={this.props.heroSize * 2}
-                        left={this.props.heroPos.x - this.props.heroSize}
-                        top={this.props.heroPos.y - this.props.heroSize}
-                    />
+                    {this.props.shadows.map((shadow, index) => (
+                        <Square
+                            className={heroStyle.shadow}
+                            style={{
+                                opacity: ((this.props.shadows.length - index - 1) / DEFAULTS.shadowQuantity * 0.3)
+                            }}
+                            key={shadow.id}
+                            size={this.props.heroSize * 2}
+                            left={shadow.x - this.props.heroSize}
+                            top={shadow.y - this.props.heroSize}
+                        />
+                    ))}
                     {this.props.threats.map((threat) => (
                         <Square
                             key={threat.id}
-                            style={style.threat}
+                            className={style.threat}
                             size={this.props.threatSize * 2}
                             left={threat.x - this.props.threatSize}
                             top={threat.y - this.props.threatSize}
                         />
                     ))}
+                    <Square
+                        className={heroStyleMap[this.props.heroStatus]}
+                        size={this.props.heroSize * 2}
+                        left={this.props.heroPos.x - this.props.heroSize}
+                        top={this.props.heroPos.y - this.props.heroSize}
+                    />
                 </Field>
                 <Sidebar />
             </div>
