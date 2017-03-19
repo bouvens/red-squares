@@ -1,10 +1,12 @@
 import _ from 'lodash'
 import * as types from '../constants/actionTypes'
+import * as managers from '../managers'
 import { DEFAULTS, GAME_STATUS } from '../constants/game'
 
 const initialState = {
     redSquares: null,
     inputController: null,
+    manager: _.findKey(managers, (f) => f === managers.Mouse),
     status: GAME_STATUS.stop,
     beats: 0,
     highestBeats: 0,

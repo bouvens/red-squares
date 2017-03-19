@@ -1,6 +1,7 @@
 import * as types from '../constants/actionTypes'
 import { HIGHEST_BEATS, GAME_STATUS, DEFAULTS, KEY_CODES } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
+import * as managers from '../managers'
 import { spacePress, gameDataUpdater } from '../game-logic'
 
 const spacePressAtStart = (state) => spacePress(state, performance.now())
@@ -24,13 +25,9 @@ function updateFrame (dispatch, getState) {
             },
         })
 
-        const fieldSize = data.game.redSquares.getFieldSize()
         data = {
             ...data,
-            target: {
-                x: InputCatcher.mousePos.x - fieldSize.left,
-                y: InputCatcher.mousePos.y - fieldSize.top,
-            },
+            target: managers[data.game.manager](data),
         }
 
         data.game.frame += 1

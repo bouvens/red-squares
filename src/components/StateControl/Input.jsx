@@ -7,7 +7,7 @@ export class Input extends React.Component {
         id: PropTypes.string.isRequired,
         label: PropTypes.string.isRequired,
         state: PropTypes.object,
-        stateName: PropTypes.string,
+        path: PropTypes.string,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         readOnly: PropTypes.bool,
         onChange: PropTypes.func,
@@ -25,8 +25,9 @@ export class Input extends React.Component {
     }
 
     inner = this.props.multiLine ? 'textarea' : 'input'
-    id = `labeled-control-${this.props.id}`
-    stateName = this.props.stateName || this.props.id
+    getId = () => `labeled-control-${this.props.id}`
+    getPath = () => this.props.path || this.props.id
+    getValue = () => this.props.value || (this.props.state && this.props.state[this.getPath()])
 
     refHandler = (control) => {
         this.control = control
@@ -35,14 +36,13 @@ export class Input extends React.Component {
     render () {
         return (
             <div className="labeled-input">
-                <label htmlFor={this.id}>{this.props.label}</label>
+                <label htmlFor={this.getId()}>{this.props.label}</label>
                 <this.inner
-                    id={this.id}
-                    label={this.props.label}
+                    id={this.getId()}
                     ref={this.refHandler}
-                    value={this.props.state[this.stateName] || this.props.value}
+                    value={this.getValue()}
                     readOnly={this.props.readOnly}
-                    onChange={this.props.onChange(this.stateName)}
+                    onChange={this.props.onChange(this.getPath())}
                     onClick={this.props.onClick(this)}
                     onFocus={this.props.onFocus(this)}
                 />

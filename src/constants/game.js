@@ -27,6 +27,7 @@ export const BUTTON_NAMES = {
 }
 
 export const IDS = {
+    manager: 'game.manager',
     heroSize: 'hero.size',
     heroSpeed: 'hero.maxSpeed',
     threatSize: 'threats.size',

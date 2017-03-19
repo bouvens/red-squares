@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import * as actions from '../actions'
+import * as managers from '../managers'
 import { GAME_STATUS, BUTTON_NAMES, IDS, DEFAULTS } from '../constants/game'
-import { Connector, Input } from './StateControl'
+import { Connector, Input, Radio } from './StateControl'
 import style from './RedSquares.less'
 
 @connect(
@@ -15,6 +16,7 @@ import style from './RedSquares.less'
             highestBeats: state.game.highestBeats,
             outs: state.game.outs,
             threatsLength: state.threats.threats.length,
+            manager: state.game.manager,
         },
         _.mapValues(IDS, (id) => _.get(state, id))
     ),
@@ -31,6 +33,7 @@ export default class Sidebar extends React.Component {
         highestBeats: PropTypes.number,
         outs: PropTypes.number,
         threatsLength: PropTypes.number,
+        manager: PropTypes.string,
         heroSize: PropTypes.number,
         threatSize: PropTypes.number,
         threatLimit: PropTypes.number,
@@ -45,10 +48,17 @@ export default class Sidebar extends React.Component {
 
     getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
 
-    changeHandler = (state) => (event) => {
-        const { value } = event.target
+    changeHandler = (path) => (event) => {
+        let { value } = event.target
 
-        this.props.setState(state, parseInt(value, 10) || 1)
+        switch (path) {
+            case IDS.manager:
+                break
+            default:
+                value = parseInt(value, 10) || 1
+        }
+
+        this.props.setState(path, value)
     }
 
     render () {
@@ -61,6 +71,13 @@ export default class Sidebar extends React.Component {
                 <p>{this.getS('out', this.props.outs)}</p>
                 <p>{this.getS('threat', this.props.threatsLength)} on field</p>
 
+                {'Control'}
+                <Radio
+                    id={IDS.manager}
+                    state={_.mapValues(_.invert(IDS), (id) => this.props[id])}
+                    values={_.keys(managers)}
+                    onChange={this.changeHandler}
+                />
                 <Connector
                     state={_.mapValues(_.invert(IDS), (id) => this.props[id])}
                     onChange={this.changeHandler}
