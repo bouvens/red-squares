@@ -1,5 +1,5 @@
 export const SCARY_INTERVAL = 3
-export const VARIANTS_QUANTITY = 12
+export const VARIANTS_QUANTITY = 24
 
 const getDistance = (A, B) => Math.sqrt((A.x - B.x) ** 2 + (A.y - B.y) ** 2)
 
