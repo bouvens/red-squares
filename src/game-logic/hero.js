@@ -28,9 +28,10 @@ function getMove (hero, target) {
     }
 
     const xMove = hero.maxSpeed / Math.sqrt(1 + (yDelta ** 2 / xDelta ** 2)) * sign(xDelta)
-    const yMove = xDelta ?
-        Math.abs(xMove * yDelta / xDelta) * sign(yDelta) :
-        hero.maxSpeed
+    const yMove = (xDelta
+            ? Math.abs(xMove * yDelta / xDelta)
+            : hero.maxSpeed
+        ) * sign(yDelta)
 
     return {
         xMove,

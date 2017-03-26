@@ -13,7 +13,6 @@ export class Radio extends React.Component {
         onChange: PropTypes.func,
         onClick: PropTypes.func,
         onFocus: PropTypes.func,
-        multiLine: PropTypes.bool,
     }
 
     static defaultProps = {
