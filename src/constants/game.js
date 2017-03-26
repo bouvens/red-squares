@@ -13,7 +13,7 @@ export const DEFAULTS = {
     fieldHeight: 600,
     sideWidth: 200,
     shadowPeriod: 1,
-    shadowQuantity: 30,
+    shadowQuantity: 50,
 }
 
 export const GAME_STATUS = {
