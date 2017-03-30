@@ -27,6 +27,7 @@ export function spacePress (state, startTime) {
                     outs: 0,
                     frame: 0,
                     startTime,
+                    error: '',
                 },
                 hero: {
                     ...state.hero,

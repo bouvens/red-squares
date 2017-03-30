@@ -22,6 +22,7 @@ const heroStyle = {
         threatSize: state.threats.size,
         threats: state.threats.threats,
         shadows: state.hero.shadows,
+        error: state.game.error,
     })
 )
 export default class CanvasField extends React.Component {
@@ -91,14 +92,17 @@ export default class CanvasField extends React.Component {
         this.paint()
 
         return (
-            <canvas
-                ref={this.handleRefCanvas}
-                className={style.field}
-                width={this.props.fieldWidth}
-                height={this.props.fieldHeight}
-            >
-                {'You are using an outdated browser.'}
-            </canvas>
+            <div className={style.fieldWrapper}>
+                <canvas
+                    className={style.field}
+                    ref={this.handleRefCanvas}
+                    width={this.props.fieldWidth}
+                    height={this.props.fieldHeight}
+                >
+                    {'You are using an outdated browser.'}
+                </canvas>
+                <div className={style.error}>{this.props.error}</div>
+            </div>
         )
     }
 }

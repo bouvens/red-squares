@@ -15,6 +15,7 @@ const initialState = {
     startTime: 0,
     fieldWidth: DEFAULTS.fieldWidth,
     fieldHeight: DEFAULTS.fieldHeight,
+    error: '',
 }
 
 export default function (state = initialState, action) {

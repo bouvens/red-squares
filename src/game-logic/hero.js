@@ -19,23 +19,20 @@ const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
 function getMove (hero, target) {
     const xDelta = target.x - hero.x
     const yDelta = target.y - hero.y
+    const distance = Math.sqrt(xDelta ** 2 + yDelta ** 2)
 
-    if (Math.sqrt(xDelta ** 2 + yDelta ** 2) <= hero.maxSpeed) {
+    if (distance <= hero.maxSpeed) {
         return {
             xMove: xDelta,
             yMove: yDelta,
         }
     }
 
-    const xMove = hero.maxSpeed / Math.sqrt(1 + (yDelta ** 2 / xDelta ** 2)) * sign(xDelta)
-    const yMove = (xDelta
-            ? Math.abs(xMove * yDelta / xDelta)
-            : hero.maxSpeed
-        ) * sign(yDelta)
+    const normalization = distance / hero.maxSpeed
 
     return {
-        xMove,
-        yMove,
+        xMove: xDelta / normalization,
+        yMove: yDelta / normalization,
     }
 }
 

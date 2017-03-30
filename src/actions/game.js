@@ -29,6 +29,13 @@ function updateFrame (dispatch, getState) {
             ...data,
             target: managers[data.game.manager](data),
         }
+        if (isNaN(data.target.x) || isNaN(data.target.y)) {
+            data.game.error = 'Bad target'
+            data.target = {
+                x: data.hero.x,
+                y: data.hero.y,
+            }
+        }
 
         data.game.frame += 1
         data = gameDataUpdater(data)
