@@ -18,38 +18,27 @@ export const getNearest = (hero, threats) => threats.reduce((nearest, threat) =>
     distance: Infinity,
 })
 
-export const getScaryEdges = (size, width, height) => {
+export const getScaryEdges = (hero, size, width, height) => {
     const edges = []
+    const { x, y } = hero
 
-    for (
-        let x = -size;
-        x < width + size;
-        x += size
-    ) {
-        edges.push({
-            x,
-            y: -size * 1.1,
-        })
-        edges.push({
-            x,
-            y: height + size * 1.1,
-        })
-    }
+    edges.push({
+        x,
+        y: -size * 1.1,
+    })
+    edges.push({
+        x,
+        y: height + size * 1.1,
+    })
 
-    for (
-        let y = -size;
-        y < height + size;
-        y += size
-    ) {
-        edges.push({
-            x: -size * 1.1,
-            y,
-        })
-        edges.push({
-            x: width + size * 1.1,
-            y,
-        })
-    }
+    edges.push({
+        x: -size * 1.1,
+        y,
+    })
+    edges.push({
+        x: width + size * 1.1,
+        y,
+    })
 
     return edges
 }

@@ -15,7 +15,7 @@ function getVariants (hero) {
 }
 
 export default function ({ game, hero, threats }) {
-    const scaryEdges = getScaryEdges(2 * threats.size, game.fieldWidth, game.fieldHeight)
+    const scaryEdges = getScaryEdges(hero, 2 * threats.size, game.fieldWidth, game.fieldHeight)
     const newThreats = threats.threats.map((threat) => (
         {
             x: threat.x + threat.speed.x,

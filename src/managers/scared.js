@@ -3,7 +3,7 @@ import { defaultHeroPosition } from '../utils/funcs'
 import { SCARY_INTERVAL, getNearest, getScaryEdges } from './common'
 
 export default function ({ game, hero, threats }) {
-    const scaryEdges = getScaryEdges(2 * threats.size, game.fieldWidth, game.fieldHeight)
+    const scaryEdges = getScaryEdges(hero, 2 * threats.size, game.fieldWidth, game.fieldHeight)
 
     const nearestThreat = getNearest(hero, _.extend(scaryEdges, threats.threats))
 
