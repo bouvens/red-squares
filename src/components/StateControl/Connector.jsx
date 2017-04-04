@@ -1,35 +1,25 @@
 import React, { PropTypes } from 'react'
-import { noOperation } from './utils'
 
-export const Connector = ({ children, state, onChange, onClick, onFocus }) => (
-    <div>
-        {React.Children.map(
-            children,
-            (child) => (
-                typeof child.type === 'function'
-                    ? React.cloneElement(child, {
-                        state,
-                        onChange,
-                        onClick,
-                        onFocus,
-                    })
-                    : child
-            )
-        )}
-    </div>
-)
+export const Connector = (props) => {
+    const { children, ...passedProps } = props
 
-Connector.propTypes = {
-    state: PropTypes.object,
-    onChange: PropTypes.func,
-    onClick: PropTypes.func,
-    onFocus: PropTypes.func,
-    children: PropTypes.array,
+    return (
+        <div>
+            {React.Children.map(
+                children,
+                (Child) => (
+                    typeof Child.type === 'function' ?
+                        <Child.type
+                            {...passedProps}
+                            {...Child.props}
+                        /> :
+                        <Child />
+                )
+            )}
+        </div>
+    )
 }
 
-Connector.defaultProps = {
-    state: {},
-    onChange: noOperation,
-    onClick: noOperation,
-    onFocus: noOperation,
+Connector.propTypes = {
+    children: PropTypes.array.isRequired,
 }

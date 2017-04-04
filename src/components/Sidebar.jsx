@@ -37,21 +37,7 @@ export default class Sidebar extends React.Component {
 
     getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
 
-    changeHandler = (path) => (event) => {
-        let { value, checked } = event.target
-
-        switch (path) {
-            case IDS.manager:
-                break
-            case IDS.autoRestart:
-                value = checked
-                break
-            default:
-                value = parseInt(value, 10) || 1
-        }
-
-        this.props.setState(path, value)
-    }
+    changeHandler = this.props.setState
 
     render () {
         return (
@@ -66,6 +52,7 @@ export default class Sidebar extends React.Component {
                 <Connector
                     state={_.mapValues(_.invert(IDS), (id) => this.props[id])}
                     onChange={this.changeHandler}
+                    defaultNum={1}
                 >
                     <Check
                         id={IDS.autoRestart}

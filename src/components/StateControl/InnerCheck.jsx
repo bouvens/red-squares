@@ -16,7 +16,7 @@ export default class InnerCheck extends React.PureComponent {
 
     static defaultProps = {
         id: '',
-        value: '',
+        value: false,
         label: '',
         readOnly: false,
         onChange: noOperation,
