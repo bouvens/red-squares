@@ -7,13 +7,13 @@ export const Connector = (props) => {
         <div>
             {React.Children.map(
                 children,
-                (Child) => (
-                    typeof Child.type === 'function' ?
-                        <Child.type
+                (child) => (
+                    typeof child.type === 'function' ?
+                        <child.type
                             {...passedProps}
-                            {...Child.props}
+                            {...child.props}
                         /> :
-                        <Child />
+                        child
                 )
             )}
         </div>

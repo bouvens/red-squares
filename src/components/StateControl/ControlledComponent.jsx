@@ -20,6 +20,7 @@ const ControlledComponent = (props) => {
                 break
             case 'string':
             default:
+                valueForReturn = valueForReturn || ''
                 break
         }
 
