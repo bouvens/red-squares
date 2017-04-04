@@ -1,18 +1,6 @@
 import _ from 'lodash'
 import { defaultHeroPosition } from '../utils/funcs'
-import { SCARY_INTERVAL, VARIANTS_QUANTITY, getNearest, getScaryEdges } from './common'
-
-function getVariants (hero) {
-    const variants = []
-    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI * 2 / VARIANTS_QUANTITY) {
-        variants.push({
-            x: hero.x + Math.cos(angle) * hero.maxSpeed,
-            y: hero.y + Math.sin(angle) * hero.maxSpeed,
-        })
-    }
-
-    return variants
-}
+import { SCARY_INTERVAL, getNearest, getScaryEdges, getVariants } from './common'
 
 export default function ({ game, hero, threats }) {
     const scaryEdges = getScaryEdges(hero, 2 * threats.size, game.fieldWidth, game.fieldHeight)

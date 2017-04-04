@@ -4,22 +4,19 @@ import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import * as actions from '../actions'
 import * as managers from '../managers'
-import { GAME_STATUS, BUTTON_NAMES, IDS, DEFAULTS } from '../constants/game'
-import { Connector, Input, Radio } from './StateControl'
+import { BUTTON_NAMES, DEFAULTS, GAME_STATUS, IDS } from '../constants/game'
+import { Connector, Input, Radio, Check } from './StateControl'
 import style from './RedSquares.less'
 
 @connect(
-    (state) => _.extend(
-        {
-            status: state.game.status,
-            beats: state.game.beats,
-            highestBeats: state.game.highestBeats,
-            outs: state.game.outs,
-            threatsLength: state.threats.threats.length,
-            manager: state.game.manager,
-        },
-        _.mapValues(IDS, (id) => _.get(state, id))
-    ),
+    (state) => _.extend({
+        status: state.game.status,
+        beats: state.game.beats,
+        highestBeats: state.game.highestBeats,
+        outs: state.game.outs,
+        threatsLength: state.threats.threats.length,
+        manager: state.game.manager,
+    }, _.mapValues(IDS, (id) => _.get(state, id))),
     (dispatch) => bindActionCreators({
         processSpacePress: actions.game.processSpacePress,
         setState: actions.params.setState,
@@ -41,10 +38,13 @@ export default class Sidebar extends React.Component {
     getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
 
     changeHandler = (path) => (event) => {
-        let { value } = event.target
+        let { value, checked } = event.target
 
         switch (path) {
             case IDS.manager:
+                break
+            case IDS.autoRestart:
+                value = checked
                 break
             default:
                 value = parseInt(value, 10) || 1
@@ -63,17 +63,19 @@ export default class Sidebar extends React.Component {
                 <p>{this.getS('out', this.props.outs)}</p>
                 <p>{this.getS('threat', this.props.threatsLength)} on field</p>
 
-                {'Control'}
-                <Radio
-                    id={IDS.manager}
-                    state={_.mapValues(_.invert(IDS), (id) => this.props[id])}
-                    values={_.keys(managers)}
-                    onChange={this.changeHandler}
-                />
                 <Connector
                     state={_.mapValues(_.invert(IDS), (id) => this.props[id])}
                     onChange={this.changeHandler}
                 >
+                    <Check
+                        id={IDS.autoRestart}
+                        label="Auto restart"
+                    />
+                    {'Control'}
+                    <Radio
+                        id={IDS.manager}
+                        values={_.keys(managers)}
+                    />
                     <Input
                         id={IDS.heroSize}
                         label="Hero size (px)"

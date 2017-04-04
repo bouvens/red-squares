@@ -6,7 +6,7 @@ export const DEFAULTS = {
     heroSpeed: 10,
     threatSize: 15,
     threatSpeed: 4,
-    threatLimit: 20,
+    threatLimit: 1,
     threatAddTimeout: 1000,
     threatRemoveProbability: 5,
     fieldWidth: 800,
@@ -29,6 +29,7 @@ export const BUTTON_NAMES = {
 }
 
 export const IDS = {
+    autoRestart: 'game.autoRestart',
     manager: 'game.manager',
     heroSize: 'hero.size',
     heroSpeed: 'hero.maxSpeed',

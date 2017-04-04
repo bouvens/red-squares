@@ -18,7 +18,7 @@ export const getNearest = (hero, threats) => threats.reduce((nearest, threat) =>
     distance: Infinity,
 })
 
-export const getScaryEdges = (hero, size, width, height) => {
+export function getScaryEdges (hero, size, width, height) {
     const edges = []
     const { x, y } = hero
 
@@ -41,4 +41,16 @@ export const getScaryEdges = (hero, size, width, height) => {
     })
 
     return edges
+}
+
+export function getVariants (hero) {
+    const variants = []
+    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI * 2 / VARIANTS_QUANTITY) {
+        variants.push({
+            x: hero.x + Math.cos(angle) * hero.maxSpeed,
+            y: hero.y + Math.sin(angle) * hero.maxSpeed,
+        })
+    }
+
+    return variants
 }

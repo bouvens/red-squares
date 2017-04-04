@@ -8,6 +8,7 @@ const initialState = {
     inputController: null,
     manager: _.findKey(managers, (f) => f === managers.Agile),
     status: GAME_STATUS.stop,
+    autoRestart: true,
     beats: 0,
     highestBeats: 0,
     outs: 0,

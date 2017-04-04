@@ -4,13 +4,13 @@ import InputCatcher from '../utils/InputCatcher'
 import * as managers from '../managers'
 import { spacePress, gameDataUpdater } from '../game-logic'
 
-const spacePressAtStart = (state) => spacePress(state, performance.now())
+const spacePressWithTime = (state) => spacePress(state, performance.now())
 
 export function processSpacePress () {
     return (dispatch, getState) => {
         dispatch({
             type: types.SET_STATE,
-            data: spacePressAtStart(getState()),
+            data: spacePressWithTime(getState()),
         })
     }
 }
@@ -18,12 +18,6 @@ export function processSpacePress () {
 function updateFrame (dispatch, getState) {
     return () => {
         let data = getState()
-
-        data.game.inputController.reactToKeys({
-            [KEY_CODES.space]: () => {
-                data = spacePressAtStart(data)
-            },
-        })
 
         data = {
             ...data,
@@ -35,6 +29,16 @@ function updateFrame (dispatch, getState) {
                 x: data.hero.x,
                 y: data.hero.y,
             }
+        }
+
+        if (data.game.autoRestart && data.game.status === GAME_STATUS.stop) {
+            data = spacePressWithTime(data)
+        } else {
+            data.game.inputController.reactToKeys({
+                [KEY_CODES.space]: () => {
+                    data = spacePressWithTime(data)
+                },
+            })
         }
 
         data.game.frame += 1
