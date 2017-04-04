@@ -1,11 +1,11 @@
 import React from 'react'
 import ControlledComponent from './ControlledComponent'
-import InnerRadio from './InnerRadio'
+import InnerCheck from './InnerCheck'
 
-const Radio = (props) => (
+const Check = (props) => (
     <ControlledComponent {...props} >
-        <InnerRadio />
+        <InnerCheck />
     </ControlledComponent>
 )
 
-export default Radio
+export default Check

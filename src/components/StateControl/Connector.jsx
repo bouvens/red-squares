@@ -6,7 +6,7 @@ export const Connector = ({ children, state, onChange, onClick, onFocus }) => (
         {React.Children.map(
             children,
             (child) => (
-                React.isValidElement(child)
+                typeof child.type === 'function'
                     ? React.cloneElement(child, {
                         state,
                         onChange,
