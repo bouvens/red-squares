@@ -5,24 +5,24 @@ import { combineProcessors, defaultHeroPosition } from '../utils/funcs'
 import { moveHero } from './hero'
 import { controlThreats } from './threats'
 
-const statusUpdate = (data, status) => _.merge({}, data, {
+const statusUpdate = (state, status) => _.merge({}, state, {
     game: {
         status,
     }
 })
 
-export function spacePress (data) {
-    switch (data.game.status) {
+export function spacePress (state) {
+    switch (state.game.status) {
         case GAME_STATUS.play:
-            return statusUpdate(data, GAME_STATUS.pause)
+            return statusUpdate(state, GAME_STATUS.pause)
         case GAME_STATUS.pause:
-            return statusUpdate(data, GAME_STATUS.play)
+            return statusUpdate(state, GAME_STATUS.play)
         case GAME_STATUS.stop:
         default:
             return { // we use spread because of need to rewrite (not merge) threats
-                ...data,
+                ...state,
                 game: {
-                    ...data.game,
+                    ...state.game,
                     status: GAME_STATUS.play,
                     beats: 0,
                     outs: 0,
@@ -30,59 +30,59 @@ export function spacePress (data) {
                     error: '',
                 },
                 hero: {
-                    ...data.hero,
+                    ...state.hero,
                     ...defaultHeroPosition,
                 },
                 threats: {
-                    ...data.threats,
+                    ...state.threats,
                     threats: [],
-                    lastTime: 0 - data.threats.addTimeout / DEFAULTS.frameLength,
+                    lastTime: 0 - state.threats.addTimeout / DEFAULTS.frameLength,
                 },
             }
     }
 }
 
-function reactToKeys (oldData) {
-    let data = { ...oldData }
+function reactToKeys (oldState) {
+    let state = { ...oldState }
 
-    if (data.game.autoRestart && data.game.status === GAME_STATUS.stop) {
-        data = spacePress(data)
+    if (state.game.autoRestart && state.game.status === GAME_STATUS.stop) {
+        state = spacePress(state)
     } else {
-        data.game.inputController.reactToKeys({
+        state.game.inputController.reactToKeys({
             [KEY_CODES.space]: () => {
-                data = spacePress(data)
+                state = spacePress(state)
             },
         })
     }
 
-    return data
+    return state
 }
 
-function callManager (oldData) {
-    const data = {
-        ...oldData,
-        target: managers[oldData.game.manager](oldData),
+function callManager (oldState) {
+    const state = {
+        ...oldState,
+        target: managers[oldState.game.manager](oldState),
     }
-    if (isNaN(data.target.x) || isNaN(data.target.y)) {
-        data.game.error = 'Bad target'
-        data.target = {
-            x: data.hero.x,
-            y: data.hero.y,
+    if (isNaN(state.target.x) || isNaN(state.target.y)) {
+        state.game.error = 'Bad target'
+        state.target = {
+            x: state.hero.x,
+            y: state.hero.y,
         }
     }
 
-    return data
+    return state
 }
 
 const nextPlayFrame = combineProcessors(callManager, controlThreats, moveHero)
 
-export function gameDataUpdater (oldData) {
-    let data = reactToKeys(oldData)
+export function gameStateUpdater (oldState) {
+    let state = reactToKeys(oldState)
 
-    if (data.game.status === GAME_STATUS.play) {
-        data = nextPlayFrame(data)
-        data.game.frame += 1
+    if (state.game.status === GAME_STATUS.play) {
+        state = nextPlayFrame(state)
+        state.game.frame += 1
     }
 
-    return data
+    return state
 }

@@ -36,6 +36,27 @@ function getMove (hero, target) {
     }
 }
 
+function getShadows ({ game, hero }) {
+    const { shadows } = hero
+    let id = 0
+
+    if (!(game.frame % hero.shadowPeriod)) {
+        if (shadows.length === hero.shadowQuantity) {
+            shadows.pop()
+        }
+        if (shadows.length) {
+            id = shadows[0].id + 1
+        }
+        shadows.unshift({
+            x: hero.x,
+            y: hero.y,
+            id,
+        })
+    }
+
+    return shadows
+}
+
 export function moveHero (state) {
     const { game, hero, target } = state
     const { threats } = state.threats
@@ -52,31 +73,19 @@ export function moveHero (state) {
     y = Math.min(y, game.fieldHeight - hero.size)
 
     const status = getHeroStatus(x, y, hero.size, threatSize, threats)
-    const { shadows } = hero
-    let id = 0
-    if (!(game.frame % hero.shadowPeriod)) {
-        if (shadows.length === hero.shadowQuantity) {
-            shadows.pop()
-        }
-        if (shadows.length) {
-            id = shadows[0].id + 1
-        }
-        shadows.unshift({
-            x: hero.x,
-            y: hero.y,
-            id,
-        })
-    }
 
-    return _.merge({}, state, {
+    return {
+        ...state,
         game: {
+            ...state.game,
             status: status === HERO_STATUSES.normal ? GAME_STATUS.play : GAME_STATUS.stop,
         },
         hero: {
+            ...state.hero,
             x,
             y,
             status,
-            shadows,
+            shadows: getShadows(state),
         }
-    })
+    }
 }

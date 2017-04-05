@@ -1,7 +1,7 @@
 import * as types from '../constants/actionTypes'
 import { DEFAULTS, GAME_STATUS, HIGHEST_BEATS } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
-import { gameDataUpdater, spacePress } from '../game-logic'
+import { gameStateUpdater, spacePress } from '../game-logic'
 
 export function processSpacePress () {
     return (dispatch, getState) => {
@@ -12,37 +12,37 @@ export function processSpacePress () {
     }
 }
 
-const getWaitTime = (data) => Math.max(
-    data.game.frameTime + DEFAULTS.frameLength - performance.now(),
+const getWaitTime = (state) => Math.max(
+    state.game.frameTime + DEFAULTS.frameLength - performance.now(),
     0
 )
 
 function updateFrame (dispatch, getState) {
     return () => {
         const initState = getState()
-        const data = gameDataUpdater(initState)
+        const state = gameStateUpdater(initState)
 
         const isPreviouslyPlayed = initState.game.status === GAME_STATUS.play
 
-        if (data.game.status === GAME_STATUS.stop && isPreviouslyPlayed) {
+        if (state.game.status === GAME_STATUS.stop && isPreviouslyPlayed) {
             localStorage.setItem(
                 HIGHEST_BEATS,
-                data.game.highestBeats = Math.max(data.game.beats, data.game.highestBeats)
+                state.game.highestBeats = Math.max(state.game.beats, state.game.highestBeats)
             )
         }
 
-        if (data.game.status === GAME_STATUS.play || isPreviouslyPlayed) {
+        if (state.game.status === GAME_STATUS.play || isPreviouslyPlayed) {
             dispatch({
                 type: types.SET_STATE,
-                data,
+                data: state,
             })
         }
 
-        if (data.game.normalSpeed) {
-            data.game.frameTime = performance.now()
+        if (state.game.normalSpeed) {
+            state.game.frameTime = performance.now()
             setTimeout(
                 updateFrame(dispatch, getState),
-                getWaitTime(data)
+                getWaitTime(state)
             )
         } else {
             setTimeout(
