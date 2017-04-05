@@ -6,7 +6,7 @@ export const DEFAULTS = {
     heroSpeed: 10,
     threatSize: 15,
     threatSpeed: 4,
-    threatLimit: 1,
+    threatLimit: 20,
     threatAddTimeout: 1000,
     threatRemoveProbability: 5,
     fieldWidth: 800,

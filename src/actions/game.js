@@ -12,12 +12,17 @@ export function processSpacePress () {
     }
 }
 
+const getWaitTime = (data) => Math.max(
+    data.game.frameTime + DEFAULTS.frameLength - performance.now(),
+    0
+)
+
 function updateFrame (dispatch, getState) {
     return () => {
-        const data = gameDataUpdater(getState())
+        const initState = getState()
+        const data = gameDataUpdater(initState)
 
-        const waitTime = data.game.frameTime + DEFAULTS.frameLength - performance.now()
-        const isPreviouslyPlayed = getState().game.status === GAME_STATUS.play
+        const isPreviouslyPlayed = initState.game.status === GAME_STATUS.play
 
         if (data.game.status === GAME_STATUS.stop && isPreviouslyPlayed) {
             localStorage.setItem(
@@ -26,7 +31,6 @@ function updateFrame (dispatch, getState) {
             )
         }
 
-        data.game.frameTime = performance.now()
         if (data.game.status === GAME_STATUS.play || isPreviouslyPlayed) {
             dispatch({
                 type: types.SET_STATE,
@@ -34,10 +38,18 @@ function updateFrame (dispatch, getState) {
             })
         }
 
-        setTimeout(
-            updateFrame(dispatch, getState),
-            data.game.normalSpeed ? Math.max(waitTime, 0) : 0
-        )
+        if (data.game.normalSpeed) {
+            data.game.frameTime = performance.now()
+            setTimeout(
+                updateFrame(dispatch, getState),
+                getWaitTime(data)
+            )
+        } else {
+            setTimeout(
+                updateFrame(dispatch, getState),
+                0
+            )
+        }
     }
 }
 
