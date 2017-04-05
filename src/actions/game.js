@@ -1,62 +1,33 @@
 import * as types from '../constants/actionTypes'
-import { HIGHEST_BEATS, GAME_STATUS, DEFAULTS, KEY_CODES } from '../constants/game'
+import { DEFAULTS, GAME_STATUS, HIGHEST_BEATS } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
-import * as managers from '../managers'
-import { spacePress, gameDataUpdater } from '../game-logic'
-
-const spacePressWithTime = (state) => spacePress(state, performance.now())
+import { gameDataUpdater, spacePress } from '../game-logic'
 
 export function processSpacePress () {
     return (dispatch, getState) => {
         dispatch({
             type: types.SET_STATE,
-            data: spacePressWithTime(getState()),
+            data: spacePress(getState()),
         })
     }
 }
 
 function updateFrame (dispatch, getState) {
     return () => {
-        let data = getState()
+        const data = gameDataUpdater(getState())
 
-        data = {
-            ...data,
-            target: managers[data.game.manager](data),
-        }
-        if (isNaN(data.target.x) || isNaN(data.target.y)) {
-            data.game.error = 'Bad target'
-            data.target = {
-                x: data.hero.x,
-                y: data.hero.y,
-            }
-        }
+        const waitTime = data.game.frameTime + DEFAULTS.frameLength - performance.now()
+        const isPreviouslyPlayed = getState().game.status === GAME_STATUS.play
 
-        if (data.game.autoRestart && data.game.status === GAME_STATUS.stop) {
-            data = spacePressWithTime(data)
-        } else {
-            data.game.inputController.reactToKeys({
-                [KEY_CODES.space]: () => {
-                    data = spacePressWithTime(data)
-                },
-            })
-        }
-
-        data.game.frame += 1
-        data = gameDataUpdater(data)
-
-        const waitTime = data.game.startTime + DEFAULTS.frameLength * data.game.frame - performance.now()
-        if (waitTime < -1000) {
-            data.game.frame = Math.floor((performance.now() - data.game.startTime) / DEFAULTS.frameLength)
-        }
-
-        if (data.game.status === GAME_STATUS.stop && getState().game.status === GAME_STATUS.play) {
+        if (data.game.status === GAME_STATUS.stop && isPreviouslyPlayed) {
             localStorage.setItem(
                 HIGHEST_BEATS,
                 data.game.highestBeats = Math.max(data.game.beats, data.game.highestBeats)
             )
         }
 
-        if (data.game.status === GAME_STATUS.play || getState().game.status === GAME_STATUS.play) {
+        data.game.frameTime = performance.now()
+        if (data.game.status === GAME_STATUS.play || isPreviouslyPlayed) {
             dispatch({
                 type: types.SET_STATE,
                 data,
@@ -65,7 +36,7 @@ function updateFrame (dispatch, getState) {
 
         setTimeout(
             updateFrame(dispatch, getState),
-            Math.max(waitTime, 0)
+            data.game.normalSpeed ? Math.max(waitTime, 0) : 0
         )
     }
 }

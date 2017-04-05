@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react'
 import { noOperation } from './utils'
 
 const controlled = (Child) => class extends React.Component {
-    propTypes = {
+    static propTypes = {
         children: PropTypes.node,
         id: PropTypes.string.isRequired,
         state: PropTypes.object,

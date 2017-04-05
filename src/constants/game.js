@@ -30,6 +30,7 @@ export const BUTTON_NAMES = {
 
 export const IDS = {
     autoRestart: 'game.autoRestart',
+    normalSpeed: 'game.normalSpeed',
     manager: 'game.manager',
     heroSize: 'hero.size',
     heroSpeed: 'hero.maxSpeed',

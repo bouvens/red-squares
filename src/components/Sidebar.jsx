@@ -58,6 +58,10 @@ export default class Sidebar extends React.Component {
                         id={IDS.autoRestart}
                         label="Auto restart"
                     />
+                    <Check
+                        id={IDS.normalSpeed}
+                        label="Normal speed"
+                    />
                     {'Control'}
                     <Radio
                         id={IDS.manager}
