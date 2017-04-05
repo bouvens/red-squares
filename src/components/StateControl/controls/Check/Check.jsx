@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
-import { noOperation } from './utils'
+import controlled from '../../common/controlled'
+import { noOperation } from '../../common/utils'
 import './Check.css'
 
-export default class InnerCheck extends React.PureComponent {
+class Check extends React.PureComponent {
     static propTypes = {
         id: PropTypes.string,
         value: PropTypes.bool,
@@ -44,3 +45,5 @@ export default class InnerCheck extends React.PureComponent {
         )
     }
 }
+
+export default controlled(Check)

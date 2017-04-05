@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { noOperation } from '../../common/utils'
 
 const Setter = ({ text, tabIndex, onClick }) => (
     <div className="setter">
@@ -12,10 +13,16 @@ Setter.propTypes = {
     onClick: PropTypes.func,
 }
 
+Setter.defaultProps = {
+    text: '',
+    tabIndex: -1,
+    onClick: noOperation,
+}
+
 export const SettersBlock = ({ setters, setState, tabIndexOffset }) => {
     let index = 0
 
-    return (<div>
+    return (<div className="setters-block">
         {setters.map((setter) => {
             index += 1
 

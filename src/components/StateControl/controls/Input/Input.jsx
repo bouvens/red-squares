@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
-import { noOperation } from './utils'
+import controlled from '../../common/controlled'
+import { noOperation } from '../../common/utils'
 import './Input.css'
 
-export default class InnerInput extends React.PureComponent {
+class Input extends React.PureComponent {
     static propTypes = {
         id: PropTypes.string,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -46,3 +47,5 @@ export default class InnerInput extends React.PureComponent {
         )
     }
 }
+
+export default controlled(Input)

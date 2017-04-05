@@ -4,7 +4,7 @@ export const Connector = (props) => {
     const { children, ...passedProps } = props
 
     return (
-        <div>
+        <div className="controlled-connector">
             {React.Children.map(
                 children,
                 (child) => (

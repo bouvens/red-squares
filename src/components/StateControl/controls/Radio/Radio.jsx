@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react'
-import { noOperation } from './utils'
+import controlled from '../../common/controlled'
+import { noOperation } from '../../common/utils'
 import './Radio.css'
 
-export default class InnerRadio extends React.PureComponent {
+class Radio extends React.PureComponent {
     static propTypes = {
         id: PropTypes.string,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -51,3 +52,5 @@ export default class InnerRadio extends React.PureComponent {
         </div>)
     }
 }
+
+export default controlled(Radio)
