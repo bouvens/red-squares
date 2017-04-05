@@ -1,10 +1,10 @@
-export const SCARY_INTERVAL = 3
+export const SCARY_INTERVAL = 4 / 3
 export const VARIANTS_QUANTITY = 24
 
 const getDistance = (A, B) => Math.sqrt((A.x - B.x) ** 2 + (A.y - B.y) ** 2)
 
-export const getNearest = (hero, threats) => threats.reduce((nearest, threat) => {
-    const distance = getDistance(hero, threat)
+export const getNearest = ({ x, y }, threats) => threats.reduce((nearest, threat) => {
+    const distance = getDistance({ x, y }, threat)
     if (!nearest.threat || nearest.distance > distance) {
         return {
             threat,
@@ -17,6 +17,9 @@ export const getNearest = (hero, threats) => threats.reduce((nearest, threat) =>
     threat: null,
     distance: Infinity,
 })
+
+export const getSafeInterval = (hero, threats) =>
+    (hero.size + threats.size + hero.maxSpeed + threats.maxSpeed) * SCARY_INTERVAL
 
 export function getScaryEdges (hero, size, width, height) {
     const edges = []
