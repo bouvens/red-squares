@@ -15,7 +15,7 @@ export default function ({ game, hero, threats }) {
     const nearestThreat = getNearest(hero, extendedThreats)
 
     if (!nearestThreat.threat || nearestThreat.distance > getSafeInterval(hero, threats)) {
-        return defaultHeroPosition
+        return defaultHeroPosition(game, hero.size)
     }
 
     const variant = getVariants(hero).reduce((best, current) => {

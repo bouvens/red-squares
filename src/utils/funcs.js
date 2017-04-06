@@ -1,5 +1,3 @@
-import { DEFAULTS } from '../constants/game'
-
 export function combineProcessors (...processors) {
     return (state) => processors.reduce((result, processor) => processor(result), state)
 }
@@ -12,7 +10,7 @@ export function sign (num) {
     return num > 0 ? 1 : -1
 }
 
-export const defaultHeroPosition = {
-    x: (DEFAULTS.fieldWidth - DEFAULTS.heroSize) / 2,
-    y: (DEFAULTS.fieldHeight - DEFAULTS.heroSize) / 2,
-}
+export const defaultHeroPosition = (game, size) => ({
+    x: (game.fieldWidth - size) / 2,
+    y: (game.fieldHeight - size) / 2,
+})

@@ -31,7 +31,7 @@ export function spacePress (state) {
                 },
                 hero: {
                     ...state.hero,
-                    ...defaultHeroPosition,
+                    ...defaultHeroPosition(state.game, state.hero.size),
                 },
                 threats: {
                     ...state.threats,
@@ -42,10 +42,29 @@ export function spacePress (state) {
     }
 }
 
+function callManager (oldState) {
+    const state = _.merge({}, oldState, {
+        hero: {
+            target: managers[oldState.game.manager](oldState),
+        }
+    })
+    if (isNaN(state.hero.target.x) || isNaN(state.hero.target.y)) {
+        state.game.error = 'Bad target'
+        state.hero.target = {
+            ...state.hero.target,
+            x: state.hero.x,
+            y: state.hero.y,
+        }
+    }
+
+    return state
+}
+
 function reactToKeys (oldState) {
     let state = { ...oldState }
 
-    if (state.game.autoRestart && state.game.status === GAME_STATUS.stop) {
+    if (state.game.status === GAME_STATUS.stop && state.game.autoRestart) {
+        state = callManager(state)
         state = spacePress(state)
     } else {
         state.game.inputController.reactToKeys({
@@ -53,22 +72,6 @@ function reactToKeys (oldState) {
                 state = spacePress(state)
             },
         })
-    }
-
-    return state
-}
-
-function callManager (oldState) {
-    const state = {
-        ...oldState,
-        target: managers[oldState.game.manager](oldState),
-    }
-    if (isNaN(state.target.x) || isNaN(state.target.y)) {
-        state.game.error = 'Bad target'
-        state.target = {
-            x: state.hero.x,
-            y: state.hero.y,
-        }
     }
 
     return state

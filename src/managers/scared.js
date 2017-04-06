@@ -8,7 +8,7 @@ export default function ({ game, hero, threats }) {
     const nearestThreat = getNearest(hero, _.extend(scaryEdges, threats.threats))
 
     if (!nearestThreat.threat || nearestThreat.distance > getSafeInterval(hero, threats) * 2) {
-        return defaultHeroPosition
+        return defaultHeroPosition(game, hero.size)
     }
 
     const distance = {

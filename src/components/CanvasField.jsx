@@ -23,9 +23,10 @@ const heroStyle = {
         threats: state.threats.threats,
         shadows: state.hero.shadows,
         error: state.game.error,
+        save: state.hero.save,
     })
 )
-export default class CanvasField extends React.Component {
+export default class CanvasField extends React.PureComponent {
     static propTypes = {
         fieldWidth: PropTypes.number,
         fieldHeight: PropTypes.number,
@@ -39,6 +40,7 @@ export default class CanvasField extends React.Component {
         threats: PropTypes.array,
         shadows: PropTypes.array,
         error: PropTypes.string,
+        save: PropTypes.string,
         refHandler: PropTypes.func,
     }
 
@@ -103,6 +105,7 @@ export default class CanvasField extends React.Component {
                     {'You are using an outdated browser.'}
                 </canvas>
                 <div className={style.error}>{this.props.error}</div>
+                <pre>{this.props.save}</pre>
             </div>
         )
     }

@@ -56,7 +56,8 @@ function getShadows ({ game, hero }) {
 }
 
 export function moveHero (state) {
-    const { game, hero, target } = state
+    const { game, hero } = state
+    const { target } = hero
     const { threats } = state.threats
     const threatSize = state.threats.size
 

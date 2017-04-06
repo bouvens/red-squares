@@ -1,17 +1,28 @@
+import _ from 'lodash'
+import * as managers from '../managers'
+
+export const SPEEDS = {
+    Normal: 'Normal',
+    Fast: 'Fast',
+    Faster: 'Faster',
+}
+
 export const DEFAULTS = {
     frameLength: 30,
-    heroSize: 25,
-    heroSpeed: 10,
-    threatSize: 15,
-    threatSpeed: 4,
-    threatLimit: 20,
-    threatAddTimeout: 1000,
-    threatRemoveProbability: 5,
     fieldWidth: 800,
     fieldHeight: 600,
     sideWidth: 200,
     shadowPeriod: 1,
     shadowQuantity: 50,
+    speed: SPEEDS.Fast,
+    manager: _.findKey(managers, (f) => f === managers.Neuro),
+    heroSize: 25,
+    heroSpeed: 10,
+    threatSize: 15,
+    threatSpeed: 4,
+    threatLimit: 1,
+    threatAddTimeout: 1000,
+    threatRemoveProbability: 5,
 }
 
 export const IDS = {
@@ -39,12 +50,6 @@ export const BUTTON_NAMES = {
     [GAME_STATUS.play]: 'Pause',
     [GAME_STATUS.pause]: 'Resume',
     [GAME_STATUS.stop]: 'Start',
-}
-
-export const SPEEDS = {
-    Normal: 'Normal',
-    Fast: 'Fast',
-    Faster: 'Faster',
 }
 
 export const KEY_CODES = {
