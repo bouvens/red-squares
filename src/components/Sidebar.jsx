@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import * as actions from '../actions'
 import * as managers from '../managers'
-import { BUTTON_NAMES, DEFAULTS, GAME_STATUS, IDS } from '../constants/game'
+import { BUTTON_NAMES, DEFAULTS, GAME_STATUS, IDS, SPEEDS } from '../constants/game'
 import { Connector, Input, Radio, Check } from './StateControl'
 import style from './RedSquares.less'
 
@@ -58,9 +58,10 @@ export default class Sidebar extends React.Component {
                         id={IDS.autoRestart}
                         label="Auto restart"
                     />
-                    <Check
-                        id={IDS.normalSpeed}
-                        label="Normal speed"
+                    {'Speed'}
+                    <Radio
+                        id={IDS.speed}
+                        values={_.keys(SPEEDS)}
                     />
                     {'Control'}
                     <Radio

@@ -1,7 +1,5 @@
-import _ from 'lodash'
 import { GAME_STATUS } from '../constants/game'
 import { HERO_STATUSES } from '../constants/hero'
-import { sign } from '../utils/funcs'
 
 const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
     const safeLength = heroSize + threatSize

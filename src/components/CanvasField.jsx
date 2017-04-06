@@ -38,6 +38,7 @@ export default class CanvasField extends React.Component {
         threatSize: PropTypes.number,
         threats: PropTypes.array,
         shadows: PropTypes.array,
+        error: PropTypes.string,
         refHandler: PropTypes.func,
     }
 
@@ -63,7 +64,7 @@ export default class CanvasField extends React.Component {
             ctx,
             pos: this.props.shadows[index],
             size: this.props.heroSize,
-            color: `rgba(237, 20, 61, ${(this.props.shadows.length - index - 1) / this.props.shadows.length * 0.3})`,
+            color: `rgba(237, 20, 61, ${(this.props.shadows.length - index - 1) / this.props.shadows.length * 0.2})`,
         }))
         CanvasField.drawSquare({
             ctx,

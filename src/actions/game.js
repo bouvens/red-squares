@@ -1,5 +1,5 @@
 import * as types from '../constants/actionTypes'
-import { DEFAULTS, GAME_STATUS, HIGHEST_BEATS } from '../constants/game'
+import { DEFAULTS, GAME_STATUS, HIGHEST_BEATS, SPEEDS } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
 import { gameStateUpdater, spacePress } from '../game-logic'
 
@@ -12,44 +12,46 @@ export function processSpacePress () {
     }
 }
 
-const getWaitTime = (state) => Math.max(
-    state.game.frameTime + DEFAULTS.frameLength - performance.now(),
+const getWaitTime = (state, lastFrameTime) => Math.max(
+    lastFrameTime + DEFAULTS.frameLength - performance.now(),
     0
 )
 
-function updateFrame (dispatch, getState) {
+const gameCycle = (initState) => {
+    const state = gameStateUpdater(initState)
+
+    if (state.game.status === GAME_STATUS.stop && initState.game.status === GAME_STATUS.play) {
+        localStorage.setItem(
+            HIGHEST_BEATS,
+            state.game.highestBeats = Math.max(state.game.beats, state.game.highestBeats)
+        )
+    }
+
+    return state
+}
+
+function updateFrame (dispatch, getState, lastFrameTime) {
     return () => {
         const initState = getState()
-        const state = gameStateUpdater(initState)
+        let state = gameCycle(initState)
 
-        const isPreviouslyPlayed = initState.game.status === GAME_STATUS.play
-
-        if (state.game.status === GAME_STATUS.stop && isPreviouslyPlayed) {
-            localStorage.setItem(
-                HIGHEST_BEATS,
-                state.game.highestBeats = Math.max(state.game.beats, state.game.highestBeats)
-            )
+        if (state.game.speed === SPEEDS.Faster) {
+            for (let i = 1; i < 100; i += 1) {
+                state = gameCycle(state)
+            }
         }
 
-        if (state.game.status === GAME_STATUS.play || isPreviouslyPlayed) {
+        if (state.game.status === GAME_STATUS.play || initState.game.status === GAME_STATUS.play) {
             dispatch({
                 type: types.SET_STATE,
                 data: state,
             })
         }
 
-        if (state.game.normalSpeed) {
-            state.game.frameTime = performance.now()
-            setTimeout(
-                updateFrame(dispatch, getState),
-                getWaitTime(state)
-            )
-        } else {
-            setTimeout(
-                updateFrame(dispatch, getState),
-                0
-            )
-        }
+        setTimeout(
+            updateFrame(dispatch, getState, performance.now()),
+            state.game.speed === SPEEDS.Normal ? getWaitTime(state, lastFrameTime) : 0
+        )
     }
 }
 

@@ -74,7 +74,7 @@ function callManager (oldState) {
     return state
 }
 
-const nextPlayFrame = combineProcessors(callManager, controlThreats, moveHero)
+const nextPlayFrame = combineProcessors(controlThreats, callManager, moveHero)
 
 export function gameStateUpdater (oldState) {
     let state = reactToKeys(oldState)

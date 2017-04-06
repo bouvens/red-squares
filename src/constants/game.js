@@ -1,7 +1,5 @@
-export const HIGHEST_BEATS = 'highestBeats'
-
 export const DEFAULTS = {
-    frameLength: 20,
+    frameLength: 30,
     heroSize: 25,
     heroSpeed: 10,
     threatSize: 15,
@@ -16,6 +14,21 @@ export const DEFAULTS = {
     shadowQuantity: 50,
 }
 
+export const IDS = {
+    autoRestart: 'game.autoRestart',
+    speed: 'game.speed',
+    manager: 'game.manager',
+    heroSize: 'hero.size',
+    heroSpeed: 'hero.maxSpeed',
+    threatSize: 'threats.size',
+    threatSpeed: 'threats.maxSpeed',
+    threatLimit: 'threats.limit',
+    threatAddTimeout: 'threats.addTimeout',
+    threatRemoveProbability: 'threats.removeProbability',
+}
+
+export const HIGHEST_BEATS = 'highestBeats'
+
 export const GAME_STATUS = {
     play: 'play',
     pause: 'pause',
@@ -28,17 +41,10 @@ export const BUTTON_NAMES = {
     [GAME_STATUS.stop]: 'Start',
 }
 
-export const IDS = {
-    autoRestart: 'game.autoRestart',
-    normalSpeed: 'game.normalSpeed',
-    manager: 'game.manager',
-    heroSize: 'hero.size',
-    heroSpeed: 'hero.maxSpeed',
-    threatSize: 'threats.size',
-    threatSpeed: 'threats.maxSpeed',
-    threatLimit: 'threats.limit',
-    threatAddTimeout: 'threats.addTimeout',
-    threatRemoveProbability: 'threats.removeProbability',
+export const SPEEDS = {
+    Normal: 'Normal',
+    Fast: 'Fast',
+    Faster: 'Faster',
 }
 
 export const KEY_CODES = {
