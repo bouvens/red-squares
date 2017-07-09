@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { noOperation } from './utils'
 
 const controlled = (Child) => class extends React.Component {
