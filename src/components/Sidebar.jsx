@@ -5,18 +5,18 @@ import _ from 'lodash'
 import * as actions from '../actions'
 import * as managers from '../managers'
 import { BUTTON_NAMES, DEFAULTS, GAME_STATUS, IDS, SPEEDS } from '../constants/game'
-import { Connector, Input, Radio, Check } from './StateControl'
+import { Connector, Input, Radio, Check, extendConnection, mapStateToIds } from './StateControl'
 import style from './RedSquares.less'
 
 @connect(
-    (state) => _.extend({
+    extendConnection((state) => ({
         status: state.game.status,
         beats: state.game.beats,
         highestBeats: state.game.highestBeats,
         outs: state.game.outs,
         threatsLength: state.threats.threats.length,
         manager: state.game.manager,
-    }, _.mapValues(IDS, (id) => _.get(state, id))),
+    }), IDS),
     (dispatch) => bindActionCreators({
         processSpacePress: actions.game.processSpacePress,
         setState: actions.params.setState,
@@ -50,7 +50,7 @@ export default class Sidebar extends React.Component {
                 <p>{this.getS('threat', this.props.threatsLength)} on field</p>
 
                 <Connector
-                    state={_.mapValues(_.invert(IDS), (id) => this.props[id])}
+                    state={mapStateToIds(this.props, IDS)}
                     onChange={this.changeHandler}
                     defaultNum={1}
                 >
