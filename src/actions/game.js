@@ -36,7 +36,7 @@ function updateFrame (dispatch, getState, lastFrameTime) {
         let state = gameCycle(initState)
 
         if (state.game.speed === SPEEDS.Faster) {
-            for (let i = 1; i < 100; i += 1) {
+            for (let i = 1; i <= 100; i += 1) {
                 state = gameCycle(state)
             }
         }

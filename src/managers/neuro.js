@@ -1,6 +1,6 @@
 import RL from '../lib/rl'
-import { getNearest, getSafeInterval, getVariants, VARIANTS_QUANTITY } from './common'
 import { GAME_STATUS } from '../constants/game'
+import { getNearest, getSafeInterval, getVariants, VARIANTS_QUANTITY } from './common'
 
 const STATUSES = {
     notInitialized: 'notInitialized',
@@ -15,20 +15,29 @@ const env = {
 }
 
 // create the DQN agent
-const spec = { alpha: 0.01 } // see full options on DQN page
-const agent = new RL.DQNAgent(env, spec)
+const spec = { alpha: 0.01 } // see full options on DQN page // TODO: tune it
+const getAgent = () => new RL.DQNAgent(env, spec)
+let agent = getAgent()
 let neuroStatus = STATUSES.notInitialized
 
 const getState = (hero, threats) => {
-    const firstThreat = threats.threats[0] || { speed: {} }
+    const firstThreat = threats.threats[0]
+        || {
+            x: 0,
+            y: 0,
+            speed: {
+                x: 0,
+                y: 0,
+            }
+        }
 
     return [
         hero.x,
         hero.y,
-        firstThreat.x || 0,
-        firstThreat.y || 0,
-        firstThreat.speed.x || 0,
-        firstThreat.speed.y || 0,
+        firstThreat.x,
+        firstThreat.y,
+        firstThreat.speed.x,
+        firstThreat.speed.y,
     ]
 }
 
@@ -45,23 +54,45 @@ export default function ({ game, hero, threats }) {
 
     if (game.status === GAME_STATUS.stop) {
         neuroStatus = STATUSES.dead
-        return {
-            save: agent.toJSON()
-        }
+
+        debugger
+        fetch('/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(agent.toJSON(), null, 2),
+        }).then((response) => {
+            console.log('dead: ' + JSON.stringify(agent.toJSON(), null, 2))
+            console.log('response: ' + response)
+
+            return {
+                x: hero.x,
+                y: hero.y,
+            }
+        }).catch(console.error)
+    } else if (neuroStatus === STATUSES.dead) { // TODO when we got normal save, replace it to !== STATUSES.learn
+        fetch('/')
+            .then((response) => response.json())
+            .then((save) => {
+                console.log('reborn: ' + save)
+                agent = getAgent() // TODO will we need to complete remake?
+                agent.fromJSON(save)
+            })
+            .catch(console.error)
+    } else {
+        // set first act
+        neuroStatus = STATUSES.learning
+
+        const action = agent.act(getState(hero, threats)) // s is an array of length env.getNumStates()
+
+        return action < VARIANTS_QUANTITY
+            ? getVariants(hero)[action]
+            : {
+                x: hero.x,
+                y: hero.y,
+            }
     }
 
-
-
-    // set first act
-    neuroStatus = STATUSES.learning
-    const action = agent.act(getState(hero, threats)) // s is an array of length env.getNumStates()
-
-    if (action < VARIANTS_QUANTITY) {
-        return getVariants(hero)[action]
-    }
-
-    return {
-        x: hero.x,
-        y: hero.y,
-    }
 }
