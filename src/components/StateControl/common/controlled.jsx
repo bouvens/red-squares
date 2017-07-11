@@ -46,20 +46,22 @@ const controlled = (Child) => class extends React.PureComponent {
     changeHandler = (event) => {
         let valueForReturn = event.target.value
         const { checked } = event.target
+        const previousType = typeof this.getValue()
 
-        if (typeof this.getValue() === 'boolean') {
+        if (previousType === 'boolean') {
             this.props.onChange(this.getPath(), checked)
 
             return
         }
 
-        let parseFunc
         const valueForCheck = this.prepareNum(valueForReturn)
 
-        if (!isNaN(valueForCheck) && valueForCheck.length) {
+        if ((!isNaN(valueForCheck) && valueForCheck.length)
+            || (previousType === 'number' && !valueForCheck.length && this.props.defaultNum)) {
             valueForReturn = valueForCheck
             if (valueForReturn.toString()[valueForReturn.toString().length - 1] !== '.') {
-                parseFunc = valueForReturn.indexOf('.') === -1 ? parseInt : parseFloat
+                const parseFunc = valueForReturn.indexOf('.') === -1 ? parseInt : parseFloat
+
                 valueForReturn = parseFunc(valueForReturn, 10) || this.props.defaultNum || 0
             } else {
                 valueForReturn = this.formatNum(valueForReturn)
@@ -79,6 +81,7 @@ const controlled = (Child) => class extends React.PureComponent {
                 return this.formatNum()
             case 'boolean':
             case 'string':
+            case 'undefined':
                 return value
             default:
                 return value.toString()
