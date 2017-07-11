@@ -1,0 +1,10 @@
+.setter {
+    margin-bottom: 0.6em;
+}
+
+.setter a {
+    padding-bottom: 1px;
+    border-bottom: 1px dashed;
+    cursor: pointer;
+    color: blue;
+}

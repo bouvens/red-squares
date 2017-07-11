@@ -6,6 +6,7 @@ import './Radio.css'
 
 class Radio extends React.PureComponent {
     static propTypes = {
+        className: PropTypes.string,
         id: PropTypes.string,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         values: PropTypes.array,
@@ -28,7 +29,7 @@ class Radio extends React.PureComponent {
     }
 
     render () {
-        return (<div className="group" id={this.props.id}>
+        return (<div className={`${this.props.className} group`} id={this.props.id}>
             {this.props.values.map((currentValue) => {
                 const variantId = currentValue.id || currentValue
 

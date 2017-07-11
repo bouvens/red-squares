@@ -6,6 +6,7 @@ import './Input.css'
 
 class Input extends React.PureComponent {
     static propTypes = {
+        className: PropTypes.string,
         id: PropTypes.string,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         label: PropTypes.string,
@@ -18,6 +19,7 @@ class Input extends React.PureComponent {
     }
 
     static defaultProps = {
+        className: '',
         id: '',
         value: '',
         label: '',
@@ -33,7 +35,7 @@ class Input extends React.PureComponent {
         const Inner = this.props.multiLine ? 'textarea' : 'input'
 
         return (
-            <div className="labeled-input">
+            <div className={`${this.props.className} labeled-input`}>
                 <label htmlFor={this.props.id}>{this.props.label}</label>
                 <Inner
                     id={this.props.id}

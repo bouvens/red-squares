@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 import { noOperation } from '../../common/utils'
+import './Setter.css'
 
 const Setter = ({ text, tabIndex, onClick }) => (
     <div className="setter">
@@ -20,15 +22,21 @@ Setter.defaultProps = {
     onClick: noOperation,
 }
 
-export const SettersBlock = ({ setters, setState, tabIndexOffset }) => {
+const setParams = (setHandler, params) => () => {
+    _.each(params, (value, name) => {
+        setHandler(name, value)
+    })
+}
+
+export const SettersBlock = ({ className, setters, setHandler, tabIndexOffset }) => {
     let index = 0
 
-    return (<div className="setters-block">
+    return (<div className={`${className} setters-block`}>
         {setters.map((setter) => {
             index += 1
 
             return (<Setter
-                onClick={() => setState(setter.params)}
+                onClick={setParams(setHandler, setter.params)}
                 key={index}
                 tabIndex={index + tabIndexOffset}
                 text={setter.text}
@@ -38,11 +46,13 @@ export const SettersBlock = ({ setters, setState, tabIndexOffset }) => {
 }
 
 SettersBlock.propTypes = {
+    className: PropTypes.string,
     setters: PropTypes.array.isRequired,
-    setState: PropTypes.func.isRequired,
+    setHandler: PropTypes.func.isRequired,
     tabIndexOffset: PropTypes.number,
 }
 
 SettersBlock.defaultProps = {
+    className: '',
     tabIndexOffset: 1,
 }

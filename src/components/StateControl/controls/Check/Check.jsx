@@ -6,6 +6,7 @@ import './Check.css'
 
 class Check extends React.PureComponent {
     static propTypes = {
+        className: PropTypes.string,
         id: PropTypes.string,
         value: PropTypes.bool,
         label: PropTypes.string,
@@ -17,6 +18,7 @@ class Check extends React.PureComponent {
     }
 
     static defaultProps = {
+        className: '',
         id: '',
         value: false,
         label: '',
@@ -30,7 +32,7 @@ class Check extends React.PureComponent {
 
     render () {
         return (
-            <div className="labeled-check">
+            <div className={`${this.props.className} labeled-check`}>
                 <input
                     id={this.props.id}
                     type="checkbox"
