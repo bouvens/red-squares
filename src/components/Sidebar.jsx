@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import _ from 'lodash'
+import { Connector, Input, Radio, Check, extendConnection, mapStateToIds } from 'state-control'
 import * as actions from '../actions'
 import * as managers from '../managers'
 import { BUTTON_NAMES, DEFAULTS, GAME_STATUS, IDS, SPEEDS } from '../constants/game'
-import { Connector, Input, Radio, Check, extendConnection, mapStateToIds } from './StateControl'
 import style from './RedSquares.less'
 
 @connect(
