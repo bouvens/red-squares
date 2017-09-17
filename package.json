@@ -23,13 +23,13 @@
     "state-control": "^0.6.5"
   },
   "devDependencies": {
-    "babel-eslint": "^7.2.1",
-    "body-parser": "^1.18.0",
-    "eslint": "^4.6.1",
+    "babel-eslint": "^8.0.0",
+    "body-parser": "^1.18.1",
+    "eslint": "^4.7.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-import-resolver-webpack": "^0.8.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.3.0",
     "gh-pages": "^1.0.0",
     "nwb": "0.18.x",

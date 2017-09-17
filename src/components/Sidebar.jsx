@@ -26,14 +26,14 @@ import style from './RedSquares.less'
 )
 export default class Sidebar extends React.Component {
     static propTypes = {
-        status: PropTypes.oneOf(_.values(GAME_STATUS)),
-        beats: PropTypes.number,
-        highestBeats: PropTypes.number,
-        outs: PropTypes.number,
-        threatsLength: PropTypes.number,
-        processSpacePress: PropTypes.func,
-        setState: PropTypes.func,
-        clearHighest: PropTypes.func,
+        status: PropTypes.oneOf(_.values(GAME_STATUS)).isRequired,
+        beats: PropTypes.number.isRequired,
+        highestBeats: PropTypes.number.isRequired,
+        outs: PropTypes.number.isRequired,
+        threatsLength: PropTypes.number.isRequired,
+        processSpacePress: PropTypes.func.isRequired,
+        setState: PropTypes.func.isRequired,
+        clearHighest: PropTypes.func.isRequired,
     }
 
     getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
