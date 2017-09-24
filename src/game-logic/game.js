@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as managers from '../managers'
+import * as managers from '../controllers'
 import { DEFAULTS, GAME_STATUS, KEY_CODES } from '../constants/game'
 import { combineProcessors, defaultHeroPosition } from '../utils/funcs'
 import { moveHero } from './hero'

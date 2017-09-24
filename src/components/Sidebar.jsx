@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import { Connector, Input, Radio, Check, extendConnection, mapStateToIds } from 'state-control'
 import * as actions from '../actions'
-import * as managers from '../managers'
+import * as managers from '../controllers'
 import { BUTTON_NAMES, DEFAULTS, GAME_STATUS, IDS, SPEEDS } from '../constants/game'
 import style from './RedSquares.less'
 

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import * as managers from '../managers'
+import * as managers from '../controllers'
 
 export const SPEEDS = {
     Normal: 'Normal',
