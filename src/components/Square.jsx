@@ -21,7 +21,7 @@ Square.propTypes = {
     left: PropTypes.number.isRequired,
     size: PropTypes.number.isRequired,
     className: PropTypes.string,
-    style: PropTypes.object,
+    style: PropTypes.objectOf(PropTypes.string),
     refHandler: PropTypes.func,
 }
 

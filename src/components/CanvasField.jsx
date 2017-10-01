@@ -28,19 +28,19 @@ const heroStyle = {
 )
 export default class CanvasField extends React.PureComponent {
     static propTypes = {
-        fieldWidth: PropTypes.number,
-        fieldHeight: PropTypes.number,
-        heroStatus: PropTypes.oneOf(_.values(HERO_STATUSES)),
-        heroSize: PropTypes.number,
+        fieldWidth: PropTypes.number.isRequired,
+        fieldHeight: PropTypes.number.isRequired,
+        heroStatus: PropTypes.oneOf(_.values(HERO_STATUSES)).isRequired,
+        heroSize: PropTypes.number.isRequired,
         heroPos: PropTypes.shape({
             x: PropTypes.number,
             y: PropTypes.number,
-        }),
-        threatSize: PropTypes.number,
-        threats: PropTypes.array,
-        shadows: PropTypes.array,
-        error: PropTypes.string,
-        refHandler: PropTypes.func,
+        }).isRequired,
+        threatSize: PropTypes.number.isRequired,
+        threats: PropTypes.arrayOf(PropTypes.object).isRequired,
+        shadows: PropTypes.arrayOf(PropTypes.object).isRequired,
+        error: PropTypes.string.isRequired,
+        refHandler: PropTypes.func.isRequired,
     }
 
     static drawSquare ({ ctx, pos, size, color }) {
@@ -65,7 +65,7 @@ export default class CanvasField extends React.PureComponent {
             ctx,
             pos: this.props.shadows[index],
             size: this.props.heroSize,
-            color: `rgba(237, 20, 61, ${(this.props.shadows.length - index - 1) / this.props.shadows.length * 0.2})`,
+            color: `rgba(237, 20, 61, ${((this.props.shadows.length - index - 1) / this.props.shadows.length) * 0.2})`,
         }))
         CanvasField.drawSquare({
             ctx,

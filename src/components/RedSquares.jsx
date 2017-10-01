@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import * as actions from '../actions'
 import { DEFAULTS } from '../constants/game'
 import style from './RedSquares.less'
@@ -20,6 +21,11 @@ export default class RedSquares extends React.Component {
     static propTypes = {
         fieldWidth: PropTypes.number,
         init: PropTypes.func,
+    }
+
+    static defaultProps = {
+        fieldWidth: 800,
+        init: _.noop,
     }
 
     componentDidMount () {

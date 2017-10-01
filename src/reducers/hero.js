@@ -15,7 +15,7 @@ const initialState = {
     target: {
         ...defaultHeroPosition(DEFAULTS, DEFAULTS.heroSize),
         save: '',
-    }
+    },
 }
 
 export default function (state = initialState, action) {

@@ -1,7 +1,7 @@
 export const SCARY_INTERVAL = 4 / 3
 export const VARIANTS_QUANTITY = 24
 
-const getDistance = (A, B) => Math.sqrt((A.x - B.x) ** 2 + (A.y - B.y) ** 2)
+const getDistance = (A, B) => Math.sqrt(((A.x - B.x) ** 2) + ((A.y - B.y) ** 2))
 
 export const getNearest = ({ x, y }, threats) => threats.reduce((nearest, threat) => {
     const distance = getDistance({ x, y }, threat)
@@ -31,7 +31,7 @@ export function getScaryEdges (hero, size, width, height) {
     })
     edges.push({
         x,
-        y: height + size * 1.1,
+        y: height + (size * 1.1),
     })
 
     edges.push({
@@ -39,7 +39,7 @@ export function getScaryEdges (hero, size, width, height) {
         y,
     })
     edges.push({
-        x: width + size * 1.1,
+        x: width + (size * 1.1),
         y,
     })
 
@@ -48,10 +48,10 @@ export function getScaryEdges (hero, size, width, height) {
 
 export function getVariants (hero) {
     const variants = []
-    for (let angle = 0; angle < Math.PI * 2; angle += Math.PI * 2 / VARIANTS_QUANTITY) {
+    for (let angle = 0; angle < Math.PI * 2; angle += (Math.PI * 2) / VARIANTS_QUANTITY) {
         variants.push({
-            x: hero.x + Math.cos(angle) * hero.maxSpeed,
-            y: hero.y + Math.sin(angle) * hero.maxSpeed,
+            x: hero.x + (Math.cos(angle) * hero.maxSpeed),
+            y: hero.y + (Math.sin(angle) * hero.maxSpeed),
         })
     }
 

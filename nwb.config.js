@@ -3,21 +3,21 @@ module.exports = {
     webpack: {
         rules: {
             babel: {
-                test: /\.jsx?/
+                test: /\.jsx?/,
             },
             'less-css': {
                 modules: true,
-                localIdentName: '[name]__[local]__[hash:base64:5]'
-            }
+                localIdentName: '[name]__[local]__[hash:base64:5]',
+            },
         },
         extra: {
             resolve: {
-                extensions: ['.js', '.jsx', '.json']
+                extensions: ['.js', '.jsx', '.json'],
             },
             node: {
-                process: false
-            }
+                process: false,
+            },
         },
-        publicPath: ''
-    }
+        publicPath: '',
+    },
 }

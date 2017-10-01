@@ -1,5 +1,5 @@
 function getRandomCoordinate (range, size) {
-    return Math.random() * (range - size * 2) + size
+    return (Math.random() * (range - (size * 2))) + size
 }
 
 let target

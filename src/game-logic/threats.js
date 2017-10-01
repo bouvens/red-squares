@@ -2,27 +2,31 @@ import _ from 'lodash'
 import { sign } from '../utils/funcs'
 import { DEFAULTS } from '../constants/game'
 
-const processSpeed = (newThreat, size, canFlyAway) => (axis, lean) => {
-    newThreat.isGoingOut = sign(lean) === sign(newThreat.speed[axis])
+const processSpeed = (threat, size, canFlyAway) => (axis, lean) => {
+    const updatedThreat = _.clone(threat)
 
-    if (!newThreat.isOut) {
-        if (canFlyAway && newThreat.isGoingOut) {
-            newThreat.isOut = true
+    updatedThreat.isGoingOut = sign(lean) === sign(updatedThreat.speed[axis])
+
+    if (!updatedThreat.isOut) {
+        if (canFlyAway && updatedThreat.isGoingOut) {
+            updatedThreat.isOut = true
         } else {
-            newThreat.speed[axis] = (newThreat.isGoingOut ? -1 : 1) * (newThreat.speed[axis] || 1)
+            updatedThreat.speed[axis] = (updatedThreat.isGoingOut ? -1 : 1) * (updatedThreat.speed[axis] || 1)
         }
     }
     if (Math.abs(lean) > size * 3) {
-        newThreat.isAroundField = false
+        updatedThreat.isAroundField = false
     }
 
-    return newThreat
+    return updatedThreat
 }
 
-const beat = (removeProbability,
-              size,
-              fieldWidth,
-              fieldHeight) =>
+const beat = (
+    removeProbability,
+    size,
+    fieldWidth,
+    fieldHeight
+) =>
     (threat) => {
         let newThreat = { ...threat }
         const canFlyAway = Math.random() < 1 / removeProbability
@@ -54,7 +58,7 @@ const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
     let x = Math.round(Math.random() * (fieldWidth - lean))
     let y = 0 - lean
     let speed = {
-        x: Math.round((Math.random() * 2 - 1) * maxSpeed),
+        x: Math.round(((Math.random() * 2) - 1) * maxSpeed),
         y: Math.ceil(Math.random() * maxSpeed),
     }
 
@@ -63,7 +67,7 @@ const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
         y = Math.round(Math.random() * (fieldHeight - lean))
         speed = {
             x: Math.ceil(Math.random() * maxSpeed),
-            y: Math.round((Math.random() * 2 - 1) * maxSpeed),
+            y: Math.round(((Math.random() * 2) - 1) * maxSpeed),
         }
 
         if (Math.random() < 0.5) {
@@ -101,7 +105,7 @@ export function controlThreats (state) {
             threats.removeProbability,
             threats.size,
             fieldWidth,
-            fieldHeight,
+            fieldHeight
         ))
     const oldThreatsNum = newThreats.length
     newThreats = newThreats.filter((threat) => threat.isAroundField)
@@ -110,11 +114,13 @@ export function controlThreats (state) {
     let beats = 0
 
     newThreats = newThreats.map((threat) => {
-        if (threat.isGoingOut && !threat.isOut) {
+        const updatedThreat = _.clone(threat)
+
+        if (updatedThreat.isGoingOut && !updatedThreat.isOut) {
             beats += 1
-            delete threat.isGoingOut
+            delete updatedThreat.isGoingOut
         }
-        return threat
+        return updatedThreat
     }, 0)
 
     let isAdded = false
@@ -124,7 +130,7 @@ export function controlThreats (state) {
             threats.index,
             fieldWidth,
             fieldHeight,
-            threats.maxSpeed,
+            threats.maxSpeed
         ))
         isAdded = true
     }

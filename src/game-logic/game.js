@@ -8,7 +8,7 @@ import { controlThreats } from './threats'
 const statusUpdate = (state, status) => _.merge({}, state, {
     game: {
         status,
-    }
+    },
 })
 
 export function spacePress (state) {
@@ -36,7 +36,7 @@ export function spacePress (state) {
                 threats: {
                     ...state.threats,
                     threats: [],
-                    lastTime: 0 - state.threats.addTimeout / DEFAULTS.frameLength,
+                    lastTime: -state.threats.addTimeout / DEFAULTS.frameLength,
                 },
             }
     }
@@ -46,7 +46,7 @@ function callManager (oldState) {
     const state = _.merge({}, oldState, {
         hero: {
             target: managers[oldState.game.manager](oldState),
-        }
+        },
     })
     if (isNaN(state.hero.target.x) || isNaN(state.hero.target.y)) {
         state.game.error = 'Bad target'

@@ -13,7 +13,7 @@ export function processSpacePress () {
 }
 
 const getWaitTime = (state, lastFrameTime) => Math.max(
-    lastFrameTime + DEFAULTS.frameLength - performance.now(),
+    (lastFrameTime + DEFAULTS.frameLength) - performance.now(),
     0
 )
 

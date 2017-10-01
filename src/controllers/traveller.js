@@ -3,9 +3,9 @@ import { getNearest, getVariants, getSafeInterval } from './common'
 const setupMinDistance = (fieldWidth, fieldHeight, safe) => ({ x, y }, threats) => Math.min(
     getNearest({ x, y }, threats).distance,
     x + safe,
-    fieldWidth + safe - x,
+    (fieldWidth + safe) - x,
     y + safe,
-    fieldHeight + safe - y,
+    (fieldHeight + safe) - y
 )
 
 function getClearest (safe, fieldWidth, fieldHeight, threats) {
