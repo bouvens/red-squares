@@ -59,14 +59,14 @@ export default class Sidebar extends React.Component {
                         id={IDS.autoRestart}
                         label="Auto restart"
                     />
-                    {'Speed'}
                     <Radio
                         id={IDS.speed}
+                        label="Speed"
                         values={_.keys(SPEEDS)}
                     />
-                    {'Control'}
                     <Radio
                         id={IDS.manager}
+                        label="Control"
                         values={_.keys(managers)}
                     />
                     <Input
