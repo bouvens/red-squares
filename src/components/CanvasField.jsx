@@ -43,9 +43,23 @@ export default class CanvasField extends React.PureComponent {
         refHandler: PropTypes.func.isRequired,
     }
 
-    static drawSquare ({ ctx, pos, size, color }) {
-        ctx.fillStyle = color
-        ctx.fillRect(
+    componentDidMount () {
+        this.paint()
+    }
+
+    componentDidUpdate () {
+        this.paint()
+    }
+
+    canvas = null
+
+    clear = () => {
+        this.canvas.clearRect(0, 0, this.props.fieldWidth, this.props.fieldHeight)
+    }
+
+    drawSquare = ({ pos, size, color }) => {
+        this.canvas.fillStyle = color
+        this.canvas.fillRect(
             Math.round(pos.x - size),
             Math.round(pos.y - size),
             size * 2,
@@ -53,29 +67,21 @@ export default class CanvasField extends React.PureComponent {
         )
     }
 
-    paint () {
-        if (!this.canvas) {
-            return
-        }
-        const ctx = this.canvas.getContext('2d')
+    paint = () => {
+        this.clear()
 
-        ctx.clearRect(0, 0, this.props.fieldWidth, this.props.fieldHeight)
-
-        this.props.shadows.forEach((shadow, index) => CanvasField.drawSquare({
-            ctx,
+        this.props.shadows.forEach((shadow, index) => this.drawSquare({
             pos: this.props.shadows[index],
             size: this.props.heroSize,
             color: `rgba(237, 20, 61, ${((this.props.shadows.length - index - 1) / this.props.shadows.length) * 0.2})`,
         }))
-        CanvasField.drawSquare({
-            ctx,
+        this.drawSquare({
             pos: this.props.heroPos,
             size: this.props.heroSize,
             color: heroStyle[this.props.heroStatus],
         })
         this.props.threats.forEach((threat) => (
-            CanvasField.drawSquare({
-                ctx,
+            this.drawSquare({
                 pos: threat,
                 size: this.props.threatSize,
                 color: 'rgb(100, 149, 237)',
@@ -83,16 +89,12 @@ export default class CanvasField extends React.PureComponent {
         ))
     }
 
-    canvas = null
-
     handleRefCanvas = (elem) => {
-        this.canvas = elem
+        this.canvas = elem.getContext('2d')
         this.props.refHandler(elem)
     }
 
     render () {
-        this.paint()
-
         return (
             <div className={style.fieldWrapper}>
                 <canvas
