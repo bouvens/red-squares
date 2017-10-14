@@ -1,7 +1,7 @@
 {
   "name": "red-squares",
   "version": "1.0.0",
-  "description": "Describe red-squares here",
+  "description": "React-redux game experiment with support of AI written on JS",
   "private": true,
   "scripts": {
     "build": "nwb build-react-app",
