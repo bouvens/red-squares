@@ -13,7 +13,7 @@ export default class InputCatcher {
         InputCatcher.instance = this
 
         document.onmousemove = this.saveMousePos
-        window.document.onkeydown = this.process
+        window.document.addEventListener('keydown', this.process)
     }
 
     saveMousePos = (e) => {
