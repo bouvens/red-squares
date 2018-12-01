@@ -4,19 +4,19 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import App from 'src/App'
 
 describe('App component', () => {
-    let node
+  let node
 
-    beforeEach(() => {
-        node = document.createElement('div')
-    })
+  beforeEach(() => {
+    node = document.createElement('div')
+  })
 
-    afterEach(() => {
-        unmountComponentAtNode(node)
-    })
+  afterEach(() => {
+    unmountComponentAtNode(node)
+  })
 
-    it('displays a welcome message', () => {
-        render(<App />, node, () => {
-            expect(node.textContent).toContain('Welcome to React')
-        })
+  it('displays a welcome message', () => {
+    render(<App />, node, () => {
+      expect(node.textContent).toContain('Welcome to React')
     })
+  })
 })

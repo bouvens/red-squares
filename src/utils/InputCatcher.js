@@ -1,39 +1,42 @@
 export default class InputCatcher {
-    static instance
-    static mousePos = {}
-    static keyPressed = []
-    initialKeymap = {}
+  static instance
 
-    constructor (keymap) {
-        this.initialKeymap = keymap
+  static mousePos = {}
 
-        if (InputCatcher.instance) {
-            return InputCatcher.instance
-        }
-        InputCatcher.instance = this
+  static keyPressed = []
 
-        document.onmousemove = this.saveMousePos
-        window.document.addEventListener('keydown', this.process)
+  initialKeymap = {}
+
+  constructor (keymap) {
+    this.initialKeymap = keymap
+
+    if (InputCatcher.instance) {
+      return InputCatcher.instance
     }
+    InputCatcher.instance = this
 
-    saveMousePos = (e) => {
-        InputCatcher.mousePos = {
-            x: e.pageX,
-            y: e.pageY,
-        }
+    document.onmousemove = this.saveMousePos
+    window.document.addEventListener('keydown', this.process)
+  }
+
+  saveMousePos = (e) => {
+    InputCatcher.mousePos = {
+      x: e.pageX,
+      y: e.pageY,
     }
+  }
 
-    process = (e) => {
-        if (e.keyCode === 32) {
-            e.preventDefault()
-        }
-        this.saveKeyPressed(e)
+  process = (e) => {
+    if (e.keyCode === 32) {
+      e.preventDefault()
     }
+    this.saveKeyPressed(e)
+  }
 
-    saveKeyPressed = ({ keyCode }) => InputCatcher.keyPressed.push(keyCode)
+  saveKeyPressed = ({ keyCode }) => InputCatcher.keyPressed.push(keyCode)
 
-    reactToKeys = (keymap = this.initialKeymap) => {
-        InputCatcher.keyPressed.forEach((key) => keymap[key] && keymap[key]())
-        InputCatcher.keyPressed = []
-    }
+  reactToKeys = (keymap = this.initialKeymap) => {
+    InputCatcher.keyPressed.forEach((key) => keymap[key] && keymap[key]())
+    InputCatcher.keyPressed = []
+  }
 }
