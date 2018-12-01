@@ -111,4 +111,5 @@ Store used as input in game AI controllers.
 * dist: there build will be saved on running `npm run build`
 * public: will be added to dist folder on build
 * src: source folder
+    * controllers: AI for red square
 * test: there must be tests
