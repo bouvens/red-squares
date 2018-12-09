@@ -1,11 +1,11 @@
 import { HIGHEST_BEATS } from '../constants/game'
 
-export function combineProcessors (...processors) {
-  return (state) => processors.reduce((result, processor) => processor(result), state)
+export function isNaNumber (num) {
+  return Number.isNaN(parseFloat(num))
 }
 
 export function sign (num) {
-  if (num === 0 || isNaN(num)) {
+  if (num === 0 || isNaNumber(num)) {
     return num
   }
 

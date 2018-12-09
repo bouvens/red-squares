@@ -1,7 +1,8 @@
 import _ from 'lodash'
+import { compose } from 'redux'
 import * as managers from '../controllers'
 import { DEFAULTS, GAME_STATUS, KEY_CODES } from '../constants/game'
-import { combineProcessors, defaultHeroPosition } from '../utils/funcs'
+import { defaultHeroPosition, isNaNumber } from '../utils/funcs'
 import { moveHero } from './hero'
 import { controlThreats } from './threats'
 
@@ -19,7 +20,8 @@ export function spacePress (state) {
       return statusUpdate(state, GAME_STATUS.play)
     case GAME_STATUS.stop:
     default:
-      return { // we use spread because of need to rewrite (not merge) threats
+      // we use spread because of need to rewrite (not merge) threats
+      return {
         ...state,
         game: {
           ...state.game,
@@ -48,7 +50,7 @@ function callManager (oldState) {
       target: managers[oldState.game.manager](oldState),
     },
   })
-  if (isNaN(state.hero.target.x) || isNaN(state.hero.target.y)) {
+  if (isNaNumber(state.hero.target.x) || isNaNumber(state.hero.target.y)) {
     state.game.error = 'Bad target'
     state.hero.target = {
       ...state.hero.target,
@@ -77,7 +79,7 @@ function reactToKeys (oldState) {
   return state
 }
 
-const nextPlayFrame = combineProcessors(controlThreats, callManager, moveHero)
+const nextPlayFrame = compose(controlThreats, callManager, moveHero)
 
 export function gameStateUpdater (oldState) {
   let state = reactToKeys(oldState)
