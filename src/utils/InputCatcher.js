@@ -1,3 +1,5 @@
+const SPACE = ' '
+
 export default class InputCatcher {
   static instance
 
@@ -27,13 +29,15 @@ export default class InputCatcher {
   }
 
   process = (e) => {
-    if (e.keyCode === 32) {
+    if (e.key === SPACE) {
       e.preventDefault()
     }
     this.saveKeyPressed(e)
   }
 
-  saveKeyPressed = ({ keyCode }) => InputCatcher.keyPressed.push(keyCode)
+  saveKeyPressed = ({ keyCode }) => {
+    InputCatcher.keyPressed.push(keyCode)
+  }
 
   reactToKeys = (keymap = this.initialKeymap) => {
     InputCatcher.keyPressed.forEach((key) => keymap[key] && keymap[key]())

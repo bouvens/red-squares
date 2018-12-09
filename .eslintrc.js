@@ -36,7 +36,7 @@ module.exports = {
       'objects': 'always-multiline',
       'imports': 'always-multiline',
       'exports': 'always-multiline',
-      'functions': 'never',
+      'functions': 'always-multiline',
     }],
     'complexity': ['warn', 12],
     'consistent-this': ['warn', 'that'],

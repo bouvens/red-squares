@@ -18,8 +18,9 @@ export const getNearest = ({ x, y }, threats) => threats.reduce((nearest, threat
   distance: Infinity,
 })
 
-export const getSafeInterval = (hero, threats) =>
-  (hero.size + threats.size + hero.maxSpeed + threats.maxSpeed) * SCARY_INTERVAL
+export const getSafeInterval = (hero, threats) => (
+  hero.size + threats.size + hero.maxSpeed + threats.maxSpeed
+) * SCARY_INTERVAL
 
 export function getScaryEdges (hero, size, width, height) {
   const edges = []

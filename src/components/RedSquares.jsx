@@ -43,7 +43,9 @@ export default class RedSquares extends React.Component {
     }
   }
 
-  handleRefField = (elem) => { this.field = elem }
+  handleRefField = (elem) => {
+    this.field = elem
+  }
 
   render () {
     return (

@@ -43,12 +43,18 @@ export default class Sidebar extends React.Component {
   render () {
     return (
       <div className={style.side} style={{ width: `${DEFAULTS.sideWidth}px` }}>
-        <button onClick={this.props.processSpacePress}>{BUTTON_NAMES[this.props.status]}</button>
+        <button type="button" onClick={this.props.processSpacePress}>{BUTTON_NAMES[this.props.status]}</button>
         {' (Press Space)'}
         <h2>{this.getS('beat', this.props.beats)}</h2>
-        <p>Highest beats: {this.props.highestBeats}</p>
+        <p>
+          {'Highest beats: '}
+          {this.props.highestBeats}
+        </p>
         <p>{this.getS('out', this.props.outs)}</p>
-        <p>{this.getS('threat', this.props.threatsLength)} on field</p>
+        <p>
+          {this.getS('threat', this.props.threatsLength)}
+          {' on field'}
+        </p>
 
         <Connector
           state={mapStateToIds(this.props, IDS)}
@@ -98,7 +104,7 @@ export default class Sidebar extends React.Component {
             label="Threat remove probability (1/x)"
           />
         </Connector>
-        <button onClick={this.props.clearHighest}>Clear highest</button>
+        <button type="button" onClick={this.props.clearHighest}>Clear highest</button>
       </div>
     )
   }
