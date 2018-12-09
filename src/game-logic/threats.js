@@ -3,7 +3,7 @@ import { sign } from '../utils/funcs'
 import { DEFAULTS } from '../constants/game'
 
 const processSpeed = (threat, size, canFlyAway) => (axis, lean) => {
-  const updatedThreat = _.clone(threat)
+  const updatedThreat = { ...threat }
 
   updatedThreat.isGoingOut = sign(lean) === sign(updatedThreat.speed[axis])
 
@@ -26,32 +26,31 @@ const beat = (
   size,
   fieldWidth,
   fieldHeight,
-) =>
-  (threat) => {
-    let newThreat = { ...threat }
-    const canFlyAway = Math.random() < 1 / removeProbability
-    const processThreat = processSpeed(newThreat, size, canFlyAway)
+) => (threat) => {
+  let newThreat = { ...threat }
+  const canFlyAway = Math.random() < 1 / removeProbability
+  const processThreat = processSpeed(newThreat, size, canFlyAway)
 
-    const leftBorder = size
-    if (newThreat.x < leftBorder) {
-      newThreat = processThreat('x', newThreat.x - leftBorder)
-    }
-    const rightBorder = fieldWidth - size
-    if (newThreat.x > rightBorder) {
-      newThreat = processThreat('x', newThreat.x - rightBorder)
-    }
-
-    const topBorder = size
-    if (newThreat.y < topBorder) {
-      newThreat = processThreat('y', newThreat.y - topBorder)
-    }
-    const bottomBorder = fieldHeight - size
-    if (newThreat.y > bottomBorder) {
-      newThreat = processThreat('y', newThreat.y - bottomBorder)
-    }
-
-    return newThreat
+  const leftBorder = size
+  if (newThreat.x < leftBorder) {
+    newThreat = processThreat('x', newThreat.x - leftBorder)
   }
+  const rightBorder = fieldWidth - size
+  if (newThreat.x > rightBorder) {
+    newThreat = processThreat('x', newThreat.x - rightBorder)
+  }
+
+  const topBorder = size
+  if (newThreat.y < topBorder) {
+    newThreat = processThreat('y', newThreat.y - topBorder)
+  }
+  const bottomBorder = fieldHeight - size
+  if (newThreat.y > bottomBorder) {
+    newThreat = processThreat('y', newThreat.y - bottomBorder)
+  }
+
+  return newThreat
+}
 
 const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
   const lean = size * 2
@@ -88,44 +87,44 @@ const newThreat = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
   }
 }
 
-export function controlThreats (state) {
-  const { threats } = state
-  const { frame, fieldWidth, fieldHeight } = state.game
-  const { frameLength } = DEFAULTS
-
-  let newThreats = threats.threats
-    .map((threat) => (
-      {
-        ...threat,
-        x: threat.x + threat.speed.x,
-        y: threat.y + threat.speed.y,
-      }
-    ))
+function moveThreats ({ threats, removeProbability, size }, fieldWidth, fieldHeight) {
+  return threats
+    .map((threat) => ({
+      ...threat,
+      x: threat.x + threat.speed.x,
+      y: threat.y + threat.speed.y,
+    }))
     .map(beat(
-      threats.removeProbability,
-      threats.size,
+      removeProbability,
+      size,
       fieldWidth,
       fieldHeight,
     ))
-  const oldThreatsNum = newThreats.length
-  newThreats = newThreats.filter((threat) => threat.isAroundField)
-  const outs = oldThreatsNum - newThreats.length
+    .filter((threat) => threat.isAroundField)
+}
 
+function beatThreats (newThreats) {
   let beats = 0
 
-  newThreats = newThreats.map((threat) => {
-    const updatedThreat = _.clone(threat)
+  return {
+    beatenThreats: newThreats.map((threat) => {
+      const updatedThreat = { ...threat }
 
-    if (updatedThreat.isGoingOut && !updatedThreat.isOut) {
-      beats += 1
-      delete updatedThreat.isGoingOut
-    }
-    return updatedThreat
-  }, 0)
+      if (updatedThreat.isGoingOut && !updatedThreat.isOut) {
+        beats += 1
+        delete updatedThreat.isGoingOut
+      }
+      return updatedThreat
+    }, 0),
+    beats,
+  }
+}
 
+function addThreats ({ newThreats, threats, frame, fieldWidth, fieldHeight, frameLength }) {
+  const addedThreats = [...newThreats]
   let isAdded = false
   if (newThreats.length < threats.limit && frame >= threats.lastTime + (threats.addTimeout / frameLength)) {
-    newThreats.push(newThreat(
+    addedThreats.push(newThreat(
       threats.size,
       threats.index,
       fieldWidth,
@@ -134,6 +133,23 @@ export function controlThreats (state) {
     ))
     isAdded = true
   }
+  return { addedThreats, isAdded }
+}
+
+export function controlThreats (state) {
+  const { threats, game: { frame, fieldWidth, fieldHeight } } = state
+  const { frameLength } = DEFAULTS
+
+  let newThreats = moveThreats(threats, fieldWidth, fieldHeight)
+  const outs = threats.threats.length - newThreats.length
+
+  const { beatenThreats, beats } = beatThreats(newThreats)
+  newThreats = beatenThreats
+
+  const { addedThreats, isAdded } = addThreats(
+    { newThreats, threats, frame, fieldWidth, fieldHeight, frameLength },
+  )
+  newThreats = addedThreats
 
   const newState = _.merge({}, state, {
     game: {
