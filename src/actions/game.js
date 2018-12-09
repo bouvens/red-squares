@@ -1,7 +1,8 @@
 import * as types from '../constants/actionTypes'
-import { DEFAULTS, GAME_STATUS, HIGHEST_BEATS, SPEEDS } from '../constants/game'
+import { DEFAULTS, GAME_STATUS, SPEEDS } from '../constants/game'
 import InputCatcher from '../utils/InputCatcher'
 import { gameStateUpdater, spacePress } from '../game-logic'
+import { getHighestScore, removeHighestScore, saveHighestScore } from '../utils/funcs'
 
 export function processSpacePress () {
   return (dispatch, getState) => {
@@ -21,10 +22,8 @@ const gameCycle = (initState) => {
   const state = gameStateUpdater(initState)
 
   if (state.game.status === GAME_STATUS.stop && initState.game.status === GAME_STATUS.play) {
-    localStorage.setItem(
-      HIGHEST_BEATS,
-      state.game.highestBeats = Math.max(state.game.beats, state.game.highestBeats),
-    )
+    state.game.highestBeats = Math.max(state.game.beats, state.game.highestBeats)
+    saveHighestScore(state.game.highestBeats)
   }
 
   return state
@@ -57,7 +56,7 @@ function updateFrame (dispatch, getState, lastFrameTime) {
 
 export function clearHighest () {
   return (dispatch) => {
-    localStorage.removeItem(HIGHEST_BEATS)
+    removeHighestScore()
 
     dispatch({
       type: types.INIT,
@@ -75,7 +74,7 @@ export function init (redSquares) {
       data: {
         redSquares,
         inputController: new InputCatcher(),
-        highestBeats: localStorage[HIGHEST_BEATS] ? parseInt(localStorage[HIGHEST_BEATS], 10) : 0,
+        highestBeats: getHighestScore(),
       },
     })
 
