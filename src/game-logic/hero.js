@@ -31,21 +31,16 @@ function getMove (hero, target) {
   }
 }
 
-function getShadows ({ game, hero }) {
-  const { shadows } = hero
-  let id = 0
-
-  if (!(game.frame % hero.shadowPeriod)) {
-    if (shadows.length === hero.shadowQuantity) {
+function getShadows ({ game, hero: { shadows, shadowPeriod, shadowQuantity, x, y } }) {
+  if (!(game.frame % shadowPeriod)) {
+    if (shadows.length === shadowQuantity) {
       shadows.pop()
     }
-    if (shadows.length) {
-      id = shadows[0].id + 1
-    }
+
     shadows.unshift({
-      x: hero.x,
-      y: hero.y,
-      id,
+      x,
+      y,
+      id: shadows.length ? shadows[0].id + 1 : 0,
     })
   }
 
@@ -53,12 +48,10 @@ function getShadows ({ game, hero }) {
 }
 
 export function moveHero (state) {
-  const { game, hero } = state
-  const { target } = hero
-  const { threats } = state.threats
+  const { game, hero, threats: { threats } } = state
   const threatSize = state.threats.size
 
-  const { xMove, yMove } = getMove(hero, target)
+  const { xMove, yMove } = getMove(hero, hero.target)
 
   let x = hero.x + xMove
   x = Math.max(x, hero.size)
