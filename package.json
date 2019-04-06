@@ -6,7 +6,10 @@
   "scripts": {
     "build": "parcel build --target node src/index.html --out-dir dist",
     "deploy": "parcel build --target node src/index.html --out-dir dist && gh-pages -d dist",
-    "start": "parcel src/index.html --out-dir temp"
+    "start": "parcel src/index.html --out-dir temp",
+    "eslint": "eslint --ext .js,.jsx -f checkstyle -o ./reports/js.checkstyle.xml ./src",
+    "eslint:html": "eslint --ext .js,.jsx -f html -o ./reports/eslint.checkstyle.html ./src",
+    "eslint:fix": "eslint --fix --ext .js,.jsx  ./src"
   },
   "dependencies": {
     "lodash": "^4.17.4",
