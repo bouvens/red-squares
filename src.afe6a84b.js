@@ -61,4 +61,4 @@ module.exports={};
 },{}],"Focm":[function(require,module,exports) {
 "use strict";var e=t(require("react")),r=require("react-dom"),u=t(require("./App"));function t(e){return e&&e.__esModule?e:{default:e}}require("./index.css"),(0,r.render)(e.default.createElement(u.default,null),document.querySelector("#app"));
 },{"./App":"0+DP","./index.css":"vKFU"}]},{},["Focm"], null)
-//# sourceMappingURL=%27.%27/src.afe6a84b.js.map
+//# sourceMappingURL=src.afe6a84b.js.map
