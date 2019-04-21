@@ -4,8 +4,8 @@
   "description": "React-redux game experiment with support of AI written on JS",
   "private": true,
   "scripts": {
-    "build": "parcel build --target node src/index.html --out-dir dist",
-    "deploy": "parcel build --target node src/index.html --out-dir dist && gh-pages -d dist",
+    "build": "parcel build src/index.html --out-dir dist --public-url ./",
+    "deploy": "gh-pages -d dist",
     "start": "parcel src/index.html --out-dir temp",
     "eslint": "eslint --ext .js,.jsx -f checkstyle -o ./reports/js.checkstyle.xml ./src",
     "eslint:html": "eslint --ext .js,.jsx -f html -o ./reports/eslint.checkstyle.html ./src",
