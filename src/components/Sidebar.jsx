@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import _ from 'lodash'
 import { Check, Connector, Input, Radio } from 'state-control'
 import * as actions from '../actions'
@@ -25,11 +24,11 @@ const mapStateToIds = (state, ids) => _.mapValues(_.invert(ids), (id) => state[i
     threatsLength: state.threats.threats.length,
     manager: state.game.manager,
   }), IDS),
-  (dispatch) => bindActionCreators({
+  {
     processSpacePress: actions.game.processSpacePress,
     setState: actions.params.setState,
     clearHighest: actions.game.clearHighest,
-  }, dispatch),
+  },
 )
 export default class Sidebar extends React.Component {
   static propTypes = {

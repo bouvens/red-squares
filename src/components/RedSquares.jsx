@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as actions from '../actions'
@@ -13,9 +12,9 @@ import Sidebar from './Sidebar'
   (state) => ({
     fieldWidth: state.game.fieldWidth,
   }),
-  (dispatch) => bindActionCreators({
+  {
     init: actions.game.init,
-  }, dispatch),
+  },
 )
 export default class RedSquares extends React.Component {
   static propTypes = {
