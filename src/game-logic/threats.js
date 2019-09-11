@@ -121,10 +121,11 @@ function beatThreats (newThreats) {
 }
 
 function addThreats ({ newThreats, threats, frame, fieldWidth, fieldHeight, frameLength }) {
-  const addedThreats = [...newThreats]
+  const threatsWithAdded = [...newThreats]
   let isAdded = false
+
   if (newThreats.length < threats.limit && frame >= threats.lastTime + (threats.addTimeout / frameLength)) {
-    addedThreats.push(newThreat(
+    threatsWithAdded.push(newThreat(
       threats.size,
       threats.index,
       fieldWidth,
@@ -133,23 +134,22 @@ function addThreats ({ newThreats, threats, frame, fieldWidth, fieldHeight, fram
     ))
     isAdded = true
   }
-  return { addedThreats, isAdded }
+
+  return { threatsWithAdded, isAdded }
 }
 
 export function controlThreats (state) {
   const { threats, game: { frame, fieldWidth, fieldHeight } } = state
   const { frameLength } = DEFAULTS
 
-  let newThreats = moveThreats(threats, fieldWidth, fieldHeight)
-  const outs = threats.threats.length - newThreats.length
+  const movedThreats = moveThreats(threats, fieldWidth, fieldHeight)
+  const outs = threats.threats.length - movedThreats.length
 
-  const { beatenThreats, beats } = beatThreats(newThreats)
-  newThreats = beatenThreats
+  const { beatenThreats, beats } = beatThreats(movedThreats)
 
-  const { addedThreats, isAdded } = addThreats(
-    { newThreats, threats, frame, fieldWidth, fieldHeight, frameLength },
+  const { threatsWithAdded, isAdded } = addThreats(
+    { newThreats: beatenThreats, threats, frame, fieldWidth, fieldHeight, frameLength },
   )
-  newThreats = addedThreats
 
   const newState = _.merge({}, state, {
     game: {
@@ -164,7 +164,7 @@ export function controlThreats (state) {
       : threats,
   })
 
-  newState.threats.threats = newThreats
+  newState.threats.threats = threatsWithAdded
 
   return newState
 }
