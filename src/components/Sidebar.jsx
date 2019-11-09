@@ -15,7 +15,7 @@ const extendConnection = (props, ids) => (state) => _.extend(
 
 const mapStateToIds = (state, ids) => _.mapValues(_.invert(ids), (id) => state[id])
 
-@connect(
+export default @connect(
   extendConnection((state) => ({
     status: state.game.status,
     beats: state.game.beats,
@@ -30,7 +30,9 @@ const mapStateToIds = (state, ids) => _.mapValues(_.invert(ids), (id) => state[i
     clearHighest: actions.game.clearHighest,
   },
 )
-export default class Sidebar extends React.Component {
+class Sidebar extends React.Component {
+  changeHandler = this.props.setState
+
   static propTypes = {
     status: PropTypes.oneOf(_.values(GAME_STATUS)).isRequired,
     beats: PropTypes.number.isRequired,
@@ -42,15 +44,14 @@ export default class Sidebar extends React.Component {
     clearHighest: PropTypes.func.isRequired,
   }
 
-  changeHandler = this.props.setState
-
   getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
 
   render () {
     return (
       <div className={style.side} style={{ width: `${DEFAULTS.sideWidth}px` }}>
         <button type="button" onClick={this.props.processSpacePress}>{BUTTON_NAMES[this.props.status]}</button>
-        {' (Press Space)'}
+        {' '}
+        (Press Space)
         <h2>{this.getS('beat', this.props.beats)}</h2>
         <p>
           {'Highest beats: '}

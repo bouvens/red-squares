@@ -11,7 +11,8 @@ const processSpeed = (threat, size, canFlyAway) => (axis, lean) => {
     if (canFlyAway && updatedThreat.isGoingOut) {
       updatedThreat.isOut = true
     } else {
-      updatedThreat.speed[axis] = (updatedThreat.isGoingOut ? -1 : 1) * (updatedThreat.speed[axis] || 1)
+      updatedThreat.speed[axis] = (updatedThreat.isGoingOut ? -1 : 1)
+        * (updatedThreat.speed[axis] || 1)
     }
   }
   if (Math.abs(lean) > size * 3) {
@@ -124,7 +125,8 @@ function addThreats ({ newThreats, threats, frame, fieldWidth, fieldHeight, fram
   const threatsWithAdded = [...newThreats]
   let isAdded = false
 
-  if (newThreats.length < threats.limit && frame >= threats.lastTime + (threats.addTimeout / frameLength)) {
+  if ((newThreats.length < threats.limit)
+    && (frame >= threats.lastTime + (threats.addTimeout / frameLength))) {
     threatsWithAdded.push(newThreat(
       threats.size,
       threats.index,

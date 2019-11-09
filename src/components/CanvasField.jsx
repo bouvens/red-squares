@@ -10,7 +10,7 @@ const heroStyle = {
   [HERO_STATUSES.trouble]: 'rgb(237, 20, 61)',
 }
 
-@connect(
+export default @connect(
   (state) => ({
     fieldWidth: state.game.fieldWidth,
     fieldHeight: state.game.fieldHeight,
@@ -26,7 +26,9 @@ const heroStyle = {
     error: state.game.error,
   }),
 )
-export default class CanvasField extends React.PureComponent {
+class CanvasField extends React.PureComponent {
+  canvas = null
+
   static propTypes = {
     fieldWidth: PropTypes.number.isRequired,
     fieldHeight: PropTypes.number.isRequired,
@@ -42,8 +44,6 @@ export default class CanvasField extends React.PureComponent {
     error: PropTypes.string.isRequired,
     refHandler: PropTypes.func.isRequired,
   }
-
-  canvas = null
 
   componentDidMount () {
     this.paint()
@@ -103,7 +103,7 @@ export default class CanvasField extends React.PureComponent {
           width={this.props.fieldWidth}
           height={this.props.fieldHeight}
         >
-          {'You are using an outdated browser.'}
+          You are using an outdated browser.
         </canvas>
         <div className={style.error}>{this.props.error}</div>
       </div>

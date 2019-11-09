@@ -1,6 +1,3 @@
-import _ from 'lodash'
-import * as managers from '../controllers'
-
 export const SPEEDS = {
   Normal: 'Normal',
   Fast: 'Fast',
@@ -15,7 +12,7 @@ export const DEFAULTS = {
   shadowPeriod: 1,
   shadowQuantity: 50,
   speed: SPEEDS.Fast,
-  manager: _.findKey(managers, (f) => f === managers.Traveller),
+  manager: 'Traveller',
   heroSize: 25,
   heroSpeed: 10,
   threatSize: 15,

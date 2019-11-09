@@ -8,7 +8,7 @@ import style from './RedSquares.less'
 import CanvasField from './CanvasField'
 import Sidebar from './Sidebar'
 
-@connect(
+export default @connect(
   (state) => ({
     fieldWidth: state.game.fieldWidth,
   }),
@@ -16,7 +16,7 @@ import Sidebar from './Sidebar'
     init: actions.game.init,
   },
 )
-export default class RedSquares extends React.Component {
+class RedSquares extends React.Component {
   static propTypes = {
     fieldWidth: PropTypes.number,
     init: PropTypes.func,

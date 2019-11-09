@@ -4,7 +4,9 @@ import { HERO_STATUSES } from '../constants/hero'
 const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
   const safeLength = heroSize + threatSize
 
-  if (threats.some((threat) => Math.abs(threat.x - x) < safeLength && Math.abs(threat.y - y) < safeLength)) {
+  if (threats.some(
+    (threat) => Math.abs(threat.x - x) < safeLength && Math.abs(threat.y - y) < safeLength,
+  )) {
     return HERO_STATUSES.trouble
   }
 
