@@ -6,13 +6,13 @@ This experiment made with [state-control ![npm][npm-badge]][npm]
 [npm-badge]: https://img.shields.io/npm/v/state-control.png?style=flat-square
 [npm]: https://www.npmjs.org/package/state-control
 
-## What's this?
+## What is this?
 
-This is simple game made with React and Redux and displaying on canvas. It can be played with a mouse or automatically with special functions written on Javascript.
+This is a simple game I made on React and Redux with a self-made canvas component. It can be played with a mouse or automatically with special functions written on JavaScript.
 
 ## Rules
 
-The field has a size of 800 by 600 pixels. Threats are generated just behind edges of the field. Timeout of adding threats is configurable. Every threat have a random speed that can't be greater than configurable max speed. Threat can fly off the field on every hit with an edge with given probability. Hero must avoid any contacts with threats.
+The field has a size of 800 by 600 pixels. Threats are generated just behind edges of the field. The timeout of adding threats is configurable. Every threat has a random speed that cannot be greater than configurable maximum speed. A threat can fly off the field on every hit with an edge with a given probability. The Hero must avoid any contact with threats.
 
 ## How to run locally
 
@@ -24,14 +24,14 @@ npm install
 npm run start
 ```
 
-Also there's a script for local build:
+Also, there's a script for a local build:
 ```Shell
 npm run build
 ```
 
 ## Controlling by AI
 
-A controller is a Javascript function that accepted a state of the game and return new position to which the hero should move. Hero moving to a new position with his maximum speed. To move with lower speed controller should return position closer to current.
+A controller is a JavaScript function that accepts a state of the game and returns a new position to which the Hero should move. The Hero is moving to a new location with his maximum speed. To proceed with a lower speed controller should return position closer to current.
 
 There's an example of a controller that moves the hero until he reaches a randomly chosen position:
 
@@ -56,60 +56,60 @@ export default function (state) {
 
 ## Structure of the store
 
-Store used as input in game AI controllers.
+The game AI controllers use the store as input.
 
 * game
-    * redSquares: helper object for getting mouse position
-    * inputController: helper object for intercepting key presses
-    * manager: name of a controller function
-    * status: one of `GAME_STATUS` constants that defines state of the game (_play_, _pause_, _stop_)
-    * autoRestart: flag defines will be game restarted on stop or not
-    * beats: score
-    * highestBeats: highest score
-    * outs: number of flied off threats
-    * frame: game’s frame counter
+    * redSquares: a helper object for getting mouse position
+    * inputController: a helper object for intercepting keypresses
+    * manager: a name of a controller function
+    * status: one of `GAME_STATUS` constants which defines the state of the game (_play_, _pause_, _stop_)
+    * autoRestart: the flag which represents will be game restarted on stop or not
+    * beats: the score
+    * highestBeats: the highest score
+    * outs: a quantity of flown away threats
+    * frame: the game frames counter
     * speed: one of `SPEEDS` constants that can be _normal_ for frames with timeouts, _fast_ without timeouts, or _fastest_ for rendering only 100th frame
     * fieldWidth: width of the field
     * fieldHeight: height of the field
-    * error: string that will be shown as error below the field
+    * error: a string that will appear below the field in case of error
 * hero
     * x: horizontal position of the Hero in pixels
     * y: vertical position of the Hero in pixels
-    * maxSpeed: maximum speed of the Hero in pixels
-    * status: on of `HERO_STATUSES` constants that can be _normal_ for alive hero and _trouble_ for dead hero
-    * size: half of size of the Hero in pixels
-    * shadowPeriod: defines which frame must be saved as shadow
+    * maxSpeed: a maximum speed of the Hero in pixels
+    * status: on of `HERO_STATUSES` constants that can be _normal_ for alive Hero and _trouble_ for dead Hero
+    * size: half of the size of the Hero in pixels
+    * shadowPeriod: number of frames, one of them will appear as a shadow
     * shadowQuantity: quantity of shadows
-    * shadows: array of shadows
+    * shadows: an array of shadows
         * x: horizontal position of a shadow in pixels
         * y: vertical position of a shadow in pixels
-        * id: identifier of a shadow element
+        * id: an identifier of a shadow element
     * target: object
         * x: horizontal position in pixels to which the Hero seeks
         * y: vertical position in pixels to which the Hero seeks
-        * save: not used element for now for saving information by AI controller
+        * save: not used element for now for keeping information by AI controller
 * threats
-    * threats: array of threats
-        * id: identifier of a threat element
+    * threats: an array of threats
+        * id: an identifier of a threat element
         * x: horizontal position of a threat in pixels
         * y: vertical position of a threat in pixels
-        * speed: object of speed
+        * speed: an object of speed
             * x: horizontal speed in pixels per frame
             * y: vertical speed in pixels per frame
         * isOut: flag of moving out of the field
         * isAroundField: helper flag to define is threat close enough to field or need to be removed
-    * size: half of size of a threat in pixels
-    * maxSpeed: maximum speed of threats in pixels
-    * lastTime: number of a frame when a threat was added
+    * size: half of the size of a threat in pixels
+    * maxSpeed: a maximum speed of threats in pixels
+    * lastTime: number of a frame when the game added a threat
     * addTimeout: quantity of frames between adding threats
     * index: id for a new threat
-    * limit: maximum quantity of threats
-    * removeProbability: reciprocal probability of flying out on hitting with an edge of the field
+    * limit: a maximum amount of threats
+    * removeProbability: a reciprocal probability of flying out on hitting with an edge of the field
 
 ## Structure of folders
 
-* dist: there build will be saved on running `npm run build`
-* public: will be added to dist folder on build
+* dist: a build will be saved there on running `npm run build`
+* public: files from here will be added to `dist` folder on build
 * src: source folder
-    * controllers: AI for red square
+    * controllers: AI for the red square
 * test: there must be tests
