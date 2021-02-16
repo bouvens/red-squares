@@ -96,7 +96,7 @@ class CanvasField extends React.PureComponent {
 
   render () {
     return (
-      <div>
+      <>
         <canvas
           className={style.field}
           ref={this.handleRefCanvas}
@@ -106,7 +106,7 @@ class CanvasField extends React.PureComponent {
           You are using an outdated browser.
         </canvas>
         <div className={style.error}>{this.props.error}</div>
-      </div>
+      </>
     )
   }
 }

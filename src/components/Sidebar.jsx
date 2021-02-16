@@ -47,7 +47,7 @@ class Sidebar extends React.Component {
 
   render () {
     return (
-      <div>
+      <>
         <button type="button" onClick={this.props.handlePauseButton}>{BUTTON_NAMES[this.props.status]}</button>
         {' '}
         (Press Space)
@@ -111,7 +111,7 @@ class Sidebar extends React.Component {
           />
         </Connector>
         <button type="button" onClick={this.props.clearHighest}>Clear highest</button>
-      </div>
+      </>
     )
   }
 }
