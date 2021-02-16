@@ -10,3 +10,15 @@ body {
   margin: 0;
   padding: 0;
 }
+
+p {
+  margin: 0 0 1.2em;
+}
+
+a {
+  color: #69f;
+}
+
+a:visited {
+  color: #a5f;
+}

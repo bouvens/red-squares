@@ -4,7 +4,7 @@ import InputCatcher from '../utils/InputCatcher'
 import { gameStateUpdater, spacePress } from '../game-logic'
 import { getHighestScore, removeHighestScore, saveHighestScore } from '../utils/funcs'
 
-export function processSpacePress () {
+export function playPauseGame () {
   return (dispatch, getState) => {
     dispatch({
       type: types.SET_STATE,

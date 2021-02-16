@@ -14,6 +14,7 @@ export default @connect(
   }),
   {
     init: actions.game.init,
+    processSpacePress: actions.game.playPauseGame,
   },
 )
 class RedSquares extends React.Component {
@@ -49,8 +50,13 @@ class RedSquares extends React.Component {
   render () {
     return (
       <div className={style.wrapper} style={{ width: `${this.props.fieldWidth + DEFAULTS.sideWidth}px` }}>
-        <CanvasField refHandler={this.handleRefField} />
-        <Sidebar />
+        <div className={style.fieldWrapper}>
+          <p><a href="/" title="JavaScript experiments">← To all the experiments</a></p>
+          <CanvasField refHandler={this.handleRefField} />
+        </div>
+        <div className={style.side} style={{ width: `${DEFAULTS.sideWidth}px` }}>
+          <Sidebar />
+        </div>
       </div>
     )
   }

@@ -5,8 +5,7 @@ import _ from 'lodash'
 import { Check, Connector, Input, Radio } from 'state-control'
 import * as actions from '../actions'
 import * as managers from '../controllers'
-import { BUTTON_NAMES, DEFAULTS, GAME_STATUS, IDS, SPEEDS } from '../constants/game'
-import style from './RedSquares.less'
+import { BUTTON_NAMES, GAME_STATUS, IDS, SPEEDS } from '../constants/game'
 
 const extendConnection = (props, ids) => (state) => _.extend(
   props(state),
@@ -25,7 +24,7 @@ export default @connect(
     manager: state.game.manager,
   }), IDS),
   {
-    processSpacePress: actions.game.processSpacePress,
+    handlePauseButton: actions.game.playPauseGame,
     setState: actions.params.setState,
     clearHighest: actions.game.clearHighest,
   },
@@ -39,7 +38,7 @@ class Sidebar extends React.Component {
     highestBeats: PropTypes.number.isRequired,
     outs: PropTypes.number.isRequired,
     threatsLength: PropTypes.number.isRequired,
-    processSpacePress: PropTypes.func.isRequired,
+    handlePauseButton: PropTypes.func.isRequired,
     setState: PropTypes.func.isRequired,
     clearHighest: PropTypes.func.isRequired,
   }
@@ -48,8 +47,8 @@ class Sidebar extends React.Component {
 
   render () {
     return (
-      <div className={style.side} style={{ width: `${DEFAULTS.sideWidth}px` }}>
-        <button type="button" onClick={this.props.processSpacePress}>{BUTTON_NAMES[this.props.status]}</button>
+      <div>
+        <button type="button" onClick={this.props.handlePauseButton}>{BUTTON_NAMES[this.props.status]}</button>
         {' '}
         (Press Space)
         <h2>{this.getS('beat', this.props.beats)}</h2>
