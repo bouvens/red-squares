@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { HERO_STATUSES } from '../constants/hero'
 import style from './RedSquares.less'
+import * as actions from '../actions'
 
 const heroStyle = {
   [HERO_STATUSES.normal]: 'rgb(50, 205, 50)',
@@ -25,6 +26,9 @@ export default @connect(
     shadows: state.hero.shadows,
     error: state.game.error,
   }),
+  {
+    handleClick: actions.game.playPauseGame,
+  },
 )
 class CanvasField extends React.PureComponent {
   canvas = null
@@ -41,6 +45,7 @@ class CanvasField extends React.PureComponent {
     threatSize: PropTypes.number.isRequired,
     threats: PropTypes.arrayOf(PropTypes.object).isRequired,
     shadows: PropTypes.arrayOf(PropTypes.object).isRequired,
+    handleClick: PropTypes.func.isRequired,
     error: PropTypes.string.isRequired,
     refHandler: PropTypes.func.isRequired,
   }
@@ -102,6 +107,7 @@ class CanvasField extends React.PureComponent {
           ref={this.handleRefCanvas}
           width={this.props.fieldWidth}
           height={this.props.fieldHeight}
+          onClick={this.props.handleClick}
         >
           You are using an outdated browser.
         </canvas>
