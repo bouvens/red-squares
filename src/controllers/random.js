@@ -4,7 +4,7 @@ function getRandomCoordinate (range, size) {
 
 let target
 
-export default function (state) {
+export default function randomController (state) {
   if (!target || (state.hero.x === target.x && state.hero.y === target.y)) {
     target = {
       x: getRandomCoordinate(state.game.fieldWidth, state.hero.size),

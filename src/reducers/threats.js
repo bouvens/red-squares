@@ -13,7 +13,7 @@ const initialState = {
   removeProbability: DEFAULTS.threatRemoveProbability,
 }
 
-export default function (state = initialState, action) {
+export default function threatsController (state = initialState, action) {
   switch (action.type) {
     case types.SET_STATE:
       return _.extend({}, state, action.data.threats)

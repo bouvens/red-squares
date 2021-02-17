@@ -1,4 +1,4 @@
-export default function (state) {
+export default function stillController (state) {
   return state.hero
     ? {
       x: state.hero.x,

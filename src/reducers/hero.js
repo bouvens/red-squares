@@ -18,7 +18,7 @@ const initialState = {
   },
 }
 
-export default function (state = initialState, action) {
+export default function heroController (state = initialState, action) {
   switch (action.type) {
     case types.SET_STATE:
       return _.extend({}, state, action.data.hero)

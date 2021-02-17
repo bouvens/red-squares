@@ -32,7 +32,7 @@ function getClearest (safe, fieldWidth, fieldHeight, threats) {
   }
 }
 
-export default function ({ game, hero, threats }) {
+export default function travellerController ({ game, hero, threats }) {
   const newThreats = threats.threats.map((threat) => ({
     x: threat.x + threat.speed.x,
     y: threat.y + threat.speed.y,

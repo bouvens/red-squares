@@ -18,7 +18,7 @@ const initialState = {
   error: '',
 }
 
-export default function (state = initialState, action) {
+export default function gameController (state = initialState, action) {
   switch (action.type) {
     case types.INIT:
       return _.extend({}, state, action.data)
