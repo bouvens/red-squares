@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "parcel build src/index.html --out-dir dist --public-url ./",
-    "deploy": "yarn run build && gh-pages -d dist",
+    "deploy": "npm run build && gh-pages -d dist",
     "start": "parcel src/index.html --out-dir temp",
     "eslint": "eslint --ext .js,.jsx ./src",
     "eslint:html": "eslint --ext .js,.jsx -f html -o ./reports/eslint.checkstyle.html ./src",
