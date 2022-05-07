@@ -40,7 +40,7 @@
     "extends": "air"
   },
   "author": "Alexander Demin <bouvens@gmail.com> (https://bouvens.github.io/)",
-  "homepage": "https://github.com/bouvens/red-squares",
+  "homepage": "https://bouvens.github.io/red-squares/",
   "repository": "github:bouvens/red-squares",
   "license": "MIT"
 }
