@@ -51,7 +51,7 @@ class RedSquares extends React.Component {
     return (
       <div className={style.wrapper} style={{ width: `${this.props.fieldWidth + DEFAULTS.sideWidth}px` }}>
         <div className={style.fieldWrapper}>
-          <p><a href="/" title="JavaScript experiments">← To all the experiments</a></p>
+          <p><a href="/" title="JavaScript Experiments">← To all experiments</a></p>
           <CanvasField refHandler={this.handleRefField} />
         </div>
         <div className={style.side} style={{ width: `${DEFAULTS.sideWidth}px` }}>

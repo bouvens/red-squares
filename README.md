@@ -1,7 +1,7 @@
 # Red Squares
 
 ### [Demo](https://bouvens.github.io/red-squares/)
-This experiment made with [state-control ![npm][npm-badge]][npm]
+This experiment is made with [state-control ![npm][npm-badge]][npm]
 
 [npm-badge]: https://img.shields.io/npm/v/state-control.png?style=flat-square
 [npm]: https://www.npmjs.org/package/state-control
