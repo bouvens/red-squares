@@ -49,6 +49,6 @@ export const BUTTON_NAMES = {
   [GAME_STATUS.stop]: 'Start',
 }
 
-export const KEY_CODES = {
-  space: 32,
+export const KEYS = {
+  space: ' ',
 }

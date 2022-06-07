@@ -1,6 +1,6 @@
 import * as types from '../constants/actionTypes'
 import { DEFAULTS, GAME_STATUS, SPEEDS } from '../constants/game'
-import InputCatcher from '../utils/InputCatcher'
+import * as InputCatcher from '../utils/input-catcher'
 import { gameStateUpdater, spacePress } from '../game-logic'
 import { getHighestScore, removeHighestScore, saveHighestScore } from '../utils/funcs'
 
@@ -73,7 +73,7 @@ export function init(redSquares) {
       type: types.INIT,
       data: {
         redSquares,
-        inputController: new InputCatcher(),
+        inputController: InputCatcher,
         highestScore: getHighestScore(),
       },
     })

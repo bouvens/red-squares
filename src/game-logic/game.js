@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { compose } from 'redux'
 import * as managers from '../controllers'
-import { DEFAULTS, GAME_STATUS, KEY_CODES } from '../constants/game'
+import { DEFAULTS, GAME_STATUS, KEYS } from '../constants/game'
 import { defaultHeroPosition, isNaNumber } from '../utils/funcs'
 import { moveHero } from './hero'
 import { controlRivals } from './rivals'
@@ -69,7 +69,7 @@ function reactToKeys(oldState) {
     state = spacePress(state)
   } else {
     state.game.inputController.reactToKeys({
-      [KEY_CODES.space]: () => {
+      [KEYS.space]: () => {
         state = spacePress(state)
       },
     })

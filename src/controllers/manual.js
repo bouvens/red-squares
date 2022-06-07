@@ -1,4 +1,4 @@
-import InputCatcher from '../utils/InputCatcher'
+import * as InputCatcher from '../utils/input-catcher'
 
 export default function manualController(data) {
   const fieldSize = data.game.redSquares.getFieldSize()
