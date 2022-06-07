@@ -12,7 +12,7 @@ This is a simple game I made on React and Redux with a self-made canvas componen
 
 ## Rules
 
-The field has a size of 800 by 600 pixels. Threats are generated just behind edges of the field. The timeout of adding threats is configurable. Every threat has a random speed that cannot be greater than configurable maximum speed. A threat can fly off the field on every hit with an edge with a given probability. The Hero must avoid any contact with threats.
+The field has a size of 800 by 600 pixels. Rivals are generated just behind edges of the field. The timeout of adding rivals is configurable. Every rival has a random speed that cannot be greater than configurable maximum speed. A rival can fly off the field on every hit with an edge with a given probability. The Hero must avoid any contact with rivals.
 
 ## How to run locally
 
@@ -64,9 +64,9 @@ The game AI controllers use the store as input.
     * manager: a name of a controller function
     * status: one of `GAME_STATUS` constants which defines the state of the game (_play_, _pause_, _stop_)
     * autoRestart: the flag which represents will be game restarted on stop or not
-    * beats: the score
-    * highestBeats: the highest score
-    * outs: a quantity of flown away threats
+    * score: a score
+    * highestScore: the highest score
+    * outs: a quantity of flown away rivals
     * frame: the game frames counter
     * speed: one of `SPEEDS` constants that can be _normal_ for frames with timeouts, _fast_ without timeouts, or _fastest_ for rendering only 100th frame
     * fieldWidth: width of the field
@@ -88,22 +88,22 @@ The game AI controllers use the store as input.
         * x: horizontal position in pixels to which the Hero seeks
         * y: vertical position in pixels to which the Hero seeks
         * save: not used element for now for keeping information by AI controller
-* threats
-    * threats: an array of threats
-        * id: an identifier of a threat element
-        * x: horizontal position of a threat in pixels
-        * y: vertical position of a threat in pixels
+* rivals
+    * rivals: an array of rivals
+        * id: an identifier of a rival element
+        * x: horizontal position of a rival in pixels
+        * y: vertical position of a rival in pixels
         * speed: an object of speed
             * x: horizontal speed in pixels per frame
             * y: vertical speed in pixels per frame
         * isOut: flag of moving out of the field
-        * isAroundField: helper flag to define is threat close enough to field or need to be removed
-    * size: half of the size of a threat in pixels
-    * maxSpeed: a maximum speed of threats in pixels
-    * lastTime: number of a frame when the game added a threat
-    * addTimeout: quantity of frames between adding threats
-    * index: id for a new threat
-    * limit: a maximum amount of threats
+        * isAroundField: helper flag to define is rival close enough to field or need to be removed
+    * size: half of the size of a rival in pixels
+    * maxSpeed: a maximum speed of rivals in pixels
+    * lastTime: number of a frame when the game added a rival
+    * addTimeout: quantity of frames between adding rivals
+    * index: id for a new rival
+    * limit: a maximum amount of rivals
     * removeProbability: a reciprocal probability of flying out on hitting with an edge of the field
 
 ## Structure of folders

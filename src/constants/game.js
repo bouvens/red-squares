@@ -15,11 +15,11 @@ export const DEFAULTS = {
   manager: 'Traveller',
   heroSize: 25,
   heroSpeed: 10,
-  threatSize: 15,
-  threatSpeed: 4,
-  threatLimit: 20,
-  threatAddTimeout: 1000,
-  threatRemoveProbability: 5,
+  rivalSize: 15,
+  rivalSpeed: 4,
+  rivalLimit: 20,
+  rivalAddTimeout: 1000,
+  rivalRemoveProbability: 5,
 }
 
 export const IDS = {
@@ -28,14 +28,14 @@ export const IDS = {
   manager: 'game.manager',
   heroSize: 'hero.size',
   heroSpeed: 'hero.maxSpeed',
-  threatSize: 'threats.size',
-  threatSpeed: 'threats.maxSpeed',
-  threatLimit: 'threats.limit',
-  threatAddTimeout: 'threats.addTimeout',
-  threatRemoveProbability: 'threats.removeProbability',
+  rivalSize: 'rivals.size',
+  rivalSpeed: 'rivals.maxSpeed',
+  rivalLimit: 'rivals.limit',
+  rivalAddTimeout: 'rivals.addTimeout',
+  rivalRemoveProbability: 'rivals.removeProbability',
 }
 
-export const HIGHEST_BEATS = 'highestBeats'
+export const HIGHEST_SCORE = 'highestScore'
 
 export const GAME_STATUS = {
   play: 'play',

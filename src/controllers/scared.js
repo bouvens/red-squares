@@ -2,18 +2,18 @@ import _ from 'lodash'
 import { defaultHeroPosition } from '../utils/funcs'
 import { getNearest, getSafeInterval, getScaryEdges } from './common'
 
-export default function scaredController ({ game, hero, threats }) {
-  const scaryEdges = getScaryEdges(hero, 2 * threats.size, game.fieldWidth, game.fieldHeight)
+export default function scaredController ({ game, hero, rivals }) {
+  const scaryEdges = getScaryEdges(hero, 2 * rivals.size, game.fieldWidth, game.fieldHeight)
 
-  const nearestThreat = getNearest(hero, _.extend(scaryEdges, threats.threats))
+  const nearestRival = getNearest(hero, _.extend(scaryEdges, rivals.rivals))
 
-  if (!nearestThreat.threat || nearestThreat.distance > getSafeInterval(hero, threats) * 2) {
+  if (!nearestRival.rival || nearestRival.distance > getSafeInterval(hero, rivals) * 2) {
     return defaultHeroPosition(game, hero.size)
   }
 
   const distance = {
-    x: hero.x - nearestThreat.threat.x,
-    y: hero.y - nearestThreat.threat.y,
+    x: hero.x - nearestRival.rival.x,
+    y: hero.y - nearestRival.rival.y,
   }
 
   return {

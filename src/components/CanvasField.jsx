@@ -21,8 +21,8 @@ export default @connect(
       x: state.hero.x,
       y: state.hero.y,
     },
-    threatSize: state.threats.size,
-    threats: state.threats.threats,
+    rivalSize: state.rivals.size,
+    rivals: state.rivals.rivals,
     shadows: state.hero.shadows,
     error: state.game.error,
   }),
@@ -42,8 +42,8 @@ class CanvasField extends React.PureComponent {
       x: PropTypes.number,
       y: PropTypes.number,
     }).isRequired,
-    threatSize: PropTypes.number.isRequired,
-    threats: PropTypes.arrayOf(PropTypes.object).isRequired,
+    rivalSize: PropTypes.number.isRequired,
+    rivals: PropTypes.arrayOf(PropTypes.object).isRequired,
     shadows: PropTypes.arrayOf(PropTypes.object).isRequired,
     handleClick: PropTypes.func.isRequired,
     error: PropTypes.string.isRequired,
@@ -85,10 +85,10 @@ class CanvasField extends React.PureComponent {
       size: this.props.heroSize,
       color: heroStyle[this.props.heroStatus],
     })
-    this.props.threats.forEach((threat) => (
+    this.props.rivals.forEach((rival) => (
       this.drawSquare({
-        pos: threat,
-        size: this.props.threatSize,
+        pos: rival,
+        size: this.props.rivalSize,
         color: 'rgb(100, 149, 237)',
       })
     ))

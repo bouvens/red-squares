@@ -2,24 +2,24 @@ import _ from 'lodash'
 import { defaultHeroPosition } from '../utils/funcs'
 import { getNearest, getSafeInterval, getScaryEdges, getVariants } from './common'
 
-export default function stableController ({ game, hero, threats }) {
-  const scaryEdges = getScaryEdges(hero, 2 * threats.size, game.fieldWidth, game.fieldHeight)
-  const newThreats = threats.threats.map((threat) => (
+export default function stableController ({ game, hero, rivals }) {
+  const scaryEdges = getScaryEdges(hero, 2 * rivals.size, game.fieldWidth, game.fieldHeight)
+  const newRivals = rivals.rivals.map((rival) => (
     {
-      x: threat.x + threat.speed.x,
-      y: threat.y + threat.speed.y,
+      x: rival.x + rival.speed.x,
+      y: rival.y + rival.speed.y,
     }
   ))
-  const extendedThreats = _.extend(scaryEdges, newThreats)
+  const extendedRivals = _.extend(scaryEdges, newRivals)
 
-  const nearestThreat = getNearest(hero, extendedThreats)
+  const nearestRival = getNearest(hero, extendedRivals)
 
-  if (!nearestThreat.threat || nearestThreat.distance > getSafeInterval(hero, threats)) {
+  if (!nearestRival.rival || nearestRival.distance > getSafeInterval(hero, rivals)) {
     return defaultHeroPosition(game, hero.size)
   }
 
   const variant = getVariants(hero).reduce((best, current) => {
-    const { distance } = getNearest(current, extendedThreats)
+    const { distance } = getNearest(current, extendedRivals)
 
     if (distance > best.distance) {
       return {
@@ -33,7 +33,7 @@ export default function stableController ({ game, hero, threats }) {
   }, {
     x: hero.x,
     y: hero.y,
-    distance: nearestThreat.distance,
+    distance: nearestRival.distance,
   })
 
   return {

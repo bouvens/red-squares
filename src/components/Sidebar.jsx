@@ -17,10 +17,10 @@ const mapStateToIds = (state, ids) => _.mapValues(_.invert(ids), (id) => state[i
 export default @connect(
   extendConnection((state) => ({
     status: state.game.status,
-    beats: state.game.beats,
-    highestBeats: state.game.highestBeats,
+    score: state.game.score,
+    highestScore: state.game.highestScore,
     outs: state.game.outs,
-    threatsLength: state.threats.threats.length,
+    rivalsLength: state.rivals.rivals.length,
     manager: state.game.manager,
   }), IDS),
   {
@@ -34,10 +34,10 @@ class Sidebar extends React.Component {
 
   static propTypes = {
     status: PropTypes.oneOf(_.values(GAME_STATUS)).isRequired,
-    beats: PropTypes.number.isRequired,
-    highestBeats: PropTypes.number.isRequired,
+    score: PropTypes.number.isRequired,
+    highestScore: PropTypes.number.isRequired,
     outs: PropTypes.number.isRequired,
-    threatsLength: PropTypes.number.isRequired,
+    rivalsLength: PropTypes.number.isRequired,
     handlePauseButton: PropTypes.func.isRequired,
     setState: PropTypes.func.isRequired,
     clearHighest: PropTypes.func.isRequired,
@@ -51,15 +51,21 @@ class Sidebar extends React.Component {
         <button type="button" onClick={this.props.handlePauseButton}>{BUTTON_NAMES[this.props.status]}</button>
         {' '}
         (Press Space)
-        <h2>{this.getS('beat', this.props.beats)}</h2>
+        <h2>
+          Score:
+          {' '}
+          {this.props.score}
+        </h2>
         <p>
-          {'Highest beats: '}
-          {this.props.highestBeats}
+          High score:
+          {' '}
+          {this.props.highestScore}
         </p>
         <p>{this.getS('out', this.props.outs)}</p>
         <p>
-          {this.getS('threat', this.props.threatsLength)}
-          {' on field'}
+          {this.getS('rival', this.props.rivalsLength)}
+          {' '}
+          on the field
         </p>
 
         <Connector
@@ -90,27 +96,27 @@ class Sidebar extends React.Component {
             label="Hero max speed (px/s)"
           />
           <Input
-            id={IDS.threatSize}
-            label="Threat size (px)"
+            id={IDS.rivalSize}
+            label="Rival size (px)"
           />
           <Input
-            id={IDS.threatSpeed}
-            label="Threat max speed (px/s)"
+            id={IDS.rivalSpeed}
+            label="Rival max speed (px/s)"
           />
           <Input
-            id={IDS.threatLimit}
-            label="Threat limit"
+            id={IDS.rivalLimit}
+            label="Rival limit"
           />
           <Input
-            id={IDS.threatAddTimeout}
-            label="Threat add timeout (ms)"
+            id={IDS.rivalAddTimeout}
+            label="Rival add timeout (ms)"
           />
           <Input
-            id={IDS.threatRemoveProbability}
-            label="Threat remove probability (1/x)"
+            id={IDS.rivalRemoveProbability}
+            label="Rival remove probability (1/x)"
           />
         </Connector>
-        <button type="button" onClick={this.props.clearHighest}>Clear highest</button>
+        <button type="button" onClick={this.props.clearHighest}>⚠ Clear high score</button>
       </>
     )
   }

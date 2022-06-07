@@ -4,7 +4,7 @@ import * as managers from '../controllers'
 import { DEFAULTS, GAME_STATUS, KEY_CODES } from '../constants/game'
 import { defaultHeroPosition, isNaNumber } from '../utils/funcs'
 import { moveHero } from './hero'
-import { controlThreats } from './threats'
+import { controlRivals } from './rivals'
 
 const statusUpdate = (state, status) => _.merge({}, state, {
   game: {
@@ -20,13 +20,12 @@ export function spacePress (state) {
       return statusUpdate(state, GAME_STATUS.play)
     case GAME_STATUS.stop:
     default:
-      // we use spread because of need to rewrite (not merge) threats
       return {
         ...state,
         game: {
           ...state.game,
           status: GAME_STATUS.play,
-          beats: 0,
+          score: 0,
           outs: 0,
           frame: 0,
           error: '',
@@ -35,10 +34,10 @@ export function spacePress (state) {
           ...state.hero,
           ...defaultHeroPosition(state.game, state.hero.size),
         },
-        threats: {
-          ...state.threats,
-          threats: [],
-          lastTime: -state.threats.addTimeout / DEFAULTS.frameLength,
+        rivals: {
+          ...state.rivals,
+          rivals: [],
+          lastTime: -state.rivals.addTimeout / DEFAULTS.frameLength,
         },
       }
   }
@@ -79,7 +78,7 @@ function reactToKeys (oldState) {
   return state
 }
 
-const nextPlayFrame = compose(controlThreats, callManager, moveHero)
+const nextPlayFrame = compose(controlRivals, callManager, moveHero)
 
 export function gameStateUpdater (oldState) {
   let state = reactToKeys(oldState)

@@ -1,14 +1,14 @@
 import { getNearest, getSafeInterval, getVariants } from './common'
 
-const setupMinDistance = (fieldWidth, fieldHeight, safe) => ({ x, y }, threats) => Math.min(
-  getNearest({ x, y }, threats).distance,
+const setupMinDistance = (fieldWidth, fieldHeight, safe) => ({ x, y }, rivals) => Math.min(
+  getNearest({ x, y }, rivals).distance,
   x + safe,
   (fieldWidth + safe) - x,
   y + safe,
   (fieldHeight + safe) - y,
 )
 
-function getClearest (safe, fieldWidth, fieldHeight, threats) {
+function getClearest (safe, fieldWidth, fieldHeight, rivals) {
   let clearest = 0
   let xBest
   let yBest
@@ -16,7 +16,7 @@ function getClearest (safe, fieldWidth, fieldHeight, threats) {
 
   for (let x = safe; x < fieldWidth - safe; x += safe) {
     for (let y = safe; y < fieldHeight - safe; y += safe) {
-      const distance = getMinDistance({ x, y }, threats)
+      const distance = getMinDistance({ x, y }, rivals)
 
       if (distance > clearest) {
         clearest = distance
@@ -32,22 +32,22 @@ function getClearest (safe, fieldWidth, fieldHeight, threats) {
   }
 }
 
-export default function travellerController ({ game, hero, threats }) {
-  const newThreats = threats.threats.map((threat) => ({
-    x: threat.x + threat.speed.x,
-    y: threat.y + threat.speed.y,
+export default function travellerController ({ game, hero, rivals }) {
+  const newRivals = rivals.rivals.map((rival) => ({
+    x: rival.x + rival.speed.x,
+    y: rival.y + rival.speed.y,
   }))
 
-  const safe = hero.size + threats.size
+  const safe = hero.size + rivals.size
   const getMinDistance = setupMinDistance(game.fieldWidth, game.fieldHeight, safe)
-  const nearest = getMinDistance(hero, newThreats)
+  const nearest = getMinDistance(hero, newRivals)
 
-  if (nearest > getSafeInterval(hero, threats)) {
-    return getClearest(safe, game.fieldWidth, game.fieldHeight, newThreats)
+  if (nearest > getSafeInterval(hero, rivals)) {
+    return getClearest(safe, game.fieldWidth, game.fieldHeight, newRivals)
   }
 
   const variant = getVariants(hero).reduce((best, current) => {
-    const distance = getMinDistance(current, newThreats)
+    const distance = getMinDistance(current, newRivals)
 
     if (distance > best.distance) {
       return {

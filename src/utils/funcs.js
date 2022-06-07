@@ -1,4 +1,4 @@
-import { HIGHEST_BEATS } from '../constants/game'
+import { HIGHEST_SCORE } from '../constants/game'
 
 export function isNaNumber (num) {
   return Number.isNaN(parseFloat(num))
@@ -19,16 +19,16 @@ export const defaultHeroPosition = (game, size) => ({
 
 export function saveHighestScore (score) {
   localStorage.setItem(
-    HIGHEST_BEATS,
+    HIGHEST_SCORE,
     score,
   )
 }
 
 export function getHighestScore () {
-  const score = localStorage[HIGHEST_BEATS]
+  const score = localStorage[HIGHEST_SCORE]
   return score ? parseInt(score, 10) : 0
 }
 
 export function removeHighestScore () {
-  localStorage.removeItem(HIGHEST_BEATS)
+  localStorage.removeItem(HIGHEST_SCORE)
 }

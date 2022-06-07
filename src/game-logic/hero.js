@@ -1,11 +1,11 @@
 import { GAME_STATUS } from '../constants/game'
 import { HERO_STATUSES } from '../constants/hero'
 
-const getHeroStatus = (x, y, heroSize, threatSize, threats) => {
-  const safeLength = heroSize + threatSize
+const getHeroStatus = (x, y, heroSize, rivalSize, rivals) => {
+  const safeLength = heroSize + rivalSize
 
-  if (threats.some(
-    (threat) => Math.abs(threat.x - x) < safeLength && Math.abs(threat.y - y) < safeLength,
+  if (rivals.some(
+    (rival) => Math.abs(rival.x - x) < safeLength && Math.abs(rival.y - y) < safeLength,
   )) {
     return HERO_STATUSES.trouble
   }
@@ -50,8 +50,8 @@ function getShadows ({ game, hero: { shadows, shadowPeriod, shadowQuantity, x, y
 }
 
 export function moveHero (state) {
-  const { game, hero, threats: { threats } } = state
-  const threatSize = state.threats.size
+  const { game, hero, rivals: { rivals } } = state
+  const rivalSize = state.rivals.size
 
   const { xMove, yMove } = getMove(hero, hero.target)
 
@@ -63,7 +63,7 @@ export function moveHero (state) {
   y = Math.max(y, hero.size)
   y = Math.min(y, game.fieldHeight - hero.size)
 
-  const status = getHeroStatus(x, y, hero.size, threatSize, threats)
+  const status = getHeroStatus(x, y, hero.size, rivalSize, rivals)
 
   return {
     ...state,

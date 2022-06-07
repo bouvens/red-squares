@@ -22,8 +22,8 @@ const gameCycle = (initState) => {
   const state = gameStateUpdater(initState)
 
   if (state.game.status === GAME_STATUS.stop && initState.game.status === GAME_STATUS.play) {
-    state.game.highestBeats = Math.max(state.game.beats, state.game.highestBeats)
-    saveHighestScore(state.game.highestBeats)
+    state.game.highestScore = Math.max(state.game.score, state.game.highestScore)
+    saveHighestScore(state.game.highestScore)
   }
 
   return state
@@ -61,7 +61,7 @@ export function clearHighest () {
     dispatch({
       type: types.INIT,
       data: {
-        highestBeats: 0,
+        highestScore: 0,
       },
     })
   }
@@ -74,7 +74,7 @@ export function init (redSquares) {
       data: {
         redSquares,
         inputController: new InputCatcher(),
-        highestBeats: getHighestScore(),
+        highestScore: getHighestScore(),
       },
     })
 
