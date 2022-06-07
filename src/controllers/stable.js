@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { defaultHeroPosition } from '../utils/funcs'
 import { getNearest, getSafeInterval, getScaryEdges, getVariants } from './common'
 
-export default function stableController ({ game, hero, rivals }) {
+export default function stableController({ game, hero, rivals }) {
   const scaryEdges = getScaryEdges(hero, 2 * rivals.size, game.fieldWidth, game.fieldHeight)
   const newRivals = rivals.rivals.map((rival) => (
     {

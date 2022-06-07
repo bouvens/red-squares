@@ -8,7 +8,7 @@ const setupMinDistance = (fieldWidth, fieldHeight, safe) => ({ x, y }, rivals) =
   (fieldHeight + safe) - y,
 )
 
-function getClearest (safe, fieldWidth, fieldHeight, rivals) {
+function getClearest(safe, fieldWidth, fieldHeight, rivals) {
   let clearest = 0
   let xBest
   let yBest
@@ -32,7 +32,7 @@ function getClearest (safe, fieldWidth, fieldHeight, rivals) {
   }
 }
 
-export default function travellerController ({ game, hero, rivals }) {
+export default function travellerController({ game, hero, rivals }) {
   const newRivals = rivals.rivals.map((rival) => ({
     x: rival.x + rival.speed.x,
     y: rival.y + rival.speed.y,

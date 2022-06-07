@@ -22,7 +22,7 @@ export const getSafeInterval = (hero, rivals) => (
   hero.size + rivals.size + hero.maxSpeed + rivals.maxSpeed
 ) * SCARY_INTERVAL
 
-export function getScaryEdges (hero, size, width, height) {
+export function getScaryEdges(hero, size, width, height) {
   const edges = []
   const { x, y } = hero
 
@@ -47,7 +47,7 @@ export function getScaryEdges (hero, size, width, height) {
   return edges
 }
 
-export function getVariants (hero) {
+export function getVariants(hero) {
   const variants = []
   for (let angle = 0; angle < Math.PI * 2; angle += (Math.PI * 2) / VARIANTS_QUANTITY) {
     variants.push({

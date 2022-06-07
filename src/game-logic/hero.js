@@ -13,7 +13,7 @@ const getHeroStatus = (x, y, heroSize, rivalSize, rivals) => {
   return HERO_STATUSES.normal
 }
 
-function getMove (hero, target) {
+function getMove(hero, target) {
   const xDelta = target.x - hero.x
   const yDelta = target.y - hero.y
   const distance = Math.sqrt((xDelta ** 2) + (yDelta ** 2))
@@ -33,7 +33,7 @@ function getMove (hero, target) {
   }
 }
 
-function getShadows ({ game, hero: { shadows, shadowPeriod, shadowQuantity, x, y } }) {
+function getShadows({ game, hero: { shadows, shadowPeriod, shadowQuantity, x, y } }) {
   if (!(game.frame % shadowPeriod)) {
     if (shadows.length === shadowQuantity) {
       shadows.pop()
@@ -49,7 +49,7 @@ function getShadows ({ game, hero: { shadows, shadowPeriod, shadowQuantity, x, y
   return shadows
 }
 
-export function moveHero (state) {
+export function moveHero(state) {
   const { game, hero, rivals: { rivals } } = state
   const rivalSize = state.rivals.size
 

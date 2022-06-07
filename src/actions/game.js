@@ -4,7 +4,7 @@ import InputCatcher from '../utils/InputCatcher'
 import { gameStateUpdater, spacePress } from '../game-logic'
 import { getHighestScore, removeHighestScore, saveHighestScore } from '../utils/funcs'
 
-export function playPauseGame () {
+export function playPauseGame() {
   return (dispatch, getState) => {
     dispatch({
       type: types.SET_STATE,
@@ -29,7 +29,7 @@ const gameCycle = (initState) => {
   return state
 }
 
-function updateFrame (dispatch, getState, lastFrameTime) {
+function updateFrame(dispatch, getState, lastFrameTime) {
   return () => {
     const initState = getState()
     let state = gameCycle(initState)
@@ -54,7 +54,7 @@ function updateFrame (dispatch, getState, lastFrameTime) {
   }
 }
 
-export function clearHighest () {
+export function clearHighest() {
   return (dispatch) => {
     removeHighestScore()
 
@@ -67,7 +67,7 @@ export function clearHighest () {
   }
 }
 
-export function init (redSquares) {
+export function init(redSquares) {
   return (dispatch, getState) => {
     dispatch({
       type: types.INIT,

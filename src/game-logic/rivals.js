@@ -88,7 +88,7 @@ const newRival = (size, index, fieldWidth, fieldHeight, maxSpeed) => {
   }
 }
 
-function moveRivals ({ rivals, removeProbability, size }, fieldWidth, fieldHeight) {
+function moveRivals({ rivals, removeProbability, size }, fieldWidth, fieldHeight) {
   return rivals
     .map((rival) => ({
       ...rival,
@@ -104,7 +104,7 @@ function moveRivals ({ rivals, removeProbability, size }, fieldWidth, fieldHeigh
     .filter((rival) => rival.isAroundField)
 }
 
-function bumpRivals (newRivals) {
+function bumpRivals(newRivals) {
   let score = 0
 
   return {
@@ -121,7 +121,7 @@ function bumpRivals (newRivals) {
   }
 }
 
-function addRivals ({ newRivals, rivals, frame, fieldWidth, fieldHeight, frameLength }) {
+function addRivals({ newRivals, rivals, frame, fieldWidth, fieldHeight, frameLength }) {
   const rivalsWithAdded = [...newRivals]
   let isAdded = false
 
@@ -140,7 +140,7 @@ function addRivals ({ newRivals, rivals, frame, fieldWidth, fieldHeight, frameLe
   return { rivalsWithAdded, isAdded }
 }
 
-export function controlRivals (state) {
+export function controlRivals(state) {
   const { rivals, game: { frame, fieldWidth, fieldHeight } } = state
   const { frameLength } = DEFAULTS
 

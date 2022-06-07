@@ -90,14 +90,15 @@ The game AI controllers use the store as input.
         * save: not used element for now for keeping information by AI controller
 * rivals
     * rivals: an array of rivals
-        * id: an identifier of a rival element
-        * x: horizontal position of a rival in pixels
-        * y: vertical position of a rival in pixels
+        * id: an identifier of the rival element
+        * x: horizontal position of the rival in pixels
+        * y: vertical position of the rival in pixels
         * speed: an object of speed
             * x: horizontal speed in pixels per frame
             * y: vertical speed in pixels per frame
         * isOut: flag of moving out of the field
         * isAroundField: helper flag to define is rival close enough to field or need to be removed
+        * isGoingOut: flag showing if the rival is flying out
     * size: half of the size of a rival in pixels
     * maxSpeed: a maximum speed of rivals in pixels
     * lastTime: number of a frame when the game added a rival

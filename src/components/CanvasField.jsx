@@ -50,11 +50,11 @@ class CanvasField extends React.PureComponent {
     refHandler: PropTypes.func.isRequired,
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.paint()
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.paint()
   }
 
@@ -99,7 +99,7 @@ class CanvasField extends React.PureComponent {
     this.props.refHandler(elem)
   }
 
-  render () {
+  render() {
     return (
       <>
         <canvas

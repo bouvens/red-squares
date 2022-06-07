@@ -12,7 +12,7 @@ const statusUpdate = (state, status) => _.merge({}, state, {
   },
 })
 
-export function spacePress (state) {
+export function spacePress(state) {
   switch (state.game.status) {
     case GAME_STATUS.play:
       return statusUpdate(state, GAME_STATUS.pause)
@@ -43,7 +43,7 @@ export function spacePress (state) {
   }
 }
 
-function callManager (oldState) {
+function callManager(oldState) {
   const state = _.merge({}, oldState, {
     hero: {
       target: managers[oldState.game.manager](oldState),
@@ -61,7 +61,7 @@ function callManager (oldState) {
   return state
 }
 
-function reactToKeys (oldState) {
+function reactToKeys(oldState) {
   let state = { ...oldState }
 
   if (state.game.status === GAME_STATUS.stop && state.game.autoRestart) {
@@ -80,7 +80,7 @@ function reactToKeys (oldState) {
 
 const nextPlayFrame = compose(controlRivals, callManager, moveHero)
 
-export function gameStateUpdater (oldState) {
+export function gameStateUpdater(oldState) {
   let state = reactToKeys(oldState)
 
   if (state.game.status === GAME_STATUS.play) {

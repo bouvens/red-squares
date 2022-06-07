@@ -28,7 +28,7 @@ class RedSquares extends React.Component {
     init: _.noop,
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.init(this)
   }
 
@@ -47,7 +47,7 @@ class RedSquares extends React.Component {
     this.field = elem
   }
 
-  render () {
+  render() {
     return (
       <div className={style.wrapper} style={{ width: `${this.props.fieldWidth + DEFAULTS.sideWidth}px` }}>
         <div className={style.fieldWrapper}>

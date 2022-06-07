@@ -13,7 +13,7 @@ const initialState = {
   removeProbability: DEFAULTS.rivalRemoveProbability,
 }
 
-export default function rivalsController (state = initialState, action) {
+export default function rivalsController(state = initialState, action) {
   switch (action.type) {
     case types.SET_STATE:
       return _.extend({}, state, action.data.rivals)

@@ -12,6 +12,8 @@ const extendConnection = (props, ids) => (state) => _.extend(
   _.mapValues(ids, (id) => _.get(state, id)),
 )
 
+const withS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
+
 const mapStateToIds = (state, ids) => _.mapValues(_.invert(ids), (id) => state[id])
 
 export default @connect(
@@ -43,9 +45,7 @@ class Sidebar extends React.Component {
     clearHighest: PropTypes.func.isRequired,
   }
 
-  getS = (name, num) => `${num || 'No'} ${name}${num !== 1 ? 's' : ''}`
-
-  render () {
+  render() {
     return (
       <>
         <button type="button" onClick={this.props.handlePauseButton}>{BUTTON_NAMES[this.props.status]}</button>
@@ -61,9 +61,9 @@ class Sidebar extends React.Component {
           {' '}
           {this.props.highestScore}
         </p>
-        <p>{this.getS('out', this.props.outs)}</p>
+        <p>{withS('out', this.props.outs)}</p>
         <p>
-          {this.getS('rival', this.props.rivalsLength)}
+          {withS('rival', this.props.rivalsLength)}
           {' '}
           on the field
         </p>
