@@ -116,7 +116,7 @@ function bumpRivals (newRivals) {
         delete updatedRival.isGoingOut
       }
       return updatedRival
-    }, 0),
+    }),
     score,
   }
 }
