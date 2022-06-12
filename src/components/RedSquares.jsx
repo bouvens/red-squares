@@ -9,9 +9,7 @@ import CanvasField from './CanvasField'
 import Sidebar from './Sidebar'
 
 export default @connect(
-  (state) => ({
-    fieldWidth: state.game.fieldWidth,
-  }),
+  null,
   {
     init: actions.game.init,
     processSpacePress: actions.game.playPauseGame,
@@ -19,12 +17,10 @@ export default @connect(
 )
 class RedSquares extends React.Component {
   static propTypes = {
-    fieldWidth: PropTypes.number,
     init: PropTypes.func,
   }
 
   static defaultProps = {
-    fieldWidth: 800,
     init: _.noop,
   }
 
@@ -49,7 +45,7 @@ class RedSquares extends React.Component {
 
   render() {
     return (
-      <div className={style.wrapper} style={{ width: `${this.props.fieldWidth + DEFAULTS.sideWidth}px` }}>
+      <div className={style.wrapper}>
         <div className={style.fieldWrapper}>
           <p><a href="/" title="JavaScript Experiments">← To all experiments</a></p>
           <CanvasField refHandler={this.handleRefField} />
